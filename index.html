@@ -11,14 +11,14 @@
 <body>
 <header class="hero"><div class="hero-inner">
 <div><div class="eyebrow">منصة حديثية أكاديمية</div><h1>📚 بصيرة الحديث</h1><p>المصدر أولًا · البيانات الموثقة · المراجعة البشرية · البحث الذكي</p></div>
-<div class="hero-actions"><button class="ghost" id="themeBtn">◐ الوضع</button><button class="ghost" id="exportBtn">⬇ نسخة احتياطية</button></div>
+<div class="hero-actions"><button class="ghost" id="themeBtn">◐ الوضع</button><button class="ghost" id="importBtn">⬆ استيراد</button><input id="importFile" type="file" accept=".json" hidden><button class="ghost" id="exportBtn">⬇ نسخة احتياطية</button></div>
 </div></header>
 <nav class="topnav"><div class="nav-inner">
 <button data-view="dashboard" class="nav-btn active">الرئيسية</button><button data-view="sources" class="nav-btn">📚 المصادر</button><button data-view="hadiths" class="nav-btn">📜 الأحاديث</button><button data-view="review" class="nav-btn">🔍 المراجعة</button><button data-view="analytics" class="nav-btn">📊 الإحصاءات</button><button data-view="catalog" class="nav-btn">🗂 الفهرس</button><button data-view="methodology" class="nav-btn">📖 المنهجية</button>
 </div></nav>
 <main class="container">
 <section id="dashboard" class="view">
-<div class="section-head"><div><span class="kicker">لوحة الباحث</span><h2>نظرة عامة</h2><p>إدارة دورة البيانات الحديثية من المصدر إلى المراجعة والنشر.</p></div><span class="status-dot">● نسخة بحثية محلية</span></div>
+<div class="section-head"><div><span class="kicker">لوحة الباحث</span><h2>نظرة عامة</h2><p>إدارة دورة البيانات الحديثية من المصدر إلى المراجعة والنشر.</p></div><span class="status-dot" id="dbHealth">● نسخة بحثية محلية</span></div>
 <div class="metrics"><article class="metric"><span>المصادر</span><strong id="mSources">0</strong><small>كتب ومراجع</small></article><article class="metric"><span>الأحاديث</span><strong id="mHadiths">0</strong><small>سجلات حديثية</small></article><article class="metric"><span>قيد المراجعة</span><strong id="mReview">0</strong><small>تحتاج تدقيقًا</small></article><article class="metric"><span>موثق / منشور</span><strong id="mPublished">0</strong><small>سجلات معتمدة</small></article></div>
 <div class="panel"><div class="panel-head"><h3>سير العمل العلمي</h3><span class="mini">نسخة 1.5</span></div><div class="steps"><div class="step active"><b>1</b><span>المصدر</span></div><div class="step"><b>2</b><span>تحليل النص</span></div><div class="step"><b>3</b><span>استخراج</span></div><div class="step"><b>4</b><span>المطابقة</span></div><div class="step"><b>5</b><span>المراجعة</span></div><div class="step"><b>6</b><span>الاعتماد</span></div></div></div>
 <div class="two-col"><div class="panel"><div class="panel-head"><h3>آخر المصادر</h3><button class="link-btn" data-view="sources">عرض الكل</button></div><div class="table-wrap"><table><thead><tr><th>الكتاب</th><th>المؤلف</th><th>السجلات</th><th>الحالة</th></tr></thead><tbody id="recentSources"></tbody></table></div></div>
@@ -51,7 +51,7 @@
 <div class="analytics-grid"><div class="panel"><h3>حالات الأحاديث</h3><div id="statusStats"></div></div><div class="panel"><h3>المصادر حسب النوع</h3><div id="typeStats"></div></div></div>
 <div class="panel"><h3>تنبيه منهجي</h3><p>الإحصاءات هنا تصف ما تم إدخاله فقط، ولا تمثل حجم التراث الحديثي أو نسبة صحة الأحاديث في أي مجموعة.</p></div></section>
 
-<section id="catalog" class="view hidden"><div class="section-head"><div><span class="kicker">الفهرسة</span><h2>الفهرس الموحد</h2><p>استعراض المصادر والسجلات المرتبطة بها.</p></div></div><div class="panel"><input id="catalogSearch" class="wide" placeholder="🔎 الكتاب، المؤلف، الراوي، النص..."><div id="catalogResults" class="catalog"></div></div></section>
+<section id="catalog" class="view hidden"><div class="section-head"><div><span class="kicker">الفهرسة</span><h2>الفهرس الموحد</h2><p>استعراض المصادر والسجلات المرتبطة بها.</p></div></div><div class="panel"><input id="catalogSearch" class="wide" placeholder="🔎 الكتاب، المؤلف، الراوي، النص، الكلمات المفتاحية..."><div id="catalogResults" class="catalog"></div></div></section>
 
 <section id="methodology" class="view hidden"><div class="section-head"><div><span class="kicker">المنهج</span><h2>المنهجية العلمية والحوكمة</h2><p>مبادئ تحكم البيانات قبل أي توسع بالذكاء الاصطناعي.</p></div></div>
 <div class="method-grid">
