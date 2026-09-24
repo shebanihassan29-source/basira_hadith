@@ -14,7 +14,7 @@
 <div class="hero-actions"><button class="ghost" id="themeBtn">◐ الوضع</button><button class="ghost" id="importBtn">⬆ استيراد</button><input id="importFile" type="file" accept=".json" hidden><button class="ghost" id="exportBtn">⬇ نسخة احتياطية</button><button class="ghost" id="seedBtn">📚 تحميل النواة العلمية</button></div>
 </div></header>
 <nav class="topnav"><div class="nav-inner">
-<button data-view="dashboard" class="nav-btn active">الرئيسية</button><button data-view="sources" class="nav-btn">📚 المصادر</button><button data-view="hadiths" class="nav-btn">📜 الأحاديث</button><button data-view="review" class="nav-btn">🔍 المراجعة</button><button data-view="analytics" class="nav-btn">📊 الإحصاءات</button><button data-view="catalog" class="nav-btn">🗂 الفهرس</button><button data-view="narrators" class="nav-btn">👤 الرواة</button><button data-view="judgments" class="nav-btn">⚖ الأحكام</button><button data-view="variants" class="nav-btn">🔗 الروايات</button><button data-view="audit" class="nav-btn">🧾 التدقيق</button><button data-view="methodology" class="nav-btn">📖 المنهجية</button>
+<button data-view="dashboard" class="nav-btn active">الرئيسية</button><button data-view="sources" class="nav-btn">📚 المصادر</button><button data-view="hadiths" class="nav-btn">📜 الأحاديث</button><button data-view="review" class="nav-btn">🔍 المراجعة</button><button data-view="analytics" class="nav-btn">📊 الإحصاءات</button><button data-view="catalog" class="nav-btn">🗂 الفهرس</button><button data-view="narrators" class="nav-btn">👤 الرواة</button><button data-view="judgments" class="nav-btn">⚖ الأحكام</button><button data-view="variants" class="nav-btn">🔗 الروايات</button><button data-view="takhrij" class="nav-btn">📚 التخريج</button><button data-view="audit" class="nav-btn">🧾 التدقيق</button><button data-view="methodology" class="nav-btn">📖 المنهجية</button>
 </div></nav>
 <main class="container">
 <section id="dashboard" class="view">
@@ -67,6 +67,8 @@
 <article class="panel"><h3>06 · قابلية التوسع</h3><p>المرحلة الحالية محلية. المرحلة التالية: قاعدة بيانات PostgreSQL/Supabase، تخزين ملفات، API، صلاحيات وRAG.</p></article>
 </div>
 <div class="notice"><b>حدود الإصدار الحالي:</b> LocalStorage مناسب للنموذج الأولي وليس مستودعًا إنتاجيًا مشتركًا. استخدم النسخة الاحتياطية قبل أي تنظيف للبيانات.</div></section>
+
+<section id="takhrij" class="view hidden"><div class="section-head"><div><span class="kicker">التخريج المتقاطع</span><h2>شبكة المصادر والروايات</h2><p>تجميع السجلات المرتبطة بالحديث الواحد مع إبقاء كل مصدر ورواية مستقلين.</p></div></div><div class="panel"><div class="notice"><b>القاعدة:</b> التشابه أو الربط في هذه الصفحة لا يعني توحيد الألفاظ أو الحكم عليها؛ كل سجل يبقى مرتبطًا بمصدره وموضعه.</div><input id="takhrijSearch" class="wide" placeholder="🔎 ابحث برقم الحديث أو المصدر أو الراوي أو النص..."><div id="takhrijResults" class="catalog"></div></div></section>
 </main>
 <div id="modal" class="modal hidden"><div class="modal-card"><button class="modal-close" id="modalClose">×</button><div id="modalBody"></div></div></div>
 <footer>بصيرة الحديث · منصة حديثية أكاديمية · © د. حسن الشيباني</footer>
