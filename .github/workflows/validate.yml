@@ -1,0 +1,32 @@
+name: Validate Basira Hadith
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check JavaScript syntax
+        run: node --check app.js
+      - name: Check required files
+        run: |
+          test -f index.html
+          test -f style.css
+          test -f manifest.webmanifest
+          test -f .nojekyll
+          test -f 404.html
+          test -f docs/DATABASE_SCHEMA.sql
+          test -f docs/ARCHITECTURE.md
