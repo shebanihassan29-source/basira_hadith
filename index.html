@@ -1,160 +1,69 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="author" content="د. حسن الشيباني">
 <meta name="description" content="بصيرة الحديث — منصة أكاديمية لإدارة المصادر الحديثية، الأحاديث، الروايات، المراجعة العلمية والاسترجاع الموجّه بالمصادر.">
-<meta name="theme-color" content="#123b2a">
-<title>بصيرة الحديث — المنصة العلمية</title>
-<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#123b2a"><meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="favicon.svg">
+<title>بصيرة الحديث | المنصة الحديثية الأكاديمية</title><link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="hero">
-  <div class="hero-inner">
-    <div>
-      <div class="eyebrow">منصة بحثية حديثية</div>
-      <h1>📚 بصيرة الحديث</h1>
-      <p>إدارة المصادر → استخراج البيانات → مقارنة الروايات → المراجعة العلمية → الاعتماد والنشر</p>
-    </div>
-    <div class="hero-actions">
-      <button class="ghost" id="themeBtn">◐ الوضع</button>
-      <button class="ghost" id="exportBtn">⬇ تصدير نسخة احتياطية</button>
-    </div>
-  </div>
-</header>
-
-<nav class="topnav" aria-label="التنقل الرئيسي">
-  <button data-view="dashboard" class="nav-btn active">لوحة المتابعة</button>
-  <button data-view="sources" class="nav-btn">📚 المصادر</button>
-  <button data-view="hadiths" class="nav-btn">📜 الأحاديث</button>
-  <button data-view="review" class="nav-btn">🔍 المراجعة</button>
-  <button data-view="catalog" class="nav-btn">🗂 الفهرس</button>
-  <button data-view="methodology" class="nav-btn">📖 المنهجية</button>
-</nav>
-
+<header class="hero"><div class="hero-inner">
+<div><div class="eyebrow">منصة حديثية أكاديمية</div><h1>📚 بصيرة الحديث</h1><p>المصدر أولًا · البيانات الموثقة · المراجعة البشرية · البحث الذكي</p></div>
+<div class="hero-actions"><button class="ghost" id="themeBtn">◐ الوضع</button><button class="ghost" id="exportBtn">⬇ نسخة احتياطية</button></div>
+</div></header>
+<nav class="topnav"><div class="nav-inner">
+<button data-view="dashboard" class="nav-btn active">الرئيسية</button><button data-view="sources" class="nav-btn">📚 المصادر</button><button data-view="hadiths" class="nav-btn">📜 الأحاديث</button><button data-view="review" class="nav-btn">🔍 المراجعة</button><button data-view="analytics" class="nav-btn">📊 الإحصاءات</button><button data-view="catalog" class="nav-btn">🗂 الفهرس</button><button data-view="methodology" class="nav-btn">📖 المنهجية</button>
+</div></nav>
 <main class="container">
 <section id="dashboard" class="view">
-  <div class="section-head">
-    <div><h2>لوحة المتابعة</h2><p>صورة فورية عن حالة البيانات في هذا المتصفح.</p></div>
-    <span class="status-dot">● النسخة المحلية</span>
-  </div>
-  <div class="metrics">
-    <article class="metric"><span>المصادر</span><strong id="mSources">0</strong><small>كتب ومراجع مسجلة</small></article>
-    <article class="metric"><span>الأحاديث</span><strong id="mHadiths">0</strong><small>سجلات حديثية</small></article>
-    <article class="metric"><span>قيد المراجعة</span><strong id="mReview">0</strong><small>تحتاج تدقيقًا بشريًا</small></article>
-    <article class="metric"><span>المعتمد والمنشور</span><strong id="mPublished">0</strong><small>سجلات وصلت للاعتماد</small></article>
-  </div>
-  <div class="panel">
-    <h3>سير العمل العلمي</h3>
-    <div class="steps">
-      <div class="step active"><b>1</b><span>استيراد المصدر</span></div>
-      <div class="step"><b>2</b><span>تحليل النص</span></div>
-      <div class="step"><b>3</b><span>استخراج الأحاديث</span></div>
-      <div class="step"><b>4</b><span>مطابقة الروايات</span></div>
-      <div class="step"><b>5</b><span>مراجعة بشرية</span></div>
-      <div class="step"><b>6</b><span>اعتماد ونشر</span></div>
-    </div>
-  </div>
-  <div class="two-col">
-    <div class="panel">
-      <h3>آخر المصادر</h3>
-      <div class="table-wrap"><table><thead><tr><th>الكتاب</th><th>المؤلف</th><th>الحالة</th><th>الأحاديث</th></tr></thead><tbody id="recentSources"></tbody></table></div>
-    </div>
-    <div class="panel">
-      <h3>إجراءات سريعة</h3>
-      <div class="quick-grid">
-        <button class="quick" data-view="sources">➕<span>إضافة مصدر</span></button>
-        <button class="quick" data-view="hadiths">📜<span>إضافة حديث</span></button>
-        <button class="quick" data-view="review">🔍<span>مراجعة السجلات</span></button>
-        <button class="quick" id="quickExport">💾<span>نسخة احتياطية</span></button>
-      </div>
-    </div>
-  </div>
-  <div class="notice scientific"><b>تنبيه علمي:</b> المنصة لا تُنشئ حكمًا حديثيًا نهائيًا آليًا. الذكاء الاصطناعي والخوارزميات — عند إضافتها — أدوات مساعدة للاستخراج والمطابقة والاسترجاع، والاعتماد العلمي يبقى للمراجع المختص مع حفظ المصدر والموضع.</div>
+<div class="section-head"><div><span class="kicker">لوحة الباحث</span><h2>نظرة عامة</h2><p>إدارة دورة البيانات الحديثية من المصدر إلى المراجعة والنشر.</p></div><span class="status-dot">● نسخة بحثية محلية</span></div>
+<div class="metrics"><article class="metric"><span>المصادر</span><strong id="mSources">0</strong><small>كتب ومراجع</small></article><article class="metric"><span>الأحاديث</span><strong id="mHadiths">0</strong><small>سجلات حديثية</small></article><article class="metric"><span>قيد المراجعة</span><strong id="mReview">0</strong><small>تحتاج تدقيقًا</small></article><article class="metric"><span>موثق / منشور</span><strong id="mPublished">0</strong><small>سجلات معتمدة</small></article></div>
+<div class="panel"><div class="panel-head"><h3>سير العمل العلمي</h3><span class="mini">نسخة 1.5</span></div><div class="steps"><div class="step active"><b>1</b><span>المصدر</span></div><div class="step"><b>2</b><span>تحليل النص</span></div><div class="step"><b>3</b><span>استخراج</span></div><div class="step"><b>4</b><span>المطابقة</span></div><div class="step"><b>5</b><span>المراجعة</span></div><div class="step"><b>6</b><span>الاعتماد</span></div></div></div>
+<div class="two-col"><div class="panel"><div class="panel-head"><h3>آخر المصادر</h3><button class="link-btn" data-view="sources">عرض الكل</button></div><div class="table-wrap"><table><thead><tr><th>الكتاب</th><th>المؤلف</th><th>السجلات</th><th>الحالة</th></tr></thead><tbody id="recentSources"></tbody></table></div></div>
+<div class="panel"><div class="panel-head"><h3>إجراءات سريعة</h3></div><div class="quick-grid"><button class="quick" data-view="sources">➕<span>إضافة مصدر</span></button><button class="quick" data-view="hadiths">📜<span>إضافة حديث</span></button><button class="quick" data-view="review">🔍<span>المراجعة</span></button><button class="quick" id="quickExport">💾<span>تصدير البيانات</span></button></div></div></div>
+<div class="notice scientific"><b>الضابط العلمي:</b> لا تُعد المنصة حكمًا حديثيًا نهائيًا آليًا. كل نتيجة تحليلية أو مطابقة هي مساعدة للباحث، ويجب أن تبقى الإحالة إلى المصدر والموضع واضحة قبل الاعتماد.</div>
 </section>
 
-<section id="sources" class="view hidden">
-  <div class="section-head"><div><h2>📚 مركز المصادر</h2><p>سجل ببليوغرافي منظم للمصادر قبل إدخال الأحاديث.</p></div></div>
-  <div class="panel">
-    <h3>إضافة مصدر</h3>
-    <form id="sourceForm" class="form-grid">
-      <input id="sBook" required placeholder="اسم الكتاب *">
-      <input id="sAuthor" placeholder="المؤلف">
-      <select id="sType"><option>كتاب حديث</option><option>صحيح</option><option>سنن</option><option>مسند</option><option>مصنف</option><option>معجم</option><option>كتب الرجال</option><option>تخريج</option><option>شرح</option><option>دراسة</option><option>أخرى</option></select>
-      <input id="sEditor" placeholder="المحقق">
-      <input id="sEdition" placeholder="الطبعة">
-      <input id="sPublisher" placeholder="الناشر">
-      <input id="sYear" placeholder="سنة النشر">
-      <input id="sIsbn" placeholder="ISBN / معرّف إن وجد">
-      <input id="sFile" type="file" accept=".pdf,.txt,.xml,.json,.csv">
-      <textarea id="sNotes" class="full" placeholder="ملاحظات المصدر، الرخصة، رابط الإتاحة، رقم النسخة، بيانات الفهرسة..."></textarea>
-      <div class="full form-actions"><button class="primary" type="submit">حفظ المصدر</button><button type="reset">مسح</button></div>
-    </form>
-    <div id="sourceMsg" class="message hidden"></div>
-  </div>
-  <div class="panel">
-    <div class="toolbar"><input id="sourceSearch" placeholder="بحث في المصادر..."><button id="clearSources" class="danger">حذف بيانات المصادر المحلية</button></div>
-    <div class="table-wrap"><table><thead><tr><th>الكتاب</th><th>المؤلف</th><th>النوع</th><th>البيانات</th><th>السجلات</th><th>إجراء</th></tr></thead><tbody id="sourcesRows"></tbody></table></div>
-  </div>
-</section>
+<section id="sources" class="view hidden"><div class="section-head"><div><span class="kicker">المصادر</span><h2>مركز المصادر الحديثية</h2><p>سجل ببليوغرافي منظم للمصادر والطبعات والملفات.</p></div></div>
+<div class="panel"><h3>إضافة مصدر</h3><form id="sourceForm" class="form-grid">
+<input id="sBook" required placeholder="اسم الكتاب *"><input id="sAuthor" placeholder="المؤلف">
+<select id="sType"><option>كتاب حديث</option><option>صحيح</option><option>سنن</option><option>مسند</option><option>مصنف</option><option>معجم</option><option>كتب الرجال</option><option>تخريج</option><option>شرح</option><option>دراسة</option><option>أخرى</option></select>
+<input id="sEditor" placeholder="المحقق"><input id="sEdition" placeholder="الطبعة"><input id="sPublisher" placeholder="الناشر"><input id="sYear" placeholder="سنة النشر"><input id="sIsbn" placeholder="ISBN / معرف">
+<input id="sFile" type="file" accept=".pdf,.txt,.xml,.json,.csv"><input id="sUrl" type="url" placeholder="رابط المصدر / الإتاحة">
+<textarea id="sNotes" class="full" placeholder="ملاحظات المصدر، الرخصة، رقم النسخة، بيانات الفهرسة..."></textarea>
+<div class="full form-actions"><button class="primary" type="submit">حفظ المصدر</button><button type="reset">مسح</button></div></form><div id="sourceMsg" class="message hidden"></div></div>
+<div class="panel"><div class="toolbar"><input id="sourceSearch" placeholder="🔎 ابحث في الكتاب أو المؤلف أو المحقق..."><button id="clearSources" class="danger">مسح البيانات المحلية</button></div><div class="table-wrap"><table><thead><tr><th>الكتاب</th><th>المؤلف</th><th>النوع</th><th>بيانات الطبعة</th><th>السجلات</th><th>إجراء</th></tr></thead><tbody id="sourcesRows"></tbody></table></div></div></section>
 
-<section id="hadiths" class="view hidden">
-  <div class="section-head"><div><h2>📜 قاعدة الأحاديث</h2><p>إدخال يدوي منظم، مع حفظ النص كما يورده الباحث ومصدره.</p></div></div>
-  <div class="panel">
-    <h3>إضافة سجل حديثي</h3>
-    <form id="hadithForm" class="form-grid">
-      <select id="hSource" required><option value="">اختر المصدر *</option></select>
-      <input id="hNumber" placeholder="رقم الحديث في المصدر">
-      <input id="hChapter" placeholder="الكتاب / الباب">
-      <input id="hNarrator" placeholder="الراوي المذكور">
-      <textarea id="hText" class="full" required placeholder="النص الأصلي للحديث كما في المصدر *"></textarea>
-      <textarea id="hIsnad" class="full" placeholder="الإسناد — إن أمكن فصله دون تعديل النص الأصلي"></textarea>
-      <textarea id="hMatn" class="full" placeholder="المتن — إن أمكن فصله للتحليل، مع إبقاء النص الأصلي محفوظًا"></textarea>
-      <input id="hPage" placeholder="الجزء / الصفحة">
-      <input id="hKeywords" placeholder="كلمات مفتاحية، مفصولة بفواصل">
-      <textarea id="hNotes" class="full" placeholder="ملاحظات الباحث"></textarea>
-      <div class="full form-actions"><button class="primary" type="submit">حفظ الحديث</button><button type="reset">مسح</button></div>
-    </form>
-    <div id="hadithMsg" class="message hidden"></div>
-  </div>
-  <div class="panel">
-    <div class="toolbar"><input id="hadithSearch" placeholder="ابحث في النص أو الراوي أو المصدر..."><select id="hadithStatus"><option value="">كل الحالات</option><option>مراجعة</option><option>موثق</option><option>منشور</option></select></div>
-    <div class="table-wrap"><table><thead><tr><th>الرقم</th><th>المصدر</th><th>النص</th><th>الراوي</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="hadithRows"></tbody></table></div>
-  </div>
-</section>
+<section id="hadiths" class="view hidden"><div class="section-head"><div><span class="kicker">قاعدة الحديث</span><h2>السجلات الحديثية</h2><p>النص الأصلي محفوظ مستقلًا عن الحقول التحليلية.</p></div></div>
+<div class="panel"><h3>إضافة سجل حديثي</h3><form id="hadithForm" class="form-grid">
+<select id="hSource" required><option value="">اختر المصدر *</option></select><input id="hNumber" placeholder="رقم الحديث في المصدر"><input id="hChapter" placeholder="الكتاب / الباب"><input id="hNarrator" placeholder="الراوي">
+<textarea id="hText" class="full" required placeholder="النص الأصلي للحديث كما في المصدر *"></textarea><textarea id="hIsnad" class="full" placeholder="الإسناد (حقل تحليلي منفصل)"></textarea><textarea id="hMatn" class="full" placeholder="المتن (حقل تحليلي منفصل)"></textarea>
+<input id="hPage" placeholder="الجزء / الصفحة"><input id="hKeywords" placeholder="كلمات مفتاحية مفصولة بفواصل"><input id="hReference" placeholder="موضع إضافي / رابط"><textarea id="hNotes" class="full" placeholder="ملاحظات الباحث"></textarea>
+<div class="full form-actions"><button class="primary" type="submit">حفظ الحديث</button><button type="reset">مسح</button></div></form><div id="hadithMsg" class="message hidden"></div></div>
+<div class="panel"><div class="toolbar"><input id="hadithSearch" placeholder="🔎 النص، الراوي، المصدر، الرقم..."><select id="hadithStatus"><option value="">كل الحالات</option><option>مراجعة</option><option>موثق</option><option>منشور</option></select></div><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>المصدر</th><th>النص</th><th>الراوي</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="hadithRows"></tbody></table></div></div></section>
 
-<section id="review" class="view hidden">
-  <div class="section-head"><div><h2>🔍 المراجعة العلمية</h2><p>Draft → Review → Verified → Published، مع عدم اختزال اختلافات العلماء في درجة واحدة.</p></div></div>
-  <div class="panel">
-    <div class="notice"><b>قاعدة المراجعة:</b> لا يُنقل السجل إلى «موثق» أو «منشور» إلا بعد فحص المصدر والموضع والنص. هذه النسخة لا تصدر حكمًا آليًا على صحة الحديث.</div>
-    <div class="table-wrap"><table><thead><tr><th>السجل</th><th>المصدر</th><th>الحديث</th><th>الحالة</th><th>الإجراء</th></tr></thead><tbody id="reviewRows"></tbody></table></div>
-  </div>
-</section>
+<section id="review" class="view hidden"><div class="section-head"><div><span class="kicker">التحقق</span><h2>المراجعة العلمية</h2><p>مسار واضح مع ملاحظات المراجع وسجل الانتقال بين الحالات.</p></div></div>
+<div class="panel"><div class="notice"><b>قاعدة المراجعة:</b> فحص المصدر والموضع والنص سابق على الاعتماد. لا تُختزل أحكام العلماء المختلفة في درجة مصطنعة.</div><div class="table-wrap"><table><thead><tr><th>السجل</th><th>المصدر</th><th>الحديث</th><th>الحالة</th><th>آخر مراجعة</th><th>إجراء</th></tr></thead><tbody id="reviewRows"></tbody></table></div></div></section>
 
-<section id="catalog" class="view hidden">
-  <div class="section-head"><div><h2>🗂 الفهرس الموحد</h2><p>استعراض سريع للمصادر والسجلات المرتبطة بها.</p></div></div>
-  <div class="panel">
-    <input id="catalogSearch" class="wide" placeholder="ابحث في الكتاب أو المؤلف أو الراوي أو النص...">
-    <div id="catalogResults" class="catalog"></div>
-  </div>
-</section>
+<section id="analytics" class="view hidden"><div class="section-head"><div><span class="kicker">البيانات</span><h2>الإحصاءات</h2><p>مؤشرات وصفية للبيانات المسجلة في النسخة المحلية.</p></div></div>
+<div class="analytics-grid"><div class="panel"><h3>حالات الأحاديث</h3><div id="statusStats"></div></div><div class="panel"><h3>المصادر حسب النوع</h3><div id="typeStats"></div></div></div>
+<div class="panel"><h3>تنبيه منهجي</h3><p>الإحصاءات هنا تصف ما تم إدخاله فقط، ولا تمثل حجم التراث الحديثي أو نسبة صحة الأحاديث في أي مجموعة.</p></div></section>
 
-<section id="methodology" class="view hidden">
-  <div class="section-head"><div><h2>📖 المنهجية العلمية</h2><p>الضوابط التي تحكم بناء «بصيرة الحديث».</p></div></div>
-  <div class="method-grid">
-    <article class="panel"><h3>1. أولوية المصدر</h3><p>كل سجل حديثي يجب أن يرتبط بمصدر محدد وموضع يمكن الرجوع إليه. لا تُخترع الصفحات أو الطبعات أو البيانات الببليوغرافية.</p></article>
-    <article class="panel"><h3>2. حفظ النص الأصلي</h3><p>يبقى النص الأصلي كما أدخله الباحث، وتكون أي عمليات تنظيف أو تحليل في حقول منفصلة قابلة للمراجعة.</p></article>
-    <article class="panel"><h3>3. استقلال الأحكام</h3><p>عند إضافة أحكام المحدثين تُحفظ كل نسبة إلى صاحبها ومصدرها، ولا تُدمج في «درجة» واحدة دون منهج معلن.</p></article>
-    <article class="panel"><h3>4. الذكاء الاصطناعي مساعد</h3><p>يمكن استخدامه للاستخراج والمطابقة والتلخيص والاسترجاع الموجّه بالمصادر، مع إظهار الإحالات واشتراط المراجعة البشرية.</p></article>
-    <article class="panel"><h3>5. سجل التدقيق</h3><p>الهدف في الإصدارات اللاحقة هو تسجيل من عدّل السجل ومتى ولماذا، مع حفظ النسخ السابقة للبيانات.</p></article>
-    <article class="panel"><h3>6. قابلية التوسع</h3><p>هذه النسخة تعمل محليًا في المتصفح. البنية المستهدفة لاحقًا: PostgreSQL/Supabase + تخزين ملفات + API + RAG موثّق.</p></article>
-  </div>
-  <div class="notice"><b>ملاحظة:</b> النسخة الحالية لا تحتوي على قاعدة بيانات خادمية. البيانات التي تُدخل هنا تُحفظ في LocalStorage لهذا المتصفح، ويمكن تصديرها كنسخة JSON احتياطية.</div>
-</section>
+<section id="catalog" class="view hidden"><div class="section-head"><div><span class="kicker">الفهرسة</span><h2>الفهرس الموحد</h2><p>استعراض المصادر والسجلات المرتبطة بها.</p></div></div><div class="panel"><input id="catalogSearch" class="wide" placeholder="🔎 الكتاب، المؤلف، الراوي، النص..."><div id="catalogResults" class="catalog"></div></div></section>
+
+<section id="methodology" class="view hidden"><div class="section-head"><div><span class="kicker">المنهج</span><h2>المنهجية العلمية والحوكمة</h2><p>مبادئ تحكم البيانات قبل أي توسع بالذكاء الاصطناعي.</p></div></div>
+<div class="method-grid">
+<article class="panel"><h3>01 · أولوية المصدر</h3><p>كل سجل يرتبط بمصدر محدد وبيانات ببليوغرافية قابلة للتحقق. لا تُخترع الصفحات أو الطبعات.</p></article>
+<article class="panel"><h3>02 · حفظ الأصل</h3><p>النص الأصلي محفوظ كما أدخله الباحث، وتكون عمليات التنظيف والتحليل في حقول منفصلة.</p></article>
+<article class="panel"><h3>03 · استقلال الأحكام</h3><p>حكم كل عالم يُحفظ مستقلًا مع نسبته ومصدره وموضعه، دون دمج آلي في درجة واحدة.</p></article>
+<article class="panel"><h3>04 · الذكاء الاصطناعي</h3><p>يُستخدم للاستخراج والمطابقة والاسترجاع والتلخيص واقتراح العلاقات، مع إحالات واضحة ومراجعة بشرية.</p></article>
+<article class="panel"><h3>05 · سجل التدقيق</h3><p>الإصدار الإنتاجي المستهدف يسجل المستخدم والتاريخ وسبب التعديل والنسخ السابقة لكل تغيير.</p></article>
+<article class="panel"><h3>06 · قابلية التوسع</h3><p>المرحلة الحالية محلية. المرحلة التالية: قاعدة بيانات PostgreSQL/Supabase، تخزين ملفات، API، صلاحيات وRAG.</p></article>
+</div>
+<div class="notice"><b>حدود الإصدار الحالي:</b> LocalStorage مناسب للنموذج الأولي وليس مستودعًا إنتاجيًا مشتركًا. استخدم النسخة الاحتياطية قبل أي تنظيف للبيانات.</div></section>
 </main>
-
-<footer>بصيرة الحديث — فكرة وتصميم: د. حسن الشيباني — الإصدار 1.0</footer>
-<script src="app.js"></script>
-</body>
-</html>
+<div id="modal" class="modal hidden"><div class="modal-card"><button class="modal-close" id="modalClose">×</button><div id="modalBody"></div></div></div>
+<footer>بصيرة الحديث · منصة حديثية أكاديمية · © د. حسن الشيباني</footer>
+<script src="app.js"></script></body></html>
