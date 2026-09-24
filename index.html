@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="د. حسن الشيباني">
+<title>بصيرة الحديث — مركز تغذية البيانات</title>
+<style>
+:root{--green:#168447;--dark:#123b2a;--blue:#2563eb;--orange:#f59e0b;--red:#dc2626;--gold:#a67c00;--gray:#64748b;--bg:#f4f7f6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#172033;font-family:Calibri,"Noto Sans Arabic",Arial,sans-serif}
+header{background:linear-gradient(135deg,#123b2a,#1b754d);color:#fff;padding:25px 5vw}header h1{margin:0 0 5px;font-size:30px}header p{margin:0;opacity:.9}
+nav{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 5vw;display:flex;gap:8px;flex-wrap:wrap}nav button{border:0;background:#eef2f7;padding:9px 14px;border-radius:9px;cursor:pointer}
+main{max-width:1250px;margin:25px auto;padding:0 16px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.metric,.panel{background:#fff;border-radius:16px;padding:18px;box-shadow:0 5px 20px #0000000a}.metric b{display:block;font-size:28px;margin-top:6px}.muted{color:var(--gray);font-size:13px}
+.panel{margin-top:18px}.panel h2{margin-top:0;font-size:20px}
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.step{padding:13px 8px;text-align:center;border-radius:10px;background:#edf2f7;font-size:13px}.step.active{background:#dff4e8;color:#11663a;font-weight:bold}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:180px}
+input,select,textarea,button{font:inherit;border:1px solid #d6dee8;border-radius:9px;padding:10px}textarea{min-height:120px;width:100%}
+.primary{background:var(--green);color:#fff;border:0}.danger{background:#fff1f2;color:#b91c1c;border-color:#fecdd3}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;border-bottom:1px solid #e8edf2;text-align:right;font-size:14px}th{background:#f8fafc}
+.badge{display:inline-block;border-radius:999px;padding:4px 9px;font-size:12px}.draft{background:#fef3c7;color:#92400e}.review{background:#dbeafe;color:#1d4ed8}.verified{background:#dcfce7;color:#166534}.published{background:#d1fae5;color:#065f46}
+.notice{padding:12px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;margin-top:10px}
+footer{text-align:center;padding:28px;color:var(--gray)}
+.hidden{display:none}.bar{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;background:var(--green);width:0}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(3,1fr)}}@media(max-width:550px){.grid{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header>
+<h1>📚 بصيرة الحديث — مركز تغذية البيانات</h1>
+<p>استيراد المصادر → التحليل → المراجعة العلمية → الاعتماد → النشر</p>
+<p style="margin-top:8px;font-size:13px">© فكرة وتصميم: د. حسن الشيباني</p>
+</header>
+<nav>
+<button onclick="show('dashboard')">لوحة المتابعة</button>
+<button onclick="show('import')">إضافة مصدر</button>
+<button onclick="show('review')">المراجعة العلمية</button>
+<button onclick="show('catalog')">فهرس المصادر</button>
+</nav>
+<main>
+
+<section id="dashboard">
+<div class="grid">
+<div class="metric">المصادر <b id="mSources">0</b><span class="muted">كتب مسجلة</span></div>
+<div class="metric">الأحاديث <b id="mHadiths">0</b><span class="muted">سجلات مستخرجة</span></div>
+<div class="metric">قيد المراجعة <b id="mReview">0</b><span class="muted">تحتاج تدقيقًا بشريًا</span></div>
+<div class="metric">منشور <b id="mPublished">0</b><span class="muted">بيانات معتمدة</span></div>
+</div>
+<div class="panel">
+<h2>خط سير البيانات</h2>
+<div class="steps">
+<div class="step active">1<br>استيراد</div><div class="step">2<br>تحليل النص</div><div class="step">3<br>استخراج الأحاديث</div><div class="step">4<br>مطابقة الروايات</div><div class="step">5<br>مراجعة</div><div class="step">6<br>اعتماد ونشر</div>
+</div>
+<div class="notice">تنبيه علمي: هذه النسخة تبني سير العمل والبيانات التجريبية فقط. لا تُعد الأحكام الحديثية النهائية آليًا ولا تُنشر دون مراجعة مصدرية.</div>
+</div>
+<div class="panel">
+<h2>آخر عمليات الاستيراد</h2>
+<table><thead><tr><th>المصدر</th><th>النوع</th><th>الحالة</th><th>السجلات</th></tr></thead><tbody id="recent"></tbody></table>
+</div>
+</section>
+
+<section id="import" class="hidden">
+<div class="panel">
+<h2>➕ إضافة مصدر حديثي</h2>
+<div class="row">
+<input id="book" placeholder="اسم الكتاب — مثال: صحيح البخاري">
+<input id="author" placeholder="المؤلف">
+<select id="type"><option>صحيح</option><option>سنن</option><option>مسند</option><option>مصنف</option><option>معجم</option><option>رجال</option><option>تخريج</option><option>شرح</option><option>دراسة</option></select>
+</div>
+<div class="row" style="margin-top:10px">
+<input id="editor" placeholder="المحقق">
+<input id="edition" placeholder="الطبعة">
+<input id="publisher" placeholder="الناشر">
+<input id="year" placeholder="سنة النشر">
+</div>
+<div style="margin-top:10px"><textarea id="notes" placeholder="ملاحظات المصدر، الرخصة/الإتاحة، مصدر الملف، رقم النسخة..."></textarea></div>
+<div style="margin-top:10px">
+<label>ملف المصدر (واجهة تجريبية): </label>
+<input type="file" id="file" accept=".pdf,.txt,.xml,.json,.csv">
+</div>
+<div style="margin-top:14px"><button class="primary" onclick="importSource()">بدء الاستيراد والتحليل</button></div>
+<div id="progressBox" class="hidden" style="margin-top:15px">
+<div class="bar"><span id="progress"></span></div><p id="progressText" class="muted"></p>
+</div>
+</div>
+</section>
+
+<section id="review" class="hidden">
+<div class="panel">
+<h2>🔍 المراجعة العلمية</h2>
+<p class="muted">كل سجل يمر بمسار Draft → Review → Verified → Published.</p>
+<table><thead><tr><th>السجل</th><th>المصدر</th><th>نوع البيانات</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="reviewRows"></tbody></table>
+</div>
+</section>
+
+<section id="catalog" class="hidden">
+<div class="panel">
+<h2>📚 فهرس المصادر</h2>
+<input id="catalogSearch" oninput="renderCatalog()" placeholder="ابحث في اسم الكتاب أو المؤلف..." style="width:100%">
+<table><thead><tr><th>الكتاب</th><th>المؤلف</th><th>النوع</th><th>البيانات</th><th>الحالة</th></tr></thead><tbody id="catalogRows"></tbody></table>
+</div>
+</section>
+
+</main>
+<footer>بصيرة الحديث — © فكرة وتصميم: د. حسن الشيباني</footer>
+
+<script>
+let sources = JSON.parse(localStorage.getItem("basiraSources")||"[]");
+let records = JSON.parse(localStorage.getItem("basiraRecords")||"[]");
+const save=()=>{localStorage.setItem("basiraSources",JSON.stringify(sources));localStorage.setItem("basiraRecords",JSON.stringify(records));renderAll()};
+function show(id){["dashboard","import","review","catalog"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id));renderAll()}
+function importSource(){
+ const book=document.getElementById("book").value.trim(); if(!book){alert("أدخل اسم الكتاب أولاً");return}
+ const s={id:Date.now(),book,author:document.getElementById("author").value, type:document.getElementById("type").value,editor:document.getElementById("editor").value,edition:document.getElementById("edition").value,publisher:document.getElementById("publisher").value,year:document.getElementById("year").value,notes:document.getElementById("notes").value,file:(document.getElementById("file").files[0]?.name||"لم يرفق ملف"),status:"مراجعة"};
+ sources.unshift(s);
+ const rid=Date.now()+1;
+ records.unshift({id:rid,sourceId:s.id,source:book,type:"مصدر مستورد",status:"مراجعة",count:0});
+ save(); document.getElementById("progressBox").classList.remove("hidden");
+ let p=0; const msgs=["فحص بيانات المصدر...","تحليل البنية النصية...","اكتشاف مواضع الأحاديث...","تهيئة السجلات للمراجعة...","اكتمل الاستيراد الأولي."];
+ const timer=setInterval(()=>{p+=20;document.getElementById("progress").style.width=p+"%";document.getElementById("progressText").textContent=msgs[Math.min(msgs.length-1,p/20-1)];if(p>=100)clearInterval(timer)},300);
+}
+function statusBadge(s){let c=s==="منشور"?"published":s==="موثق"?"verified":s==="مراجعة"?"review":"draft";return `<span class="badge ${c}">${s}</span>`}
+function renderAll(){
+ document.getElementById("mSources").textContent=sources.length;
+ document.getElementById("mHadiths").textContent=records.reduce((a,x)=>a+(x.count||0),0);
+ document.getElementById("mReview").textContent=records.filter(x=>x.status==="مراجعة").length;
+ document.getElementById("mPublished").textContent=records.filter(x=>x.status==="منشور").length;
+ document.getElementById("recent").innerHTML=sources.slice(0,8).map(s=>`<tr><td>${esc(s.book)}</td><td>${esc(s.type)}</td><td>${statusBadge(s.status)}</td><td>${records.find(r=>r.sourceId===s.id)?.count||0}</td></tr>`).join("")||'<tr><td colspan="4">لا توجد عمليات بعد.</td></tr>';
+ document.getElementById("reviewRows").innerHTML=records.map(r=>`<tr><td>${r.id}</td><td>${esc(r.source)}</td><td>${esc(r.type)}</td><td>${statusBadge(r.status)}</td><td><button onclick="advance(${r.id})">اعتماد المرحلة التالية</button></td></tr>`).join("")||'<tr><td colspan="5">لا توجد سجلات للمراجعة.</td></tr>';
+ renderCatalog();
+}
+function renderCatalog(){
+ const q=(document.getElementById("catalogSearch")?.value||"").toLowerCase();
+ document.getElementById("catalogRows").innerHTML=sources.filter(s=>(s.book+" "+s.author).toLowerCase().includes(q)).map(s=>`<tr><td>${esc(s.book)}</td><td>${esc(s.author||"—")}</td><td>${esc(s.type)}</td><td>المحقق: ${esc(s.editor||"—")}<br>الناشر: ${esc(s.publisher||"—")}<br>الطبعة: ${esc(s.edition||"—")}</td><td>${statusBadge(s.status)}</td></tr>`).join("")||'<tr><td colspan="5">لا توجد مصادر.</td></tr>';
+}
+function advance(id){
+ const r=records.find(x=>x.id===id); if(!r)return;
+ const next={"مراجعة":"موثق","موثق":"منشور","منشور":"منشور"}[r.status]; r.status=next;
+ const s=sources.find(x=>x.id===r.sourceId); if(s)s.status=next;
+ save();
+}
+function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+renderAll();
+</script>
+</body>
+</html>
