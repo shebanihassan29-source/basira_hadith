@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://shebanihassan29-source.github.io/basira_hadith/sitemap.xml
