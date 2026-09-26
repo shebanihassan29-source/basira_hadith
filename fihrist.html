@@ -447,6 +447,7 @@ footer{border-top:1px solid var(--line)}
         <button class="chip" data-sort="date" id="sortDate"></button>
         <button class="chip" data-sort="cited" id="sortCited"></button>
         <span class="sep"></span>
+        <button class="abtn" onclick="copyShareLink()"><svg class="ic"><use href="#i-ext"/></svg><span id="lblShare"></span></button>
         <div class="export-menu">
           <button class="abtn primary" onclick="toggleExportPop(event)"><svg class="ic"><use href="#i-down"/></svg><span id="lblExport"></span></button>
           <div class="export-pop" id="exportPop"></div>
@@ -528,7 +529,7 @@ ar:{
   searching:'يستمسك الفِهرِس خيوط البحث في ٨ قواعد علمية…',
   results:'نتيجة', found:'عُثر على',
   sortRel:'الصلة الذكية', sortDate:'الأحدث', sortCited:'الأكثر استشهاداً',
-  lblSort:'ترتيب:', lblExport:'تصدير',
+  lblSort:'ترتيب:', lblExport:'تصدير', lblShare:'نسخ رابط البحث',
   exCopy:'نسخ المراجع إلى الحافظة', exDoc:'تنزيل مستند Word', exBib:'تنزيل BibTeX', exPdf:'تصدير PDF (جاهز للطباعة)', exRis:'تنزيل RIS (EndNote / Zotero)',
   detail:'التفاصيل الكاملة', cite:'اقتباس', save:'حفظ', saved:'محفوظ',
   citations:'استشهاد', dTitle:'بطاقة المصدر',
@@ -589,7 +590,7 @@ en:{
   searching:'Al-Fihrist is threading your query through 8 scholarly databases…',
   results:'results', found:'Found',
   sortRel:'Smart relevance', sortDate:'Newest', sortCited:'Most cited',
-  lblSort:'Sort:', lblExport:'Export',
+  lblSort:'Sort:', lblExport:'Export', lblShare:'Copy search link',
   exCopy:'Copy references to clipboard', exDoc:'Download Word document', exBib:'Download BibTeX', exPdf:'Export PDF (print-ready)', exRis:'Download RIS (EndNote / Zotero)',
   detail:'Full details', cite:'Cite', save:'Save', saved:'Saved',
   citations:'citations', dTitle:'Source Record',
@@ -667,14 +668,18 @@ const cap=s=>s[0].toUpperCase()+s.slice(1);
 /* ---------- أدوات الشبكة ---------- */
 /* عنوان بريدي حقيقي يُستحسن استبداله ببريد د. حسن الرسمي — OpenAlex يمنح
    أولوية أسرع (polite pool) لمن يُرفق بريداً صالحاً؛ العنوان الحالي وهمي. */
-const CONTACT_EMAIL='fihrist-research@example.org';
+const CONTACT_EMAIL='h.shebani@zu.edu.ly';
+/* مفتاح OpenAlex المجاني (اختياري) — احصل عليه من openalex.org/settings/api وضعه هنا لرفع حصتك اليومية */
+const OPENALEX_KEY='T7zlaYDlLoutn6776NMAdJ';
+/* بروكسي خاص بيك (Cloudflare Worker) — انظر ملف worker.js المرفق للنشر، ثم ضع رابطه هنا */
+const OWN_PROXY='';
 /* بوابة احتياطية لتجاوز رفض CORS من بعض القواعد (arXiv تحديداً لا ترسل
    ترويسة Access-Control-Allow-Origin دوماً) — تُستخدم فقط عند فشل الطلب
    المباشر بخطأ شبكي، وليست وسيطاً دائماً لبقية القواعد. */
 /* بوابتان احتياطيتان بالتتابع (وليس بوابة واحدة) — corsproxy.io يفرض أحياناً
    حدوداً صارمة أو يتعطل مؤقتاً، وحين يحدث ذلك سابقاً كان مصدر arXiv (وأي
    مصدر آخر يرفض CORS) يفشل بلا أي بديل. */
-const CORS_PROXIES=['https://corsproxy.io/?url=','https://api.allorigins.win/raw?url='];
+const CORS_PROXIES=[...(OWN_PROXY?[OWN_PROXY]:[]),'https://corsproxy.io/?url=','https://api.allorigins.win/raw?url='];
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 /* سجلّ التحكّم بالإلغاء: كل طلب مسجَّل تحت رمز (token) بحثه — يتيح إيقاف
    طلبات بحث سابق مهجور فوراً بدل تركها تستهلك الشبكة والمعالج في الخلفية. */
@@ -732,7 +737,7 @@ function normType(x){x=String(x||'').toLowerCase();
 function rebuildAbstract(inv){if(!inv)return'';const a=[];
   for(const w in inv)inv[w].forEach(p=>a[p]=w);
   return a.filter(Boolean).join(' ');}
-const MAIL='&mailto='+encodeURIComponent(CONTACT_EMAIL);
+const MAIL='&mailto='+encodeURIComponent(CONTACT_EMAIL)+(OPENALEX_KEY?('&api_key='+encodeURIComponent(OPENALEX_KEY)):'');
 
 /* ---------- المحوّلات الثمانية (بحث حيّ) ---------- */
 async function apiOpenAlex(q,n,yF,yT,tok){
@@ -992,12 +997,12 @@ async function runSearch(q){
     }catch(e){
       if(mySeq!==searchSeq)return;
       errs[SOURCES[k]]=classifyErr(e);
-      const stale=cacheGet(ck,true); /* حتى لو تجاوزت صلاحيتها — أفضل من نتيجة فارغة عند تعطّل مؤقت */
-      if(stale&&stale.length){counts[SOURCES[k]]=stale.length;okN++;staleUsed=true;mergeWorks(stale);}
+      const stale=cacheGet(ck,true); /* حتى لو تجاوزت صلاحيتها — أفضل من نتيجة فارغة عند تعطّل مؤقت */      if(stale&&stale.length){counts[SOURCES[k]]=stale.length;okN++;staleUsed=true;mergeWorks(stale);}
       else counts[SOURCES[k]]=0;
       if(k==='s2')toast(t('s2Limit'));
     }finally{
-      doneN++;      if(mySeq===searchSeq&&!finalized){
+      doneN++;
+      if(mySeq===searchSeq&&!finalized){
         state.srcCounts={...counts};
         if(state.raw.length){scheduleRender();}else{renderSrcCounts();}
         if(doneN===on.length)finalize(false);
@@ -1005,7 +1010,7 @@ async function runSearch(q){
     }
   }));
 }
-function qWords(){return state.query.toLowerCase().split(/\s+/).filter(w=>w.length>1&&![...STOP_AR,...STOP_EN].has(w));}
+function qWords(){return state.query.toLowerCase().split(/\s+/).filter(w=>w.length>1&&!STOP_AR.has(w)&&!STOP_EN.has(w));}
 function scoreRel(w){
   let s=0;const tl=(w.title||'').toLowerCase(),al=(w.abstract||'').toLowerCase();
   qWords().forEach(qw=>{if(tl.includes(qw))s+=3;if(al.includes(qw))s+=1;});
@@ -1347,6 +1352,7 @@ function doSmartSummary(btn){
   const iv=setInterval(()=>{i+=3;$('sumTxt').textContent=words.slice(0,i).join(' ');
     if(i>=words.length){clearInterval(iv);$('sumTxt').textContent=sum;btn.disabled=false;btn.style.opacity=1;}},28);}
 function copyEl(id){const el=$(id);el.select();copyText(el.value);}
+function copyShareLink(){updateURLForQuery(state.query||$('mainQ').value.trim());copyText(location.href);}
 async function copyText(txt){
   try{await navigator.clipboard.writeText(txt);}
   catch{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
@@ -1501,7 +1507,7 @@ function applyLang(){
   $('typeSel').innerHTML=`<option value="all">${esc(t('typeAll'))}</option>`+
     ['article','book','chapter','conference','preprint','thesis'].map(x=>`<option value="${x}">${esc(t('t'+cap(x)))}</option>`).join('');
   $('sortRel').textContent=t('sortRel');$('sortDate').textContent=t('sortDate');$('sortCited').textContent=t('sortCited');
-  $('lblSort').textContent=t('lblSort');$('lblExport').textContent=t('lblExport');
+  $('lblSort').textContent=t('lblSort');$('lblExport').textContent=t('lblExport');$('lblShare').textContent=t('lblShare');
   $('dHeadTitle').textContent=t('dTitle');
   $('brandName').textContent=L==='ar'?'الفِهرِسْ':'الفهرس';
   $('brandName2').textContent=$('brandName').textContent;
