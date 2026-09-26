@@ -442,6 +442,9 @@ footer{border-top:1px solid var(--line)}
         </div>
       </div>
 
+      <div class="srcchips" id="srcChips" aria-label="قواعد البيانات"></div>
+      <div class="hist-row" id="histRow" hidden></div>
+
       <div class="search-module" id="bookSearchModule">
         <div class="module-title"><svg class="ic"><use href="#i-book"/></svg><span id="bookSearchTitle"></span></div>
         <form class="module-search" onsubmit="submitBookSearch(event)">
@@ -1490,6 +1493,7 @@ function getHist(){try{return JSON.parse(localStorage.getItem('fihrist-hist')||'
 function pushHist(q){const h=[q,...getHist().filter(x=>x!==q)].slice(0,8);
   try{localStorage.setItem('fihrist-hist',JSON.stringify(h))}catch{}renderHist();}
 function renderHist(){const h=getHist(),el=$('histRow');
+  if(!el)return;
   if(!h.length){el.hidden=true;return;}
   el.hidden=false;
   el.innerHTML=`<span class="hlabel">${esc(t('histT'))}</span>`+
@@ -1690,7 +1694,8 @@ function initDeepLink(){
     $('themeBtn').innerHTML='<svg class="ic"><use href="#i-sun"/></svg>';}}catch{}
   try{const L=localStorage.getItem('fihrist-lang');if(L==='ar'||L==='en')state.lang=L;}catch{}
   loadBasket();
-  $('srcChips').innerHTML=SOURCE_ORDER.map(k=>`<label class="srcchip">
+  const srcChips=$('srcChips');
+  if(srcChips)srcChips.innerHTML=SOURCE_ORDER.map(k=>`<label class="srcchip">
     <input type="checkbox" checked onchange="this.checked?state.enabled.add('${k}'):state.enabled.delete('${k}')">
     <span><b>●</b>${SOURCES[k]}</span></label>`).join('');
   applyLang();updateBasketCount();
