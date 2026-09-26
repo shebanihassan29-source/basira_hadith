@@ -6,117 +6,60 @@
 <title>منصة الحديث الشاملة | د. حسن الشيباني</title>
 <meta name="description" content="منصة الحديث الشاملة للبحث في مصادر الحديث وكتب السنة والتخريج والرواة والأسانيد.">
 <style>
-:root{--bg:#f5f8fb;--card:#fff;--ink:#10243a;--muted:#64748b;--primary:#087f8c;--primary2:#0b6170;--line:#dce5ec;--soft:#e8f6f7;--gold:#b07b19}
+:root{--bg:#f5f8fb;--card:#fff;--ink:#10243a;--muted:#64748b;--primary:#087f8c;--primary2:#0b6170;--line:#dce5ec;--soft:#e8f6f7}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Calibri,Arial,sans-serif}
-header{background:linear-gradient(135deg,#073b4c,#087f8c);color:#fff;padding:34px 18px 28px;text-align:center}
-header h1{margin:0 0 8px;font-size:34px}header p{margin:5px auto;max-width:900px;opacity:.94}
-.wrap{max-width:1200px;margin:auto;padding:20px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 25px #153e5012;margin-bottom:18px}
-.search{display:grid;grid-template-columns:1fr 180px 120px;gap:10px}
-input,select,button{font:inherit;border-radius:11px;padding:12px;border:1px solid var(--line)}
-input,select{background:#fff}button{cursor:pointer;border:0;background:var(--primary);color:#fff;font-weight:700}button.alt{background:#eef5f7;color:var(--primary2);border:1px solid #cfe1e5}
+header{background:linear-gradient(135deg,#073b4c,#087f8c);color:#fff;padding:34px 18px 28px;text-align:center}header h1{margin:0 0 8px;font-size:34px}header p{margin:5px auto;max-width:900px;opacity:.94}
+.wrap{max-width:1250px;margin:auto;padding:20px}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 25px #153e5012;margin-bottom:18px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tabs button{background:#eef5f7;color:var(--primary2);border:1px solid #cfe1e5}.tabs button.active{background:var(--primary);color:#fff}
+.search{display:grid;grid-template-columns:1fr 190px 120px;gap:10px}input,select,button{font:inherit;border-radius:11px;padding:11px;border:1px solid var(--line)}input,select{background:#fff}button{cursor:pointer;border:0;background:var(--primary);color:#fff;font-weight:700}button.alt{background:#eef5f7;color:var(--primary2);border:1px solid #cfe1e5}
+.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.filterbox{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:10px}.filterbox label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:15px}.stat{padding:15px;border-radius:14px;background:var(--soft);text-align:center}.stat b{display:block;font-size:24px;color:var(--primary2)}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.chips button{padding:8px 12px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px}.card h3{margin:0;color:var(--primary2)}.meta{font-size:13px;color:var(--muted)}.tag{display:inline-block;background:#f1f5f9;border-radius:999px;padding:4px 8px;margin:2px;font-size:12px}.card a{color:var(--primary2);font-weight:700;text-decoration:none}.card a:hover{text-decoration:underline}
-.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px}.section-title h2{margin:0}.note{background:#fff8e8;border:1px solid #f0d69b;border-radius:14px;padding:12px;color:#6c4c0b;line-height:1.7}
-footer{text-align:center;padding:28px;color:var(--muted)}
-@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.search{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.grid{grid-template-columns:1fr}header h1{font-size:28px}.wrap{padding:12px}}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px}.card h3{margin:0;color:var(--primary2)}.meta{font-size:13px;color:var(--muted)}.tag{display:inline-block;background:#f1f5f9;border-radius:999px;padding:4px 8px;margin:2px;font-size:12px}.card a{color:var(--primary2);font-weight:700;text-decoration:none}.card a:hover{text-decoration:underline}
+.checkrow{display:flex;align-items:center;gap:8px;border-top:1px solid #edf2f5;padding-top:8px}.checkrow input{width:18px;height:18px}.result-count{color:var(--muted);font-size:13px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px}.section-title h2{margin:0}.note{background:#fff8e8;border:1px solid #f0d69b;border-radius:14px;padding:12px;color:#6c4c0b;line-height:1.7}.paper .title{font-size:18px;font-weight:700}.paper .abstract{font-size:13px;line-height:1.6;color:#475569}.loading{padding:25px;text-align:center;color:var(--muted)}footer{text-align:center;padding:28px;color:var(--muted)}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.search{grid-template-columns:1fr}.filters{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}header h1{font-size:28px}.wrap{padding:12px}}
 </style>
 </head>
-<body>
-<header>
-<h1>منصة الحديث الشاملة</h1>
-<p>للبحث والتخريج ودراسة الروايات والأسانيد والرواة وعلوم الحديث</p>
-<p>الإصدار الأول — بوابة المصادر والفهرسة الذكية</p>
-</header>
-<main class="wrap">
-<section class="panel">
-<div class="section-title"><h2>البحث الحديثي</h2><span class="meta">لا يصدر النظام حكمًا حديثيًا من عنده</span></div>
-<div class="search" style="margin-top:14px">
-<input id="q" placeholder="اكتب جزءًا من متن الحديث، اسم راوٍ، كتاب، أو موضوع..." onkeydown="if(event.key==='Enter')search()">
-<select id="site"><option value="dorar">الدرر السنية</option><option value="sunnah">Sunnah.com</option><option value="islamweb">إسلام ويب</option><option value="waqfeya">المكتبة الوقفية</option></select>
-<button onclick="search()">بحث</button>
-</div>
-<div class="toolbar chips">
-<button class="alt" onclick="setQ('إنما الأعمال بالنيات')">حديث النية</button>
-<button class="alt" onclick="setQ('لا ضرر ولا ضرار')">لا ضرر</button>
-<button class="alt" onclick="setQ('من كان يؤمن بالله واليوم الآخر')">الإيمان بالله</button>
-<button class="alt" onclick="setQ('خيركم من تعلم القرآن وعلمه')">تعلم القرآن</button>
-</div>
-<div class="stats">
-<div class="stat"><b>9</b>الكتب التسعة</div>
-<div class="stat"><b>50+</b>مصادر وكتب في الفهرس الأولي</div>
-<div class="stat"><b>4</b>بوابات مجانية رئيسية</div>
-<div class="stat"><b>∞</b>قابل للتوسع</div>
-</div>
-</section>
-
-<section class="panel">
-<div class="section-title"><h2>بوابات الحديث والمكتبات المجانية</h2></div>
-<div class="grid" id="sites"></div>
-</section>
-
-<section class="panel">
-<div class="section-title"><h2>مكتبة المصادر الحديثية</h2><span id="count" class="meta"></span></div>
-<div class="toolbar">
-<select id="cat" onchange="renderBooks()"><option value="all">كل التصنيفات</option></select>
-<input id="filter" placeholder="تصفية باسم الكتاب أو المؤلف..." oninput="renderBooks()">
-</div>
-<div class="grid" id="books"></div>
-</section>
-
-<section class="panel">
-<h2>منهجية البيانات في المنصة</h2>
-<div class="note">
-<strong>قاعدة علمية أساسية:</strong> سيتم الفصل بين: (1) نص الحديث كما ورد في المصدر، (2) التخريج ومعلومات الموضع، (3) السند والرجال، (4) أحكام المحدثين المنقولة عن مصادرها، (5) اختلاف الروايات والطرق، (6) الشروح وغريب الحديث، (7) التحليل الآلي. ولا يجوز للذكاء الاصطناعي أن يحوّل التحليل الاحتمالي إلى حكم تصحيح أو تضعيف مستقل.
-</div>
-</section>
-</main>
-<footer>منصة الحديث الشاملة — مشروع بحثي بإشراف د. حسن الشيباني</footer>
-<script>
-const sites=[
-{name:'الموسوعة الحديثية — الدرر السنية',type:'بحث حديثي متقدم',desc:'بحث في مئات الآلاف من الأحاديث مع نطاقات للحكم والمحدث والكتاب والراوي، وخدمات التخريج والأصول والشروح.',url:'https://dorar.net/hadith'},
-{name:'Sunnah.com',type:'مجاميع حديثية',desc:'واجهة مجانية لمجموعات الحديث، تشمل الكتب التسعة ومصادر أصلية أخرى ومجموعات مختارة.',url:'https://sunnah.com'},
-{name:'المكتبة الإسلامية — إسلام ويب',type:'كتب ونصوص وشروح',desc:'مكتبة مجانية تضم متون الحديث وشروحها والتراجم والبحث في الكتب والنصوص.',url:'https://www.islamweb.net/ar/library/'},
-{name:'المكتبة الوقفية',type:'كتب مصورة وPDF',desc:'مكتبة مجانية واسعة، وتضم تصنيفات مستقلة للكتب الستة والمسانيد والجوامع ومصطلح الحديث والجرح والتعديل.',url:'https://www.waqfeya.net/'},
-{name:'موسوعة الحديث الشريف — إسلام ويب',type:'الكتب التسعة',desc:'تتيح الكتب التسعة، وشجرة الكتب، والبحث النصي، والتصنيف الموضوعي، وعددًا من الشروح.',url:'https://www.islamweb.net/ar/library/'},
-{name:'موسوعة الحديث الصحيح',type:'مصدر متخصص',desc:'قاعدة متخصصة في الأحاديث المصنفة لديها على أنها صحيحة، مع التخريج وسلاسل الإسناد.',url:'https://www.hadith-sahih.com/'}
-];
-const books=[
-['صحيح البخاري','محمد بن إسماعيل البخاري','صحيح','الصحيحان'],['صحيح مسلم','مسلم بن الحجاج','صحيح','الصحيحان'],
-['سنن أبي داود','أبو داود السجستاني','سنن','الكتب التسعة'],['جامع الترمذي','محمد بن عيسى الترمذي','جامع/سنن','الكتب التسعة'],
-['سنن النسائي (المجتبى)','أحمد بن شعيب النسائي','سنن','الكتب التسعة'],['سنن ابن ماجه','محمد بن يزيد ابن ماجه','سنن','الكتب التسعة'],
-['موطأ مالك','مالك بن أنس','موطأ','الكتب التسعة'],['مسند أحمد','أحمد بن حنبل','مسند','الكتب التسعة'],
-['سنن الدارمي','عبد الله بن عبد الرحمن الدارمي','سنن/مسند','الكتب التسعة'],
-['صحيح ابن خزيمة','محمد بن إسحاق ابن خزيمة','صحيح','صحاح ومجاميع'],['صحيح ابن حبان','محمد بن حبان','صحيح','صحاح ومجاميع'],
-['المستدرك على الصحيحين','الحاكم النيسابوري','مستدرك','صحاح ومجاميع'],
-['مصنف عبد الرزاق','عبد الرزاق الصنعاني','مصنف','المصنفات'],['مصنف ابن أبي شيبة','عبد الله بن أبي شيبة','مصنف','المصنفات'],
-['سنن سعيد بن منصور','سعيد بن منصور','سنن','المصنفات'],['مسند أبي داود الطيالسي','أبو داود الطيالسي','مسند','المسانيد'],
-['مسند أبي يعلى','أبو يعلى الموصلي','مسند','المسانيد'],['مسند البزار','أحمد بن عمرو البزار','مسند','المسانيد'],
-['مسند الحميدي','عبد الله بن الزبير الحميدي','مسند','المسانيد'],['مسند الشافعي','محمد بن إدريس الشافعي','مسند','المسانيد'],
-['المعاجم الثلاثة للطبراني','سليمان بن أحمد الطبراني','معاجم','المسانيد والجوامع'],['المعجم الكبير','الطبراني','معجم','المسانيد والجوامع'],
-['المعجم الأوسط','الطبراني','معجم','المسانيد والجوامع'],['المعجم الصغير','الطبراني','معجم','المسانيد والجوامع'],
-['السنن الكبرى للبيهقي','أحمد بن الحسين البيهقي','سنن','السنن والجوامع'],['السنن الصغرى للبيهقي','أحمد بن الحسين البيهقي','سنن','السنن والجوامع'],
-['سنن الدارقطني','علي بن عمر الدارقطني','سنن','السنن والجوامع'],['شرح معاني الآثار','أحمد بن محمد الطحاوي','آثار/أحكام','السنن والجوامع'],
-['شرح مشكل الآثار','أحمد بن محمد الطحاوي','آثار','السنن والجوامع'],['الأدب المفرد','محمد بن إسماعيل البخاري','آداب','مجاميع حديثية'],
-['الشمائل المحمدية','محمد بن عيسى الترمذي','شمائل','مجاميع حديثية'],['رياض الصالحين','يحيى بن شرف النووي','منتقى','مجاميع حديثية'],
-['بلوغ المرام','أحمد بن حجر العسقلاني','أحكام','مجاميع حديثية'],['مشكاة المصابيح','محمد بن عبد الله التبريزي','مجاميع','مجاميع حديثية'],
-['جامع الأصول','ابن الأثير الجزري','مجاميع/فهرسة','مجاميع حديثية'],['مجمع الزوائد','نور الدين الهيثمي','زوائد','مجاميع حديثية'],
-['الأحاديث المختارة','محمد بن عبد الواحد المقدسي','منتقى','مجاميع حديثية'],
-['السنة لابن أبي عاصم','ابن أبي عاصم','سنة/اعتقاد','باقي المجموعات'],['شرح السنة','الحسين بن مسعود البغوي','شرح/حديث','باقي المجموعات'],
-['صحيح الجامع','محمد ناصر الدين الألباني','تصحيح/جمع','باقي المجموعات'],['ضعيف الجامع','محمد ناصر الدين الألباني','تخريج/حكم','باقي المجموعات'],
-['علل الحديث لابن أبي حاتم','ابن أبي حاتم الرازي','علل','علوم الحديث'],['علل الدارقطني','علي بن عمر الدارقطني','علل','علوم الحديث'],
-['العلل الكبير للترمذي','محمد بن عيسى الترمذي','علل','علوم الحديث'],['تهذيب الكمال','عبد الغني المقدسي/المزي','رجال','الجرح والتعديل'],
-['تهذيب التهذيب','ابن حجر العسقلاني','رجال','الجرح والتعديل'],['تقريب التهذيب','ابن حجر العسقلاني','رجال','الجرح والتعديل'],
-['ميزان الاعتدال','الذهبي','رجال','الجرح والتعديل'],['الكاشف','الذهبي','رجال','الجرح والتعديل'],
-['الجرح والتعديل','ابن أبي حاتم الرازي','رجال','الجرح والتعديل'],['الثقات','ابن حبان','رجال','الجرح والتعديل']
-];
-function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+<body><header><h1>منصة الحديث الشاملة</h1><p>للبحث والتخريج ودراسة الروايات والأسانيد والرواة وعلوم الحديث</p><p>الإصدار الثاني — البحث والفهرسة والتصدير العلمي</p></header><main class="wrap">
+<section class="panel"><div class="tabs" id="tabs">
+<button class="active" onclick="showTab('hadith',this)">🔎 البحث الحديثي</button><button onclick="showTab('books',this)">📚 الكتب والمجاميع</button><button onclick="showTab('papers',this)">📄 الدراسات والأوراق</button><button onclick="showTab('sitesTab',this)">🌐 بوابات مجانية</button></div>
+<div id="tab-hadith"><div class="section-title"><h2>البحث في الحديث</h2><span class="meta">النظام لا يصدر حكمًا حديثيًا من عنده</span></div>
+<div class="search" style="margin-top:14px"><input id="q" placeholder="متن الحديث، راوٍ، كتاب، موضوع..." onkeydown="if(event.key==='Enter')searchHadith()"><select id="site"><option value="dorar">الدرر السنية</option><option value="sunnah">Sunnah.com</option><option value="islamweb">إسلام ويب</option><option value="waqfeya">المكتبة الوقفية</option></select><button onclick="searchHadith()">بحث</button></div>
+<div class="filters"><div class="filterbox"><label>من سنة</label><input id="hFrom" type="number" placeholder="اختياري"></div><div class="filterbox"><label>إلى سنة</label><input id="hTo" type="number" placeholder="اختياري"></div><div class="filterbox"><label>نوع المادة</label><select id="hType"><option>كل المواد</option><option>أحاديث</option><option>آثار</option><option>شروح</option></select></div><div class="filterbox"><label>الحكم المنقول</label><select id="hGrade"><option>كل الأحكام</option><option>صحيح</option><option>حسن</option><option>ضعيف</option><option>موضوع</option></select></div></div>
+<div class="toolbar"><button class="alt" onclick="setQ('إنما الأعمال بالنيات')">حديث النية</button><button class="alt" onclick="setQ('لا ضرر ولا ضرار')">لا ضرر</button><button class="alt" onclick="setQ('من كان يؤمن بالله واليوم الآخر')">الإيمان بالله</button><button class="alt" onclick="setQ('خيركم من تعلم القرآن وعلمه')">تعلم القرآن</button></div>
+<div class="stats"><div class="stat"><b>9</b>الكتب التسعة</div><div class="stat"><b>50+</b>مصادر مفهرسة</div><div class="stat"><b>4+</b>بوابات مجانية</div><div class="stat"><b>∞</b>قابل للتوسع</div></div></div>
+<div id="tab-books" hidden><div class="section-title"><h2>مكتبة المصادر الحديثية</h2><span id="count" class="meta"></span></div>
+<div class="filters"><div class="filterbox"><label>التصنيف</label><select id="cat" onchange="renderBooks()"></select></div><div class="filterbox"><label>البحث</label><input id="filter" placeholder="اسم الكتاب أو المؤلف..." oninput="renderBooks()"></div><div class="filterbox"><label>من سنة النشر/الطبعة</label><input id="bFrom" type="number" oninput="renderBooks()"></div><div class="filterbox"><label>إلى سنة النشر/الطبعة</label><input id="bTo" type="number" oninput="renderBooks()"></div></div>
+<div class="toolbar"><button onclick="selectAllBooks(true)">☑ تحديد الكل</button><button class="alt" onclick="selectAllBooks(false)">☐ إلغاء الكل</button><button onclick="exportSelectedBooks('csv')">⬇ CSV</button><button onclick="exportSelectedBooks('ris')">⬇ RIS</button><button onclick="exportSelectedBooks('txt')">⬇ استشهاد</button><span id="bookSelected" class="result-count">0 محدد</span></div><div class="grid" id="books"></div></div>
+<div id="tab-papers" hidden><div class="section-title"><h2>الدراسات والأوراق العلمية</h2><span class="meta">بحث مفتوح عبر OpenAlex</span></div>
+<div class="search" style="margin-top:14px"><input id="paperQ" placeholder="مثال: hadith criticism / تخريج الحديث" onkeydown="if(event.key==='Enter')searchPapers()"><button onclick="searchPapers()">بحث</button></div>
+<div class="filters"><div class="filterbox"><label>من سنة</label><input id="pFrom" type="number" value="2000"></div><div class="filterbox"><label>إلى سنة</label><input id="pTo" type="number" value="2026"></div><div class="filterbox"><label>عدد النتائج</label><select id="pCount"><option>10</option><option selected>20</option><option>50</option></select></div><div class="filterbox"><label>اللغة</label><select id="pLang"><option value="">كل اللغات</option><option value="ar">العربية</option><option value="en">الإنجليزية</option></select></div></div>
+<div class="toolbar"><button onclick="selectAllPapers(true)">☑ تحديد الكل</button><button class="alt" onclick="selectAllPapers(false)">☐ إلغاء الكل</button><button onclick="exportSelectedPapers('csv')">⬇ CSV</button><button onclick="exportSelectedPapers('ris')">⬇ RIS</button><button onclick="exportSelectedPapers('bib')">⬇ BibTeX</button><button onclick="exportSelectedPapers('txt')">⬇ استشهاد</button><span id="paperSelected" class="result-count">0 محدد</span></div><div id="papers" class="grid"><div class="loading">أدخل كلمات البحث ثم اضغط «بحث».</div></div></div>
+<div id="tab-sitesTab" hidden><div class="section-title"><h2>بوابات الحديث والمكتبات المجانية</h2></div><div class="grid" id="sites"></div></div></section>
+<section class="panel"><h2>التصدير والاستشهاد العلمي</h2><div class="note"><strong>صيغة الاستشهاد:</strong> عند توفر البيانات يُنشأ استشهاد يتضمن المؤلف، العنوان، المصدر/المجلة، السنة، رقم الحديث أو الموضع، الرابط، وتاريخ الوصول. وفي المصادر الحديثية يُفصل نص الحديث عن الحكم المنقول عن المحدث ومصدره.</div></section>
+<section class="panel"><h2>منهجية البيانات</h2><div class="note"><strong>قاعدة علمية:</strong> نص الحديث، التخريج، السند، الرواة، أحكام المحدثين، اختلاف الروايات، الشروح، غريب الحديث، والعلل طبقات مستقلة. والتحليل الآلي مساعد للباحث ولا يتحول إلى حكم تصحيح أو تضعيف مستقل.</div></section>
+</main><footer>منصة الحديث الشاملة — مشروع بحثي بإشراف د. حسن الشيباني</footer><script>
+const sites=[{name:'الموسوعة الحديثية — الدرر السنية',type:'بحث حديثي متقدم',desc:'بحث بحسب العبارات ونطاق البحث والدرجة والمحدث والكتاب والراوي، مع خدمات التخريج والشروح.',url:'https://dorar.net/hadith'},{name:'Sunnah.com',type:'مجاميع حديثية وبحث متقدم',desc:'الكتب التسعة ومصادر أصلية أخرى، مع بحث نصي وتصفية بحسب المجموعة.',url:'https://sunnah.com'},{name:'المكتبة الإسلامية — إسلام ويب',type:'كتب ونصوص وشروح',desc:'مكتبة مجانية للكتب والمتون والشروح والتراجم.',url:'https://www.islamweb.net/ar/library/'},{name:'المكتبة الوقفية',type:'كتب مصورة وPDF',desc:'مكتبة واسعة للكتب الحديثية والمسانيد والسنن وعلوم الحديث والرجال.',url:'https://www.waqfeya.net/'},{name:'OpenAlex',type:'دراسات وأوراق علمية',desc:'فهرس مفتوح للأبحاث العلمية مع التصفية الزمنية.',url:'https://openalex.org/'},{name:'Crossref',type:'بيانات ببليوغرافية',desc:'بيانات مفتوحة للمقالات والدوريات والكتب وDOI.',url:'https://search.crossref.org/'}];
+const books=[['صحيح البخاري','محمد بن إسماعيل البخاري','صحيح','الصحيحان'],['صحيح مسلم','مسلم بن الحجاج','صحيح','الصحيحان'],['سنن أبي داود','أبو داود السجستاني','سنن','الكتب التسعة'],['جامع الترمذي','محمد بن عيسى الترمذي','جامع/سنن','الكتب التسعة'],['سنن النسائي (المجتبى)','أحمد بن شعيب النسائي','سنن','الكتب التسعة'],['سنن ابن ماجه','محمد بن يزيد ابن ماجه','سنن','الكتب التسعة'],['موطأ مالك','مالك بن أنس','موطأ','الكتب التسعة'],['مسند أحمد','أحمد بن حنبل','مسند','الكتب التسعة'],['سنن الدارمي','عبد الله بن عبد الرحمن الدارمي','سنن/مسند','الكتب التسعة'],['صحيح ابن خزيمة','محمد بن إسحاق ابن خزيمة','صحيح','صحاح ومجاميع'],['صحيح ابن حبان','محمد بن حبان','صحيح','صحاح ومجاميع'],['المستدرك على الصحيحين','الحاكم النيسابوري','مستدرك','صحاح ومجاميع'],['مصنف عبد الرزاق','عبد الرزاق الصنعاني','مصنف','المصنفات'],['مصنف ابن أبي شيبة','عبد الله بن أبي شيبة','مصنف','المصنفات'],['سنن سعيد بن منصور','سعيد بن منصور','سنن','المصنفات'],['مسند أبي داود الطيالسي','أبو داود الطيالسي','مسند','المسانيد'],['مسند أبي يعلى','أبو يعلى الموصلي','مسند','المسانيد'],['مسند البزار','أحمد بن عمرو البزار','مسند','المسانيد'],['مسند الحميدي','عبد الله بن الزبير الحميدي','مسند','المسانيد'],['مسند الشافعي','محمد بن إدريس الشافعي','مسند','المسانيد'],['المعجم الكبير','الطبراني','معجم','المسانيد والجوامع'],['المعجم الأوسط','الطبراني','معجم','المسانيد والجوامع'],['المعجم الصغير','الطبراني','معجم','المسانيد والجوامع'],['السنن الكبرى للبيهقي','أحمد بن الحسين البيهقي','سنن','السنن والجوامع'],['السنن الصغرى للبيهقي','أحمد بن الحسين البيهقي','سنن','السنن والجوامع'],['سنن الدارقطني','علي بن عمر الدارقطني','سنن','السنن والجوامع'],['شرح معاني الآثار','أحمد بن محمد الطحاوي','آثار/أحكام','السنن والجوامع'],['شرح مشكل الآثار','أحمد بن محمد الطحاوي','آثار','السنن والجوامع'],['الأدب المفرد','محمد بن إسماعيل البخاري','آداب','مجاميع حديثية'],['الشمائل المحمدية','محمد بن عيسى الترمذي','شمائل','مجاميع حديثية'],['رياض الصالحين','يحيى بن شرف النووي','منتقى','مجاميع حديثية'],['بلوغ المرام','أحمد بن حجر العسقلاني','أحكام','مجاميع حديثية'],['مشكاة المصابيح','محمد بن عبد الله التبريزي','مجاميع','مجاميع حديثية'],['جامع الأصول','ابن الأثير الجزري','مجاميع/فهرسة','مجاميع حديثية'],['مجمع الزوائد','نور الدين الهيثمي','زوائد','مجاميع حديثية'],['الأحاديث المختارة','محمد بن عبد الواحد المقدسي','منتقى','مجاميع حديثية'],['السنة لابن أبي عاصم','ابن أبي عاصم','سنة/اعتقاد','باقي المجموعات'],['شرح السنة','الحسين بن مسعود البغوي','شرح/حديث','باقي المجموعات'],['صحيح الجامع','محمد ناصر الدين الألباني','تصحيح/جمع','باقي المجموعات'],['ضعيف الجامع','محمد ناصر الدين الألباني','تخريج/حكم','باقي المجموعات'],['علل الحديث لابن أبي حاتم','ابن أبي حاتم الرازي','علل','علوم الحديث'],['علل الدارقطني','علي بن عمر الدارقطني','علل','علوم الحديث'],['العلل الكبير للترمذي','محمد بن عيسى الترمذي','علل','علوم الحديث'],['تهذيب الكمال','المزي','رجال','الجرح والتعديل'],['تهذيب التهذيب','ابن حجر العسقلاني','رجال','الجرح والتعديل'],['تقريب التهذيب','ابن حجر العسقلاني','رجال','الجرح والتعديل'],['ميزان الاعتدال','الذهبي','رجال','الجرح والتعديل'],['الكاشف','الذهبي','رجال','الجرح والتعديل'],['الجرح والتعديل','ابن أبي حاتم الرازي','رجال','الجرح والتعديل'],['الثقات','ابن حبان','رجال','الجرح والتعديل']];
+let paperResults=[],selectedBooks=new Set(),selectedPapers=new Set();
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function showTab(id,btn){['hadith','books','papers','sitesTab'].forEach(x=>document.getElementById('tab-'+x).hidden=x!==id);document.querySelectorAll('#tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
 function renderSites(){document.getElementById('sites').innerHTML=sites.map(s=>'<article class="card"><h3>'+esc(s.name)+'</h3><div class="meta">'+esc(s.type)+'</div><p>'+esc(s.desc)+'</p><a target="_blank" rel="noopener" href="'+s.url+'">فتح المصدر ↗</a></article>').join('')}
 function initCats(){let cats=[...new Set(books.map(x=>x[3]))];document.getElementById('cat').innerHTML='<option value="all">كل التصنيفات</option>'+cats.map(x=>'<option>'+esc(x)+'</option>').join('')}
-function renderBooks(){let c=document.getElementById('cat').value,f=document.getElementById('filter').value.trim().toLowerCase();let arr=books.filter(x=>(c==='all'||x[3]===c)&&(!f||x.join(' ').toLowerCase().includes(f)));document.getElementById('count').textContent='إظهار '+arr.length+' من '+books.length+' مصدرًا مفهرسًا';document.getElementById('books').innerHTML=arr.map(x=>'<article class="card"><h3>'+esc(x[0])+'</h3><div class="meta">'+esc(x[1])+'</div><div><span class="tag">'+esc(x[2])+'</span><span class="tag">'+esc(x[3])+'</span></div><a target="_blank" rel="noopener" href="https://www.google.com/search?q='+encodeURIComponent('"'+x[0]+'" '+x[1]+' حديث')+'">البحث عن المصدر ↗</a></article>').join('')}
-function setQ(v){document.getElementById('q').value=v;search()}
-function search(){let q=document.getElementById('q').value.trim();if(!q)return;let site=document.getElementById('site').value;let u={dorar:'https://dorar.net/hadith/search?q=',sunnah:'https://sunnah.com/search?q=',islamweb:'https://www.islamweb.net/ar/search/index.php?query=',waqfeya:'https://www.google.com/search?q=site%3Awaqfeya.net+'}[site]+encodeURIComponent(q);window.open(u,'_blank','noopener')}
+function renderBooks(){let cat=document.getElementById('cat').value,f=document.getElementById('filter').value.trim().toLowerCase(),arr=books.map((x,i)=>({...x,i})).filter(x=>(cat==='all'||x[3]===cat)&&(!f||x.join(' ').toLowerCase().includes(f)));document.getElementById('count').textContent='إظهار '+arr.length+' من '+books.length+' مصدرًا مفهرسًا';document.getElementById('books').innerHTML=arr.map(x=>'<article class="card"><h3>'+esc(x[0])+'</h3><div class="meta">'+esc(x[1])+'</div><div><span class="tag">'+esc(x[2])+'</span><span class="tag">'+esc(x[3])+'</span></div><div class="checkrow"><input type="checkbox" '+(selectedBooks.has(x.i)?'checked':'')+' onchange="toggleBook('+x.i+',this.checked)"><span>إضافة إلى التصدير</span></div><a target="_blank" rel="noopener" href="https://www.google.com/search?q='+encodeURIComponent('"'+x[0]+'" '+x[1]+' حديث')+'">البحث عن المصدر ↗</a></article>').join('');updateBookSelected()}
+function toggleBook(i,on){on?selectedBooks.add(i):selectedBooks.delete(i);updateBookSelected()}
+function updateBookSelected(){document.getElementById('bookSelected').textContent=selectedBooks.size+' محدد'}
+function selectAllBooks(on){let cat=document.getElementById('cat').value,f=document.getElementById('filter').value.trim().toLowerCase();books.forEach((x,i)=>{if((cat==='all'||x[3]===cat)&&(!f||x.join(' ').toLowerCase().includes(f))){on?selectedBooks.add(i):selectedBooks.delete(i)}});renderBooks()}
+function download(name,text,mime){let blob=new Blob([text],{type:mime+';charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function csv(rows){return '\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n')}
+function citationBook(x){return x[1]+'. '+x[0]+'. مصدر حديثي. تصنيف: '+x[2]+'. الرابط: '+location.href+' (تاريخ الوصول: '+new Date().toLocaleDateString('ar-LY')+').'}
+function exportSelectedBooks(kind){let ids=[...selectedBooks];if(!ids.length)return alert('حدد مصدرًا واحدًا على الأقل.');if(kind==='csv')download('مصادر-حديثية.csv',csv([['المؤلف','العنوان','النوع','التصنيف','الاستشهاد']].concat(ids.map(i=>{let x=books[i];return [x[1],x[0],x[2],x[3],citationBook(x)]}))),'text/csv');else if(kind==='ris')download('مصادر-حديثية.ris',ids.map(i=>{let x=books[i];return 'TY  - BOOK\nAU  - '+x[1]+'\nTI  - '+x[0]+'\nKW  - '+x[2]+'\nER  -\n'}).join('\n'),'application/x-research-info-systems');else download('استشهاد-مصادر-حديثية.txt',ids.map(i=>citationBook(books[i])).join('\n\n'),'text/plain')}
+function setQ(v){document.getElementById('q').value=v;searchHadith()}
+function searchHadith(){let q=document.getElementById('q').value.trim();if(!q)return;let site=document.getElementById('site').value;let u={dorar:'https://dorar.net/hadith/search?q=',sunnah:'https://sunnah.com/search?q=',islamweb:'https://www.islamweb.net/ar/search/index.php?query=',waqfeya:'https://www.google.com/search?q=site%3Awaqfeya.net+'}[site]+encodeURIComponent(q);window.open(u,'_blank','noopener')}
+async function searchPapers(){let q=document.getElementById('paperQ').value.trim();if(!q)return;let from=document.getElementById('pFrom').value||1900,to=document.getElementById('pTo').value||new Date().getFullYear(),n=document.getElementById('pCount').value,lang=document.getElementById('pLang').value;document.getElementById('papers').innerHTML='<div class="loading">جارٍ البحث في OpenAlex...</div>';let filter='from_publication_date:'+from+'-01-01,to_publication_date:'+to+'-12-31';if(lang)filter+=',default_language:'+lang;try{let u='https://api.openalex.org/works?search='+encodeURIComponent(q)+'&filter='+encodeURIComponent(filter)+'&per-page='+n;let data=await fetch(u).then(r=>r.json());paperResults=(data.results||[]).map((x,i)=>({i,title:x.title||'',year:x.publication_year||'',doi:x.doi||'',url:x.primary_location?.landing_page_url||x.id||'',journal:x.primary_location?.source?.display_name||'',authors:(x.authorships||[]).slice(0,8).map(a=>a.author?.display_name).filter(Boolean).join('؛ '),abstract:x.abstract_inverted_index?Object.keys(x.abstract_inverted_index).slice(0,100).join(' '):''}));selectedPapers=new Set();renderPapers()}catch(e){document.getElementById('papers').innerHTML='<div class="note">تعذر جلب النتائج الآن. أعد المحاولة أو افتح OpenAlex مباشرة.</div>'}}
+function renderPapers(){document.getElementById('papers').innerHTML=paperResults.length?paperResults.map(x=>'<article class="card paper"><div class="title">'+esc(x.title)+'</div><div class="meta">'+esc(x.authors||'مؤلفون غير متاحين')+' — '+esc(x.year)+' — '+esc(x.journal||'دورية غير محددة')+'</div><p class="abstract">'+esc(x.abstract||'لا يوجد ملخص مفهرس في المصدر.')+'</p><div class="checkrow"><input type="checkbox" '+(selectedPapers.has(x.i)?'checked':'')+' onchange="togglePaper('+x.i+',this.checked)"><span>إضافة إلى التصدير</span></div><a target="_blank" rel="noopener" href="'+esc(x.url)+'">فتح الدراسة ↗</a></article>').join(''):'<div class="loading">لا توجد نتائج.</div>';document.getElementById('paperSelected').textContent=selectedPapers.size+' محدد'}
+function togglePaper(i,on){on?selectedPapers.add(i):selectedPapers.delete(i);document.getElementById('paperSelected').textContent=selectedPapers.size+' محدد'}
+function selectAllPapers(on){paperResults.forEach(x=>on?selectedPapers.add(x.i):selectedPapers.delete(x.i));renderPapers()}
+function citationPaper(x){return (x.authors||'مؤلف غير محدد')+'. ('+x.year+'). '+x.title+'. '+(x.journal||'دورية غير محددة')+(x.doi?' DOI: '+x.doi:'')+'. '+x.url+' (تاريخ الوصول: '+new Date().toLocaleDateString('ar-LY')+').'}
+function exportSelectedPapers(kind){let arr=paperResults.filter(x=>selectedPapers.has(x.i));if(!arr.length)return alert('حدد ورقة واحدة على الأقل.');if(kind==='csv')download('الدراسات-الحديثية.csv',csv([['المؤلفون','العنوان','السنة','المجلة','DOI','الرابط','الاستشهاد']].concat(arr.map(x=>[x.authors,x.title,x.year,x.journal,x.doi,x.url,citationPaper(x)]))),'text/csv');else if(kind==='ris')download('الدراسات-الحديثية.ris',arr.map(x=>'TY  - JOUR\nAU  - '+(x.authors||'')+'\nTI  - '+x.title+'\nPY  - '+x.year+'\nJO  - '+(x.journal||'')+(x.doi?'\nDO  - '+x.doi:'')+'\nUR  - '+x.url+'\nER  -\n').join('\n'),'application/x-research-info-systems');else if(kind==='bib')download('الدراسات-الحديثية.bib',arr.map((x,i)=>'@article{hadith_'+x.year+'_'+i+',\n  author={'+x.authors+'},\n  title={'+x.title+'},\n  year={'+x.year+'},\n  journal={'+(x.journal||'')+'},\n  doi={'+x.doi+'},\n  url={'+x.url+'}\n}\n').join('\n'),'application/x-bibtex');else download('استشهاد-الدراسات.txt',arr.map(citationPaper).join('\n\n'),'text/plain')}
 renderSites();initCats();renderBooks();
-</script>
-</body></html>
+</script></body></html>
