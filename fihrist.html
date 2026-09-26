@@ -997,4 +997,626 @@ async function runSearch(q){
       else counts[SOURCES[k]]=0;
       if(k==='s2')toast(t('s2Limit'));
     }finally{
-      doneN++;
+      doneN++;      if(mySeq===searchSeq&&!finalized){
+        state.srcCounts={...counts};
+        if(state.raw.length){scheduleRender();}else{renderSrcCounts();}
+        if(doneN===on.length)finalize(false);
+      }
+    }
+  }));
+}
+function qWords(){return state.query.toLowerCase().split(/\s+/).filter(w=>w.length>1&&![...STOP_AR,...STOP_EN].has(w));}
+function scoreRel(w){
+  let s=0;const tl=(w.title||'').toLowerCase(),al=(w.abstract||'').toLowerCase();
+  qWords().forEach(qw=>{if(tl.includes(qw))s+=3;if(al.includes(qw))s+=1;});
+  s+=Math.min(14,Math.log10(1+(w.cited||0))*5);
+  if(w.year)s+=Math.max(0,(w.year-1980)/45*6);
+  if(w.pdf)s+=1;return s;}
+function applyAndRender(){
+  let list=state.raw.slice();
+  if(state.typeFilter!=='all')list=list.filter(w=>w.type===state.typeFilter);
+  const yf=+$('yFrom').value||null,yt=+$('yTo').value||null;
+  if(yf)list=list.filter(w=>w.year>=yf);
+  if(yt)list=list.filter(w=>w.year<=yt);
+  if(state.flt.src!=='all')list=list.filter(w=>w.srcs.includes(state.flt.src));
+  if(state.flt.pdf)list=list.filter(w=>w.pdf);
+  if(state.flt.oa)list=list.filter(w=>w.oa||w.pdf);
+  if(state.sort==='rel')list.sort((a,b)=>scoreRel(b)-scoreRel(a));
+  if(state.sort==='date')list.sort((a,b)=>(b.year||0)-(a.year||0));
+  if(state.sort==='cited')list.sort((a,b)=>(b.cited||0)-(a.cited||0));
+  state.view=list;
+  renderResults();renderInsights();renderSrcCounts();renderFltRow();renderExportPop();
+  document.querySelectorAll('[data-sort]').forEach(x=>x.classList.toggle('on',x.dataset.sort===state.sort));}
+function renderSrcCounts(){
+  $('srcCounts').innerHTML=Object.entries(state.srcCounts).map(([k,v])=>`<span class="sc">${esc(k)} <b>${v===null?'◌':v}</b></span>`).join('')+
+    `<span class="sc">${esc(t('ofSources'))}: <b>${Object.keys(state.srcCounts).filter(k=>state.srcCounts[k]>0).length}</b></span>`;}
+function validateYearRange(showToast=true){
+  const yf=Number.parseInt($('yFrom').value,10)||null;
+  const yt=Number.parseInt($('yTo').value,10)||null;
+  const wrap=$('yFrom').closest('.years');
+  const note=$('yearNote');
+  let msg='';
+  if(yf!==null&&(yf<1400||yf>2100))msg=state.lang==='ar'?'أدخل سنة بداية بين 1400 و2100.':'Enter a start year between 1400 and 2100.';
+  else if(yt!==null&&(yt<1400||yt>2100))msg=state.lang==='ar'?'أدخل سنة نهاية بين 1400 و2100.':'Enter an end year between 1400 and 2100.';
+  else if(yf!==null&&yt!==null&&yf>yt)msg=state.lang==='ar'?'سنة البداية يجب ألا تتجاوز سنة النهاية.':'The start year must not be later than the end year.';
+  wrap?.classList.toggle('invalid',!!msg);
+  if(note)note.textContent=msg||(state.lang==='ar'?'يمكن استخدام سنة واحدة أو نطاق من سنة إلى سنة، وزر «الكل» لمسح النطاق.':'Use one year, a year range, or “All time” to clear the range.');
+  if(msg&&showToast)toast(msg,'err');
+  if(msg)return null;
+  return{from:yf,to:yt};
+}
+function syncYearQuickButtons(){
+  const now=new Date().getFullYear();
+  const yf=Number.parseInt($('yFrom').value,10)||null;
+  const yt=Number.parseInt($('yTo').value,10)||null;
+  $('qyAll').classList.toggle('on',!yf&&!yt);
+  $('qy5').classList.toggle('on',yf===now-4&&yt===now);
+  $('qy10').classList.toggle('on',yf===now-9&&yt===now);
+  validateYearRange(false);
+}
+function renderFltRow(){
+  const sel=$('fltSrc');const cur=state.flt.src;
+  sel.innerHTML=`<option value="all">${esc(t('fltAllSrcs'))}</option>`+
+    Object.keys(state.srcCounts).filter(s=>state.srcCounts[s]!==null).map(s=>`<option value="${esc(s)}" ${s===cur?'selected':''}>${esc(s)} (${state.srcCounts[s]})</option>`).join('');
+  $('lblFltSrc').textContent=t('fltSrc');
+  $('fltPdf').textContent=t('fltPdf');$('fltOa').textContent=t('fltOa');
+  $('fltPdf').classList.toggle('on',state.flt.pdf);$('fltOa').classList.toggle('on',state.flt.oa);}
+function renderSkeleton(){
+  $('worksList').innerHTML=Array(6).fill(`<div class="skel"><div style="flex:1">
+    <div class="bar" style="width:34%;margin-bottom:12px"></div>
+    <div class="bar" style="width:78%;height:20px;margin-bottom:10px"></div>
+    <div class="bar" style="width:56%;margin-bottom:8px"></div>
+    <div class="bar" style="width:92%"></div></div></div>`).join('');}
+
+/* ---------- رسم النتائج ---------- */
+function renderResults(){
+  const el=$('worksList'),L=state.view;
+  $('countEcho').innerHTML=`${esc(t('found'))} <b>${L.length}</b> ${esc(t('results'))}`;
+  if(!L.length){el.innerHTML=`<div class="emptybox"><svg class="ic"><use href="#i-search"/></svg>
+    <h3>${esc(t('noRes'))}</h3><p>${esc(t('noResSub'))}</p></div>`;return;}
+  el.innerHTML=L.map((w,i)=>{
+    const inB=state.basket.has(basketKey(w));
+    return`<article class="work" style="animation-delay:${Math.min(i*40,480)}ms">
+      <div class="w-idx">${String(i+1).padStart(2,'0')}</div>
+      <div class="w-body">
+        <div class="w-topmeta">
+          <span class="badge type">${esc(t('t'+cap(w.type)))}</span>
+          ${w.srcs.map(s=>`<span class="badge src">${esc(s)}</span>`).join('')}
+          ${w.oa?`<span class="badge oa">${esc(t('oaTag'))}</span>`:''}
+          ${w.fwci?`<span class="badge imp">${(+w.fwci).toFixed(1)}× ${esc(t('impact'))}</span>`:''}
+          ${w.year?`<span class="yr">${w.year}</span>`:''}
+          ${w.cited?`<span class="cited"><svg class="ic"><use href="#i-cite"/></svg>${w.cited} ${esc(t('citations'))}</span>`:''}
+        </div>
+        <h3 class="w-title" onclick="openDetail(${i})">${esc(w.title)}</h3>
+        ${w.authors.length?`<p class="w-auth"><b>${esc(w.authors.slice(0,4).join(' · '))}</b>${w.authors.length>4?' et al.':''}${w.venue?' — '+esc(w.venue):''}</p>`:''}
+        ${w.abstract?`<p class="w-abs">${esc(w.abstract)}</p>`:''}
+        <div class="w-actions">
+          <button class="wbtn" onclick="openDetail(${i})"><svg class="ic"><use href="#i-doc"/></svg>${esc(t('detail'))}</button>
+          <button class="wbtn" onclick="openDetail(${i},'cite')"><svg class="ic"><use href="#i-quote"/></svg>${esc(t('cite'))}</button>
+          ${w.pdf?`<a class="wbtn" href="${esc(w.pdf)}" target="_blank" rel="noopener"><svg class="ic"><use href="#i-down"/></svg>PDF</a>`:''}
+          ${w.doi?`<a class="wbtn" href="https://doi.org/${esc(w.doi)}" target="_blank" rel="noopener"><svg class="ic"><use href="#i-doi"/></svg>DOI</a>`:''}
+          <span style="flex:1"></span>
+          <button class="wbtn star ${inB?'on':''}" onclick="toggleBasket(event,${i})"><svg class="ic"><use href="#i-star"/></svg>${inB?esc(t('saved')):esc(t('save'))}</button>
+        </div>
+      </div></article>`;}).join('');}
+
+/* ---------- لوحة «بصيرة» ---------- */
+function tokenize(s){return String(s||'').toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).filter(w=>w.length>2&&!STOP_AR.has(w)&&!STOP_EN.has(w)&&!/^\d+$/.test(w));}
+function computeInsights(L){
+  const tf={},big={},auth={};let oa=0,yMin=9999,yMax=0;
+  L.forEach(w=>{if(w.oa||w.pdf)oa++;
+    if(w.year){yMin=Math.min(yMin,w.year);yMax=Math.max(yMax,w.year);}
+    if(w.authors[0])auth[w.authors[0]]=(auth[w.authors[0]]||0)+1;
+    const toks=tokenize(w.title+' '+(w.abstract||'').split(/(?<=[.!?؟])\s/).slice(0,3).join(' '));
+    toks.forEach(x=>tf[x]=(tf[x]||0)+1);
+    for(let i=0;i<toks.length-1;i++){const b=toks[i]+' '+toks[i+1];big[b]=(big[b]||0)+1;}});
+  const kws=Object.entries(big).filter(([k,v])=>v>1&&k.split(' ').every(x=>(tf[x]||0)<L.length*0.7))
+    .map(([k,v])=>[k,v*2.2]).concat(Object.entries(tf).map(([k,v])=>[k,v]))
+    .sort((a,b)=>b[1]-a[1]).slice(0,13).map(([k])=>k);
+  const yrs={};L.forEach(w=>{if(w.year&&w.year>=1900)yrs[w.year]=(yrs[w.year]||0)+1;});
+  const yrArr=Object.entries(yrs).sort((a,b)=>a[0]-b[0]);
+  const topCited=L.filter(w=>w.cited>0).sort((a,b)=>b.cited-a.cited).slice(0,5);
+  const topAuth=Object.entries(auth).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  let growth=null;
+  if(yrArr.length>6){const cur=yrArr.slice(-5).reduce((s,x)=>s+x[1],0)/5,prev=yrArr.slice(-10,-5).reduce((s,x)=>s+x[1],0)/5;
+    if(prev>0)growth=Math.round((cur-prev)/prev*100);}
+  return{kws,yrArr,topCited,topAuth,oa:Math.round(oa/L.length*100),yMin,yMax,growth};}
+function smartParagraph(L,ins){
+  const top=ins.topCited[0];
+  const peak=ins.yrArr.slice().sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]).join('، ');
+  if(state.lang==='ar'){
+    return`شمل هذا الرصد <b>${L.length}</b> مصدراً علمياً${ins.yMin<9999?` تمتدّ أعوامها بين <b>${ins.yMin}</b> و<b>${ins.yMax}</b>`:''}، استُخرجت من ${Object.values(state.srcCounts).filter(v=>v>0).length} قواعد بيانات مرصودة. يتقاطع الخطاب البحثي حول مفاهيم محورية أبرزها: <b>${esc(ins.kws.slice(0,3).join('، '))}</b>.${top?` وحصل أكبر اهتمام واستشهاد على «${esc(top.title.slice(0,90))}» بـ<b>${top.cited}</b> استشهاداً.`:''}${peak?` وسجّلت أعوام <b>${peak}</b> ذروة النشر.`:''}${ins.growth!==null?` ويُقدّر نموّ النشر في الخمسية الأخيرة بنحو <b>${ins.growth>0?'+':''}${ins.growth}٪</b>.`:''}`;}
+  return`This scan captured <b>${L.length}</b> works${ins.yMin<9999?` spanning <b>${ins.yMin}</b>–<b>${ins.yMax}</b>`:''} across ${Object.values(state.srcCounts).filter(v=>v>0).length} databases. The discourse converges on: <b>${esc(ins.kws.slice(0,3).join(', '))}</b>.${top?` Most cited: “${esc(top.title.slice(0,90))}” with <b>${top.cited}</b> citations.`:''}${peak?` Publication peaks around <b>${peak}</b>.`:''}${ins.growth!==null?` Publishing grew roughly <b>${ins.growth>0?'+':''}${ins.growth}%</b> over the last five years.`:''}`;}
+function renderInsights(){
+  const L=state.view,el=$('insights');
+  if(L.length<3){el.hidden=true;return;}
+  const ins=computeInsights(L);el.hidden=false;
+  const maxY=Math.max(...ins.yrArr.map(x=>x[1]),1);
+  const spark=ins.yrArr.length>1?`<div class="spark">${ins.yrArr.map(([y,v])=>
+    `<div class="col ${v===maxY?'peak':''}" style="height:${Math.max(4,v/maxY*100)}%" title="${y}: ${v}"></div>`).join('')}</div>
+    <div class="yl"><span>${ins.yrArr[0][0]}</span><span>${ins.yrArr[ins.yrArr.length-1][0]}</span></div>`:'';
+  el.innerHTML=`
+  <div class="ins-card"><h4><svg class="ic"><use href="#i-spark"/></svg>${esc(t('insTitle'))}<span class="tag">AI</span></h4>
+    <p class="smartread">${smartParagraph(L,ins)}</p></div>
+  <div class="ins-card"><h4><svg class="ic"><use href="#i-fil"/></svg>${esc(t('kwTitle'))}</h4>
+    <div>${ins.kws.map(k=>`<span class="kw" onclick="searchKeyword('${esc(k).replace(/'/g,"\\'")}')">${esc(k)}</span>`).join('')}</div></div>
+  ${spark?`<div class="ins-card"><h4><svg class="ic"><use href="#i-cite"/></svg>${esc(t('yearsTitle'))}</h4>${spark}
+    <div class="statpair" style="margin-top:12px">
+      <div class="st"><b>${ins.yMax-ins.yMin>=0?ins.yMax-ins.yMin+'+':''}</b><span>${esc(t('span'))}</span></div>
+      <div class="st"><b>${ins.oa}٪</b><span>${esc(t('oaRatio'))}</span></div>
+    </div></div>`:''}
+  ${ins.topCited.length?`<div class="ins-card"><h4><svg class="ic"><use href="#i-star"/></svg>${esc(t('topCited'))}</h4>
+    ${ins.topCited.map((w,i)=>`<div class="mini-item" onclick="openDetail(${state.view.indexOf(w)})">
+      <span class="n">${i+1}</span><span class="mt">${esc(w.title.slice(0,95))}${w.title.length>95?'…':''}</span>
+      <span class="mc">${w.cited}</span></div>`).join('')}</div>`:''}
+  ${ins.topAuth.length?`<div class="ins-card"><h4><svg class="ic"><use href="#i-quote"/></svg>${esc(t('topAuth'))}</h4>
+    ${ins.topAuth.map(([a,n])=>`<div class="mini-item"><span class="mt">${esc(a)}</span><span class="mc">${n}</span></div>`).join('')}</div>`:''}`;}
+function searchKeyword(k){$('mainQ').value=k;runSearch(k);}
+function smartSummary(text){
+  const sents=text.split(/(?<=[.!?؟])\s+/).filter(s=>s.split(' ').length>5);
+  if(sents.length<3)return null;
+  const freq={};tokenize(text).forEach(w=>freq[w]=(freq[w]||0)+1);
+  const qws=qWords();
+  const scored=sents.map((s,i)=>{const tk=tokenize(s);
+    let sc=tk.reduce((a,w)=>a+(freq[w]||0),0)/Math.sqrt(tk.length||1);
+    qws.forEach(q=>{if(s.toLowerCase().includes(q))sc+=4;});
+    if(i<2)sc*=1.15;return{s,i,sc};});
+  return scored.sort((a,b)=>b.sc-a.sc).slice(0,3).sort((a,b)=>a.i-b.i).map(x=>x.s).join(' ');}
+
+/* ---------- التوثيق الأكاديمي ---------- */
+const STYLES=['apa','mla','chicago','harvard','ieee','vancouver'];
+function apaAuthors(A){const F=A.map(a=>{const n=splitName(a);return n.family?`${n.family}, ${initials(n.given)}`.trim().replace(/,$/,''):a;});
+  if(F.length===1)return F[0];if(F.length===2)return F[0]+' & '+F[1];
+  if(F.length<=7)return F.slice(0,-1).join(', ')+', & '+F[F.length-1];
+  return F.slice(0,6).join(', ')+' ... '+F[F.length-1];}
+function mlaAuthors(A){const F=A.map(a=>{const n=splitName(a);return n.given?`${n.family}, ${n.given}`:a;});
+  if(F.length===1)return F[0];if(F.length===2)return F[0]+', and '+F[1];return F[0]+', et al.';}
+function chicagoAuthors(A){return mlaAuthors(A);}
+function harvAuthors(A){const F=A.map(a=>{const n=splitName(a);return n.family?`${n.family}, ${initials(n.given)}`:a;});
+  if(F.length===1)return F[0];if(F.length===2)return F[0]+' and '+F[1];return F[0]+' et al.';}
+function ieeeAuthors(A){return A.slice(0,6).map(a=>{const n=splitName(a);return n.family?`${initials(n.given)} ${n.family}`.trim():a;}).join(', ')+(A.length>6?' et al.':'');}
+function vancAuthors(A){return A.slice(0,6).map(a=>{const n=splitName(a);return n.family?`${n.family} ${initials(n.given)}`.trim():a;}).join(', ')+(A.length>6?', et al':'');}
+function citationFor(w,style,idx){
+  const A=w.authors||[],Y=w.year||'n.d.',T=w.title||'',V=w.venue||'',DOI=w.doi?('https://doi.org/'+w.doi):'';
+  if(w.type==='book'){
+    const pub=w.publisher||V||'n.p.';
+    switch(style){
+      case'apa':return`${apaAuthors(A)||T} (${Y}). ${T}. ${pub}.${DOI?' '+DOI:''}`;
+      case'mla':return`${mlaAuthors(A)||T}. ${T}. ${pub}, ${Y}.${DOI?' '+DOI:''}`;
+      case'chicago':return`${chicagoAuthors(A)||T}. ${Y}. ${T}. ${pub}.${DOI?' '+DOI:''}`;
+      case'harvard':return`${harvAuthors(A)||T} (${Y}) ${T}. ${pub}.${DOI?' '+DOI:''}`;
+      case'ieee':return`[${idx||1}] ${ieeeAuthors(A)||'—'}, ${T}. ${pub}, ${Y}.${DOI?' '+DOI:''}`;
+      case'vancouver':return`${idx||1}. ${vancAuthors(A)||'—'}. ${T}. ${pub}; ${Y}.${DOI?' '+DOI:''}`;}}
+  switch(style){
+    case'apa':return`${apaAuthors(A)||T} (${Y}). ${T}. ${V||'—'}${w.volume?`, ${w.volume}`:''}${w.issue?`(${w.issue})`:''}${w.pages?`, ${w.pages}`:''}.${DOI?' '+DOI:''}`;
+    case'mla':return`${mlaAuthors(A)||'—'}. "${T}." ${V||'—'}${w.volume?`, vol. ${w.volume}`:''}${w.issue?`, no. ${w.issue}`:''}, ${Y}${w.pages?`, pp. ${w.pages}`:''}.${DOI?' '+DOI:''}`;
+    case'chicago':return`${chicagoAuthors(A)||'—'}. ${Y}. "${T}." ${V||'—'}${w.volume?' '+w.volume:''}${w.pages?`: ${w.pages}`:''}.${DOI?' '+DOI:''}`;
+    case'harvard':return`${harvAuthors(A)||'—'} (${Y}) '${T}', ${V||'—'}${w.volume?`, ${w.volume}`:''}${w.issue?`(${w.issue})`:''}${w.pages?`, pp. ${w.pages}`:''}.${DOI?' '+DOI:''}`;
+    case'ieee':return`[${idx||1}] ${ieeeAuthors(A)||'—'}, "${T}," ${V||'—'}${w.volume?`, vol. ${w.volume}`:''}${w.issue?`, no. ${w.issue}`:''}${w.pages?`, pp. ${w.pages}`:''}, ${Y}.${DOI?' '+DOI:''}`;
+    case'vancouver':return`${idx||1}. ${vancAuthors(A)||'—'}. ${T}. ${V||'—'}. ${Y}${w.volume?';'+w.volume:''}${w.issue?`(${w.issue})`:''}${w.pages?`:${w.pages}`:''}.${DOI?' '+DOI:''}`;}
+  return'';}
+function bibtexFor(w){
+  const first=splitName(w.authors[0]||'anon').family.replace(/[^\p{L}]/gu,'')||'anon';
+  const key=(first+w.year).toLowerCase();
+  const type=(w.type==='book')?'book':'article';
+  const fields=[`title={${w.title}}`,`author={${w.authors.join(' and ')}}`,
+    w.year?`year={${w.year}}`:'',w.venue?`journal={${w.venue}}`:'',w.volume?`volume={${w.volume}}`:'',
+    w.issue?`number={${w.issue}}`:'',w.pages?`pages={${w.pages}}`:'',w.publisher?`publisher={${w.publisher}}`:'',
+    w.doi?`doi={${w.doi}}`:''].filter(Boolean).join(',\n  ');
+  return`@${type}{${key},\n  ${fields}\n}`;}
+function risFor(w){
+  const T={article:'JOUR',chapter:'CHAP',book:'BOOK',conference:'CONF',preprint:'JOUR',thesis:'THES'}[w.type]||'JOUR';
+  const L=[`TY  - ${T}`,`TI  - ${w.title}`];
+  w.authors.slice(0,15).forEach(a=>{const n=splitName(a);L.push(`AU  - ${n.family?n.family+', '+n.given:a}`);});
+  if(w.year)L.push(`PY  - ${w.year}`);
+  if(w.venue)L.push(`JO  - ${w.venue}`);
+  if(w.publisher)L.push(`PB  - ${w.publisher}`);
+  if(w.volume)L.push(`VL  - ${w.volume}`);
+  if(w.issue)L.push(`IS  - ${w.issue}`);
+  if(w.pages){const p=String(w.pages).split(/[–-]/);L.push(`SP  - ${p[0]}`);if(p[1])L.push(`EP  - ${p[1]}`);}
+  if(w.doi)L.push(`DO  - ${w.doi}`);
+  if(w.url)L.push(`UR  - ${w.url}`);
+  if(w.abstract)L.push(`AB  - ${w.abstract.slice(0,900)}`);
+  L.push(`ER  - `);return L.join('\r\n');}
+
+/* ---------- شبكة الاستشهادات ---------- */
+const oaMini=x=>({title:x.display_name,authors:(x.authorships||[]).map(a=>a.author?.display_name).filter(Boolean).slice(0,4),
+  year:x.publication_year||null,cited:x.cited_by_count||0,doi:normDoi(x.doi)});
+async function fetchNetwork(w,dir){
+  if(w.oaid){
+    if(dir==='cited'){
+      const d=await jget(`https://api.openalex.org/works?filter=cites:${w.oaid}&per-page=30&select=id,display_name,publication_year,authorships,cited_by_count,doi${MAIL}`);
+      return (d.results||[]).map(oaMini);}
+    const d0=await jget(`https://api.openalex.org/works/${w.oaid}?select=referenced_works${MAIL}`);
+    const ids=(d0.referenced_works||[]).slice(0,30);
+    if(!ids.length)return[];
+    const d=await jget(`https://api.openalex.org/works?filter=openalex:${ids.join('|')}&per-page=30&select=id,display_name,publication_year,authorships,cited_by_count,doi${MAIL}`);
+    return (d.results||[]).map(oaMini);}
+  const key=w.s2id||(w.doi?'DOI:'+w.doi:null);
+  if(key){
+    const d=await jget(`https://api.semanticscholar.org/graph/v1/paper/${key}/${dir==='refs'?'references':'citations'}?fields=title,year,authors,citationCount,externalIds&limit=40`,null,12000);
+    return (d.data||[]).map(x=>{const p=x.citedPaper||x.paper||x;if(!p||!p.title)return null;
+      return{title:p.title,authors:(p.authors||[]).map(a=>a.name),year:p.year||null,
+      cited:p.citationCount||0,doi:normDoi(p.externalIds?.DOI||'')};}).filter(Boolean);}
+  throw new Error('nokey');}
+let netCache={},netWorks=[];
+function switchNet(dir){document.querySelectorAll('.net-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.d===dir));loadNet(dir);}
+async function loadNet(dir){
+  const w=detailWork,body=$('netBody');if(!w||!body)return;
+  body.innerHTML=`<div class="net-load"><span class="spin">◌</span> ${esc(t('netLoading'))}</div>`;
+  const key=basketKey(w);netCache[key]=netCache[key]||{};
+  try{
+    if(!netCache[key][dir])netCache[key][dir]=await fetchNetwork(w,dir);
+    const L=netCache[key][dir],base=netWorks.length;
+    netWorks=netWorks.concat(L);
+    if(!L.length){body.innerHTML=`<p class="srcnote">${esc(t('netEmpty'))}</p>`;return;}
+    body.innerHTML=L.map((x,i)=>`<div class="net-item">
+      <span class="n">${i+1}</span>
+      <span class="mt" onclick="netSearch(${base+i})">${esc(x.title)}</span>
+      <span class="mc">${x.year||''}${x.cited?' · '+x.cited:''}</span>
+      <button class="iconbtn" style="width:26px;height:26px" onclick="netStar(${base+i},event)"><svg class="ic" style="width:12px;height:12px"><use href="#i-star"/></svg></button>
+    </div>`).join('');
+  }catch(e){body.innerHTML=`<p class="srcnote">${esc(t('netNoKey'))}</p>`;}}
+function netSearch(i){const x=netWorks[i];if(!x)return;closeDrawers();$('mainQ').value=x.title;runSearch(x.title);}
+function netStar(i,ev){ev.stopPropagation();const x=netWorks[i];if(!x)return;
+  toggleBasketW({id:'net:'+(x.doi||x.title),title:x.title,authors:x.authors||[],year:x.year||null,
+    type:'article',venue:'',publisher:'',doi:x.doi||'',url:x.doi?('https://doi.org/'+x.doi):'',
+    pdf:'',cited:x.cited||0,abstract:'',volume:'',issue:'',pages:'',lang:'',
+    srcs:[state.lang==='ar'?'شبكة الاستشهاد':'Citation network'],oa:false});}
+
+/* ---------- لوحة التفاصيل ---------- */
+let detailWork=null,detailStyle='apa';
+function openDetail(i,focusCite){
+  detailWork=state.view[i];if(!detailWork)return;
+  openDrawer($('detailDrawer'));
+  $('dHeadTitle').textContent=t('dTitle');
+  const w=detailWork;
+  const doiUrl=w.doi?('https://doi.org/'+w.doi):(w.url||'');
+  const te=encodeURIComponent(w.title);
+  const traces=[
+    ['Google Scholar',`https://scholar.google.com/scholar?q=${te}`],
+    ['Crossref',`https://search.crossref.org/search/works?q=${encodeURIComponent(w.doi||w.title)}`],
+    ['PubMed',`https://pubmed.ncbi.nlm.nih.gov/?term=${te}`],
+    ['دار المنظومة',`https://www.google.com/search?q=site:mandumah.com+${te}`],
+    ['منصة شمعة',`https://www.google.com/search?q=site:shamaa.org+${te}`],
+    ['Google Books',`https://www.google.com/search?tbm=bks&q=${te}`],
+    ['WorldCat',`https://search.worldcat.org/search?q=${te}`],
+    ['ResearchGate',`https://www.researchgate.net/search?q=${te}`],
+    ['JSTOR',`https://www.jstor.org/action/doBasicSearch?Query=${te}`]];
+  $('dBody').innerHTML=`
+    <div class="d-type">
+      <span class="badge type">${esc(t('t'+cap(w.type)))}</span>
+      ${w.oa?`<span class="badge oa">${esc(t('oaTag'))}</span>`:''}
+      ${w.year?`<span class="badge">${w.year}</span>`:''}
+      ${w.srcs.map(s=>`<span class="badge src">${esc(s)}</span>`).join('')}
+    </div>
+    <h2 class="d-title">${esc(w.title)}</h2>
+    ${w.authors.length?`<p class="d-auth">${esc(w.authors.join(' · '))}</p>`:''}
+    <div class="d-grid">
+      <div class="cell"><div class="k">${esc(t('dYear'))}</div><div class="v">${w.year||'—'}</div></div>
+      <div class="cell"><div class="k">${esc(t('dVenue'))}</div><div class="v">${esc(w.venue||'—')}</div></div>
+      ${w.publisher?`<div class="cell"><div class="k">${esc(t('dPub'))}</div><div class="v">${esc(w.publisher)}</div></div>`:''}
+      <div class="cell"><div class="k">${esc(t('dCited'))}</div><div class="v">${w.cited||0}</div></div>
+      ${w.volume?`<div class="cell"><div class="k">Vol / Issue</div><div class="v">${esc(w.volume)}${w.issue?' ('+esc(w.issue)+')':''}</div></div>`:''}
+      ${w.pages?`<div class="cell"><div class="k">Pages</div><div class="v">${esc(w.pages)}</div></div>`:''}
+      ${w.lang?`<div class="cell"><div class="k">${esc(t('dLang'))}</div><div class="v">${esc(w.lang)}</div></div>`:''}
+      <div class="cell"><div class="k">${esc(t('dDoi'))}</div><div class="v">${w.doi?`<a href="https://doi.org/${esc(w.doi)}" target="_blank" rel="noopener">${esc(w.doi)}</a>`:'—'}</div></div>
+    </div>
+    <div class="d-sec"><h5><svg class="ic"><use href="#i-doc"/></svg>${esc(t('dAbs'))}</h5>
+      <div class="d-abs ${w.abstract?'':'none'}">${w.abstract?esc(w.abstract):esc(t('dAbsNone'))}</div>
+      ${w.abstract?`<div style="margin-top:10px"><button class="abtn" onclick="doSmartSummary(this)"><svg class="ic"><use href="#i-spark"/></svg>${esc(t('smart'))}</button></div>
+      <div id="sumHolder"></div>`:''}
+    </div>
+    <div class="d-sec" id="citeSec"><h5><svg class="ic"><use href="#i-quote"/></svg>${esc(t('dCite'))}</h5>
+      <div class="styletabs" id="styleTabs">${STYLES.map(s=>`<button data-s="${s}" class="${s===detailStyle?'on':''}" onclick="setDetailStyle('${s}')">${s.toUpperCase()}</button>`).join('')}</div>
+      <textarea class="citebox" id="citeBox" readonly rows="4"></textarea>
+      <div style="display:flex;gap:8px;margin-top:9px;flex-wrap:wrap">
+        <button class="wbtn" onclick="copyEl('citeBox')"><svg class="ic"><use href="#i-copy"/></svg>${esc(state.lang==='ar'?'نسخ الاقتباس':'Copy citation')}</button>
+        <button class="wbtn" onclick="copyText(bibtexFor(detailWork))"><svg class="ic"><use href="#i-copy"/></svg>BibTeX</button>
+      </div></div>
+    <div class="d-sec"><h5><svg class="ic"><use href="#i-net"/></svg>${esc(t('netTitle'))}</h5>
+      <div class="net-tabs">
+        <button class="on" data-d="refs" onclick="switchNet('refs')">${esc(t('netRefs'))}</button>
+        <button data-d="cited" onclick="switchNet('cited')">${esc(t('netCited'))}</button>
+      </div>
+      <p class="srcnote">${esc(t('netHint'))}</p>
+      <div id="netBody"></div></div>
+    <div class="d-sec"><h5><svg class="ic"><use href="#i-ext"/></svg>${esc(t('dTrace'))}</h5>
+      <p class="srcnote">${esc(t('dTraceSub'))}</p>
+      <div class="tracelinks" style="margin-top:10px">
+      ${w.pdf?`<a href="${esc(w.pdf)}" target="_blank" rel="noopener" style="border-color:var(--brass);color:var(--brass)"><svg class="ic"><use href="#i-down"/></svg>${esc(t('openPdf'))}</a>`:''}
+      ${doiUrl?`<a href="${esc(doiUrl)}" target="_blank" rel="noopener" style="border-color:var(--brass);color:var(--brass)"><svg class="ic"><use href="#i-doi"/></svg>${esc(t('openSrc'))}</a>`:''}
+      ${traces.map(([n,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener"><svg class="ic"><use href="#i-ext"/></svg>${esc(n)}</a>`).join('')}
+      </div></div>`;
+  updateCiteBox();
+  $('dStar').classList.toggle('on',state.basket.has(basketKey(w)));
+  if(w.oaid||w.s2id||w.doi)loadNet('refs');
+  else $('netBody').innerHTML=`<p class="srcnote">${esc(t('netNoKey'))}</p>`;
+  if(focusCite)setTimeout(()=>$('citeSec').scrollIntoView({behavior:'smooth'}),350);}
+function setDetailStyle(s){detailStyle=s;
+  document.querySelectorAll('#styleTabs button').forEach(b=>b.classList.toggle('on',b.dataset.s===s));
+  updateCiteBox();}
+function updateCiteBox(){if(detailWork)$('citeBox').value=citationFor(detailWork,detailStyle,1);}
+function doSmartSummary(btn){
+  const sum=smartSummary(detailWork.abstract||'');
+  const holder=$('sumHolder');
+  if(!sum){holder.innerHTML='';toast(t('summNone'));return;}
+  btn.disabled=true;btn.style.opacity=.5;
+  let i=0;const words=sum.split(' ');
+  holder.innerHTML=`<div class="sumbox"><div class="tag"><svg class="ic"><use href="#i-spark"/></svg>${esc(t('smartTag'))}</div><span id="sumTxt"></span></div>`;
+  const iv=setInterval(()=>{i+=3;$('sumTxt').textContent=words.slice(0,i).join(' ');
+    if(i>=words.length){clearInterval(iv);$('sumTxt').textContent=sum;btn.disabled=false;btn.style.opacity=1;}},28);}
+function copyEl(id){const el=$(id);el.select();copyText(el.value);}
+async function copyText(txt){
+  try{await navigator.clipboard.writeText(txt);}
+  catch{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+  toast(t('copied'));}
+
+/* ---------- سلة المراجع ---------- */
+const basketKey=w=>(w.doi?'doi:'+normDoi(w.doi):'t:'+normTitle(w.title)+':'+(w.year||''));
+function saveBasket(){try{localStorage.setItem('fihrist-basket',JSON.stringify([...state.basket.entries()]));}catch{}}
+function loadBasket(){try{const raw=localStorage.getItem('fihrist-basket');
+  if(raw)JSON.parse(raw).forEach(([k,v])=>state.basket.set(k,v));}catch{}}
+function toggleBasket(ev,i){ev.stopPropagation();toggleBasketW(state.view[i]);renderResults();}
+function toggleBasketW(w){
+  const k=basketKey(w);
+  if(state.basket.has(k)){state.basket.delete(k);toast(t('removedBasket'));}
+  else{state.basket.set(k,w);toast(t('addedBasket'));}
+  saveBasket();updateBasketCount();if($('basketDrawer').classList.contains('open'))renderBasket();
+  if(detailWork&&basketKey(detailWork)===k)$('dStar').classList.toggle('on',state.basket.has(k));}
+function updateBasketCount(){
+  const c=state.basket.size;$('basketCount').style.display=c?'flex':'none';$('basketCount').textContent=c;}
+function renderBasket(){
+  const L=[...state.basket.values()];
+  $('bHeadTitle').textContent=t('basket');
+  $('bBody').innerHTML=`
+    <p class="srcnote" style="margin-bottom:8px">${L.length?esc(t('bStyle'))+':':''}</p>
+    <div class="styletabs" id="bStyleTabs">${STYLES.map(s=>`<button data-s="${s}" class="${s===detailStyle?'on':''}" onclick="bStyle('${s}')">${s.toUpperCase()}</button>`).join('')}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 20px">
+      <button class="abtn primary" onclick="exportRefs('copy')" ${L.length?'':'disabled style="opacity:.4"'}><svg class="ic"><use href="#i-copy"/></svg>${esc(t('exCopy'))}</button>
+      <button class="abtn" onclick="exportRefs('doc')" ${L.length?'':'disabled style="opacity:.4"'}><svg class="ic"><use href="#i-doc"/></svg>Word</button>
+      <button class="abtn" onclick="exportRefs('pdf')" ${L.length?'':'disabled style="opacity:.4"'}><svg class="ic"><use href="#i-print"/></svg>PDF</button>
+      <button class="abtn" onclick="exportRefs('ris')" ${L.length?'':'disabled style="opacity:.4"'}><svg class="ic"><use href="#i-down"/></svg>RIS</button>
+      <button class="abtn" onclick="exportRefs('bib')" ${L.length?'':'disabled style="opacity:.4"'}><svg class="ic"><use href="#i-down"/></svg>BibTeX</button>
+    </div>
+    ${L.length?L.map((w,i)=>`<div class="b-item">
+      <span style="font-family:var(--serif);color:var(--brass);font-weight:700">${i+1}.</span>
+      <div class="bt" onclick="openDetailFromBasket('${esc(basketKey(w)).replace(/'/g,"\\'")}')">
+        ${esc(w.title)}<div class="by">${esc(w.authors.slice(0,3).join(', '))} — ${w.year||''}</div></div>
+      <button class="iconbtn" style="width:30px;height:30px" onclick="removeBasket('${esc(basketKey(w)).replace(/'/g,"\\'")}')"><svg class="ic"><use href="#i-x"/></svg></button>
+    </div>`).join(''):`<div class="emptybox"><svg class="ic"><use href="#i-book"/></svg><h3>${esc(t('basket'))}</h3><p>${esc(t('basketEmpty'))}</p></div>`}`;}
+function bStyle(s){detailStyle=s;document.querySelectorAll('#bStyleTabs button').forEach(b=>b.classList.toggle('on',b.dataset.s===s));}
+function openDetailFromBasket(k){const w=state.basket.get(k);if(!w)return;
+  const idx=state.view.indexOf(w);if(idx>=0)openDetail(idx);
+  else{state.raw.push(w);state.view.push(w);openDetail(state.view.length-1);}}
+function removeBasket(k){state.basket.delete(k);saveBasket();updateBasketCount();renderBasket();renderResults();}
+function clearBasket(){state.basket.clear();saveBasket();updateBasketCount();renderBasket();renderResults();toast(t('cleared'));}
+function openBasket(){renderBasket();openDrawer($('basketDrawer'));}
+
+/* ---------- التصدير ---------- */
+function refsList(){return[...state.basket.values()].length?[...state.basket.values()]:state.view;}
+function refsHtml(L,style){
+  const items=L.map((w,i)=>`<li>${esc(citationFor(w,style,i+1))}</li>`).join('');
+  return`<h1>${state.lang==='ar'?'قائمة المراجع':'References'}</h1>
+  <div class="meta"><b>${esc(state.query)}</b> — ${L.length} ${esc(t('results'))} · ${style.toUpperCase()} · ${new Date().toLocaleDateString(state.lang==='ar'?'ar':'en')}</div>
+  <ol class="refs">${items}</ol>`;}
+function creditLine(){
+  return`${esc(t('printCredit'))} · © ${new Date().getFullYear()} ${state.lang==='ar'?'الفِهرِسْ':'Al-Fihrist'}`;}
+function downloadBlob(content,name,type){
+  try{const b=new Blob([content],{type});const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+  catch{toast(t('fileErr'),'err');}}
+function printRefs(){
+  const L=refsList(),st=detailStyle;
+  const w=window.open('','_blank');
+  if(!w){toast(t('netErr'),'err');return;}
+  w.document.write(`<!DOCTYPE html><html lang="${state.lang}" dir="${state.lang==='ar'?'rtl':'ltr'}"><head><meta charset="UTF-8">
+  <title>Al-Fihrist — ${st.toUpperCase()}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Spectral&display=swap" rel="stylesheet">
+  <style>body{font-family:'${state.lang==='ar'?'Amiri':'Spectral'}',serif;max-width:800px;margin:40px auto;padding:0 26px;font-size:14pt;line-height:2;color:#12293F}
+  h1{text-align:center;font-size:20pt;border-bottom:2px solid #0D6FA8;padding-bottom:10px;color:#0D2B4A}
+  .meta{text-align:center;font-size:10.5pt;color:#41648A;margin:12px 0 30px}
+  .refs{padding-inline-start:28px}.refs li{margin-bottom:16px}
+  .brandline{text-align:center;font-size:9.5pt;color:#0D6FA8;letter-spacing:.14em;margin-top:44px;border-top:1px solid #A3CDE9;padding-top:12px}
+  @page{margin:2.2cm}</style></head><body>${refsHtml(L,st)}
+  <div class="brandline">AL-FIHRIST · ${creditLine()}</div>
+  </body></html>`);
+  w.document.close();setTimeout(()=>{w.focus();w.print();},700);}
+function exportRefs(mode){
+  const L=refsList();
+  if(!L.length){toast(t('noBasket'),'err');return;}
+  const st=detailStyle;
+  if(mode==='copy')copyText(L.map((w,i)=>citationFor(w,st,i+1)).join('\n\n'));
+  if(mode==='doc')downloadBlob('\ufeff'+`<!DOCTYPE html><html lang="${state.lang}" dir="${state.lang==='ar'?'rtl':'ltr'}"><head><meta charset="UTF-8"><style>body{font-family:'${state.lang==='ar'?'Traditional Arabic':'Times New Roman'}',serif;font-size:13pt;line-height:1.9;color:#12293F}h1{text-align:center;font-size:18pt;border-bottom:2px solid #0D6FA8;padding-bottom:8px;color:#0D2B4A}.meta{font-size:10pt;color:#41648A;text-align:center;margin:10px 0 24px}.refs li{margin-bottom:14px}ol{padding-inline-start:26px}.credit{text-align:center;font-size:9pt;color:#0D6FA8;border-top:1px solid #A3CDE9;padding-top:8px;margin-top:28px}</style></head><body>${refsHtml(L,st)}<p class="credit">${creditLine()}</p></body></html>`,'al-fihrist-references.doc','application/msword');
+  if(mode==='bib')downloadBlob(L.map(bibtexFor).join('\n\n'),'al-fihrist.bib','text/plain');
+  if(mode==='ris')downloadBlob(L.map(risFor).join('\r\n'),'al-fihrist.ris','application/x-research-info-systems');
+  if(mode==='pdf')printRefs();}
+function renderExportPop(){
+  $('exportPop').innerHTML=`
+    <button onclick="exportRefs('copy')"><svg class="ic"><use href="#i-copy"/></svg>${esc(t('exCopy'))}</button>
+    <button onclick="exportRefs('doc')"><svg class="ic"><use href="#i-doc"/></svg>${esc(t('exDoc'))}</button>
+    <button onclick="exportRefs('pdf')"><svg class="ic"><use href="#i-print"/></svg>${esc(t('exPdf'))}</button>
+    <button onclick="exportRefs('ris')"><svg class="ic"><use href="#i-down"/></svg>${esc(t('exRis'))}</button>
+    <button onclick="exportRefs('bib')"><svg class="ic"><use href="#i-down"/></svg>${esc(t('exBib'))}</button>`;}
+function toggleExportPop(ev){ev.stopPropagation();$('exportPop').classList.toggle('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('.export-menu'))$('exportPop').classList.remove('open');});
+
+/* ---------- الرسائل والسجل ---------- */
+function toast(msg,kind){
+  const el=document.createElement('div');el.className='toast'+(kind==='err'?' err':'');
+  el.innerHTML=`<svg class="ic"><use href="#i-${kind==='err'?'x':'check'}"/></svg>${esc(msg)}`;
+  $('toasts').appendChild(el);
+  setTimeout(()=>{el.style.transition='.4s';el.style.opacity='0';setTimeout(()=>el.remove(),400);},3000);}
+function getHist(){try{return JSON.parse(localStorage.getItem('fihrist-hist')||'[]')}catch{return[]}}
+function pushHist(q){const h=[q,...getHist().filter(x=>x!==q)].slice(0,8);
+  try{localStorage.setItem('fihrist-hist',JSON.stringify(h))}catch{}renderHist();}
+function renderHist(){const h=getHist(),el=$('histRow');
+  if(!h.length){el.hidden=true;return;}
+  el.hidden=false;
+  el.innerHTML=`<span class="hlabel">${esc(t('histT'))}</span>`+
+    h.map(q=>`<button class="hist-chip" onclick="histGo(this.dataset.q)" data-q="${esc(q)}">${esc(q)}</button>`).join('')+
+    `<button class="hist-clear" onclick="clearHist()">${esc(t('histClear'))}</button>`;}
+function histGo(q){$('mainQ').value=q;runSearch(q);}
+function clearHist(){try{localStorage.removeItem('fihrist-hist')}catch{}renderHist();}
+
+/* ---------- اللوحات ---------- */
+let lastFocusedEl=null;
+function openDrawer(d){
+  lastFocusedEl=document.activeElement;closeDrawers();
+  d.classList.add('open');d.setAttribute('aria-hidden','false');
+  d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');
+  $('overlay').classList.add('show');
+  const focusable=d.querySelector('button, [href], input, select, textarea, [tabindex]');
+  if(focusable)focusable.focus();
+  document.addEventListener('keydown',trapFocus);}
+function closeDrawers(){
+  document.querySelectorAll('.drawer').forEach(d=>{d.classList.remove('open');d.setAttribute('aria-hidden','true');});
+  $('overlay').classList.remove('show');
+  document.removeEventListener('keydown',trapFocus);
+  if(lastFocusedEl&&typeof lastFocusedEl.focus==='function')lastFocusedEl.focus();}
+function trapFocus(e){
+  if(e.key==='Escape'){closeDrawers();return;}
+  if(e.key!=='Tab')return;
+  const open=document.querySelector('.drawer.open');if(!open)return;
+  const f=[...open.querySelectorAll('button, [href], input, select, textarea, [tabindex]')].filter(el=>!el.disabled&&el.offsetParent!==null);
+  if(!f.length)return;
+  const first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.querySelector('.drawer.open'))closeDrawers();});
+
+/* ---------- اللغة والثيم ---------- */
+function applyLang(){
+  const L=state.lang;
+  document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
+  $('kicker').textContent=t('kicker');
+  $('heroTitle').innerHTML=t('heroTitle');
+  $('heroSub').textContent=t('heroSub');
+  $('mainQ').placeholder=t('searchPh');$('miniQ').placeholder=t('searchPh');
+  $('searchBtnLabel').textContent=t('searchBtn');
+  $('lblYears').textContent=t('lblYears');$('lblType').textContent=t('lblType');$('lblLimit').textContent=t('lblLimit');
+  $('qyAll').textContent=t('qyAll');$('qy5').textContent=t('qy5');$('qy10').textContent=t('qy10');
+  $('extTtl').textContent=t('extTtl');
+  $('aiHintText').textContent=t('aiHintText');$('aiHintBtn').textContent=t('aiHintBtn');
+  $('typeSel').innerHTML=`<option value="all">${esc(t('typeAll'))}</option>`+
+    ['article','book','chapter','conference','preprint','thesis'].map(x=>`<option value="${x}">${esc(t('t'+cap(x)))}</option>`).join('');
+  $('sortRel').textContent=t('sortRel');$('sortDate').textContent=t('sortDate');$('sortCited').textContent=t('sortCited');
+  $('lblSort').textContent=t('lblSort');$('lblExport').textContent=t('lblExport');
+  $('dHeadTitle').textContent=t('dTitle');
+  $('brandName').textContent=L==='ar'?'الفِهرِسْ':'الفهرس';
+  $('brandName2').textContent=$('brandName').textContent;
+  $('footNote').textContent=t('footNote');
+  /* توقيع المصمم */
+  $('sigLbl').textContent=t('sigLbl');
+  $('sigName').textContent=t('sigName');
+  $('sigSub').textContent=t('sigSub');
+  $('sigRights').innerHTML=t('sigRights');
+  document.title=L==='ar'?'الفِهرِسْ | Al-Fihrist — د. حسن الشيباني':'Al-Fihrist | الفِهرِسْ — Dr. Hassan Al-Shaibani';
+  renderExtLinks();renderHist();syncYearQuickButtons();
+  if(document.body.classList.contains('in-results')&&state.raw.length)applyAndRender();}
+function toggleLang(){state.lang=state.lang==='ar'?'en':'ar';try{localStorage.setItem('fihrist-lang',state.lang);}catch{}applyLang();}
+function toggleTheme(){
+  state.theme=state.theme==='light'?'dark':'light';
+  document.documentElement.dataset.theme=state.theme;
+  $('themeBtn').innerHTML=`<svg class="ic"><use href="#i-${state.theme==='dark'?'sun':'moon'}"/></svg>`;
+  try{localStorage.setItem('fihrist-theme',state.theme)}catch{}}
+function renderExtLinks(){
+  const targets=state.lang==='ar'
+    ?[['Google Scholar','scholar'],['دار المنظومة','mandumah'],['منصة شمعة','shamaa'],['Google Books','books'],['WorldCat','worldcat'],['JSTOR','jstor']]
+    :[['Google Scholar','scholar'],['Google Books','books'],['WorldCat','worldcat'],['JSTOR','jstor'],['Dar Almandumah','mandumah'],['Shamaa','shamaa']];
+  const urls={scholar:'https://scholar.google.com/scholar?q=',mandumah:'https://www.google.com/search?q=site:mandumah.com+',
+    shamaa:'https://www.google.com/search?q=site:shamaa.org+',books:'https://www.google.com/search?tbm=bks&q=',
+    worldcat:'https://search.worldcat.org/search?q=',jstor:'https://www.jstor.org/action/doBasicSearch?Query='};
+  $('extLinks').innerHTML=targets.map(([n,k])=>
+    `<a class="extlink" target="_blank" rel="noopener" href="${urls[k]}${encodeURIComponent($('mainQ').value||'')}">${esc(n)}<svg class="ic"><use href="#i-ext"/></svg></a>`).join('');}
+
+/* ---------- مساعد «بصيرة» ---------- */
+function detectTerm(q){
+  const ql=q.toLowerCase();
+  for(const[ar,en]of TERMS){
+    if(/[\u0600-\u06FF]/.test(q)&&ql.includes(ar))return{to:en};
+    if(ql.includes(en))return{to:ar};}
+  return null;}
+function checkAssistant(){
+  const q=$('mainQ').value.trim(),hint=$('aiHint');
+  if(q.length<3){hint.classList.remove('show');return;}
+  const m=detectTerm(q);
+  if(m){hint.classList.add('show');$('aiHintTerm').textContent=m.to;
+    $('aiHintBtn').onclick=()=>{$('mainQ').value=m.to;runSearch(m.to);};}
+  else hint.classList.remove('show');}
+
+/* ---------- الأحداث ---------- */
+function submitSearch(e){e.preventDefault();const q=$('mainQ').value.trim();if(q)runSearch(q);}
+function submitMini(e){e.preventDefault();const q=$('miniQ').value.trim();if(q)runSearch(q);}
+function quickYears(n){
+  const now=new Date().getFullYear();
+  if(!n){$('yFrom').value='';$('yTo').value='';}
+  else{$('yFrom').value=now-(n-1);$('yTo').value=now;}
+  syncYearQuickButtons();
+  if(state.raw.length)applyAndRender();
+}
+function goHome(){
+  closeDrawers();$('resultsView').hidden=true;$('homeView').hidden=false;
+  document.body.classList.remove('in-results');window.scrollTo({top:0,behavior:'smooth'});}
+ $('typeSel').addEventListener('change',e=>{state.typeFilter=e.target.value;if(state.raw.length)applyAndRender();});
+document.querySelectorAll('[data-sort]').forEach(b=>b.addEventListener('click',()=>{state.sort=b.dataset.sort;if(state.raw.length)applyAndRender();}));
+['yFrom','yTo'].forEach(id=>$(id).addEventListener('input',()=>{syncYearQuickButtons();}));
+['yFrom','yTo'].forEach(id=>$(id).addEventListener('change',()=>{if(validateYearRange(true)){updateURLForQuery(state.query||$('mainQ').value.trim());if(state.raw.length)applyAndRender();}}));
+ $('fltSrc').addEventListener('change',e=>{state.flt.src=e.target.value;if(state.raw.length)applyAndRender();});
+ $('fltPdf').addEventListener('click',()=>{state.flt.pdf=!state.flt.pdf;if(state.raw.length)applyAndRender();});
+ $('fltOa').addEventListener('click',()=>{state.flt.oa=!state.flt.oa;if(state.raw.length)applyAndRender();});
+ $('mainQ').addEventListener('input',()=>{renderExtLinks();checkAssistant();});
+ $('dStar').addEventListener('click',()=>{if(detailWork)toggleBasketW(detailWork);});
+
+/* ---------- حالة الاتصال بالشبكة ---------- */
+function initOnlineWatch(){
+  const banner=$('netBanner');
+  function paint(){
+    if(navigator.onLine){banner.classList.remove('show');}
+    else{banner.textContent=t('offlineTitle')+' — '+t('offlineSub');banner.classList.add('show');}
+  }
+  window.addEventListener('offline',paint);
+  window.addEventListener('online',()=>{paint();toast(t('backOnline'));});
+  paint();
+}
+
+/* ---------- روابط عميقة قابلة للمشاركة (?q=...) ---------- */
+function updateURLForQuery(q){
+  try{
+    const u=new URL(location.href);
+    u.searchParams.set('q',q);
+    const yF=$('yFrom').value,yT=$('yTo').value;
+    yF?u.searchParams.set('yF',yF):u.searchParams.delete('yF');
+    yT?u.searchParams.set('yT',yT):u.searchParams.delete('yT');
+    history.replaceState(null,'',u.toString());
+  }catch{}
+}
+function initDeepLink(){
+  try{
+    const p=new URLSearchParams(location.search);
+    const q=p.get('q');
+    if(!q)return;
+    if(p.get('yF'))$('yFrom').value=p.get('yF');
+    if(p.get('yT'))$('yTo').value=p.get('yT');
+    syncYearQuickButtons();
+    $('mainQ').value=q;
+    runSearch(q);
+  }catch{}
+}
+
+/* ---------- التهيئة ---------- */
+(function init(){
+  try{const th=localStorage.getItem('fihrist-theme');if(th==='dark'){state.theme='dark';document.documentElement.dataset.theme='dark';
+    $('themeBtn').innerHTML='<svg class="ic"><use href="#i-sun"/></svg>';}}catch{}
+  try{const L=localStorage.getItem('fihrist-lang');if(L==='ar'||L==='en')state.lang=L;}catch{}
+  loadBasket();
+  $('srcChips').innerHTML=SOURCE_ORDER.map(k=>`<label class="srcchip">
+    <input type="checkbox" checked onchange="this.checked?state.enabled.add('${k}'):state.enabled.delete('${k}')">
+    <span><b>●</b>${SOURCES[k]}</span></label>`).join('');
+  applyLang();updateBasketCount();
+  try{initOnlineWatch();}catch(e){console.error('initOnlineWatch',e);}
+  try{initDeepLink();}catch(e){console.error('initDeepLink',e);}
+})();
+</script>
+</body>
+</html>
