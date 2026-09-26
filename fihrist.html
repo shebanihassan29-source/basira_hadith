@@ -880,7 +880,7 @@ const HARD_TIMEOUT_MS=14000;     /* سقف زمني صلب: الواجهة لا 
 const STALL_HINT_MS=6000;        /* بعده نُخبر المستخدم أن بعض القواعد ما زالت تستجيب */
 
 /* ---------- تخزين مؤقت للنتائج (سرعة + شبكة أمان) ---------- */
-const CACHE_TTL_MS=30*60*1000; /* 15 دقيقة — بيانات ببليوغرافية لا تتغيّر لحظياً */
+const CACHE_TTL_MS=30*60*1000; /* 30 دقيقة — بيانات ببليوغرافية لا تتغيّر لحظياً */
 const CACHE_PREFIX='fc:';
 function cacheKeyFor(k,q,yF,yT,per){return CACHE_PREFIX+k+'|'+normTitle(q)+'|'+(yF||'')+'|'+(yT||'')+'|'+per;}
 function cacheGet(key,ignoreTTL){
