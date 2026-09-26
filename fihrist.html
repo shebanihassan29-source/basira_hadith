@@ -445,15 +445,6 @@ footer{border-top:1px solid var(--line)}
       <div class="srcchips" id="srcChips" aria-label="قواعد البيانات"></div>
       <div class="hist-row" id="histRow" hidden></div>
 
-      <div class="search-module" id="bookSearchModule">
-        <div class="module-title"><svg class="ic"><use href="#i-book"/></svg><span id="bookSearchTitle"></span></div>
-        <form class="module-search" onsubmit="submitBookSearch(event)">
-          <input id="bookSearchQ" type="search" autocomplete="off" placeholder="">
-          <button type="submit"><svg class="ic"><use href="#i-search"/></svg><span id="bookSearchBtn"></span></button>
-        </form>
-        <div class="module-note" id="bookSearchNote"></div>
-      </div>
-
       <div class="search-module" id="portalSearchModule">
         <div class="module-title"><svg class="ic"><use href="#i-ext"/></svg><span id="portalSearchTitle"></span></div>
         <form class="module-search" onsubmit="submitPortalSearch(event)">
@@ -556,7 +547,6 @@ ar:{
   lblYears:'نطاق سنوات النشر', lblType:'نوع المصدر', lblLimit:'حجم النتائج',
   qyAll:'الكل', qy5:'آخر ٥ سنوات', qy10:'آخر ١٠ سنوات',
   extTtl:'بحث موازٍ في القواعد العربية والمتخصّصة',
-  bookSearchTitle:'البحث في الكتب والمجاميع', bookSearchPh:'اكتب عنوان كتاب أو مؤلف أو موضوع…', bookSearchBtn:'بحث الكتب', bookSearchNote:'يُرشّح النتائج لإظهار الكتب والمجاميع فقط، مع الاستفادة من قواعد الفهرسة المتاحة.',
   portalSearchTitle:'البوابات المجانية', portalSearchPh:'اكتب موضوع البحث لتحديث روابط البوابات…', portalSearchBtn:'بحث في البوابات', portalSearchNote:'روابط بحث مجانية أو مفتوحة؛ قد يختلف توفر النص الكامل بحسب المصدر.',
   aiHintText:'يقترح «بصيرة» البحث بالمقابل الإنجليزي لنتائج أوسع:',
   aiHintBtn:'ابحث بهذا المصطلح',
@@ -619,7 +609,6 @@ en:{
   lblYears:'Publication years', lblType:'Source type', lblLimit:'Result size',
   qyAll:'All time', qy5:'Last 5 yrs', qy10:'Last 10 yrs',
   extTtl:'Parallel search in Arabic & specialist databases',
-  bookSearchTitle:'Search books & collections', bookSearchPh:'Enter a book title, author or topic…', bookSearchBtn:'Search books', bookSearchNote:'Results are filtered to books and collections where the indexed source provides that type.',
   portalSearchTitle:'Free research portals', portalSearchPh:'Enter a topic to update the portal links…', portalSearchBtn:'Search portals', portalSearchNote:'Free/open search portals; full-text availability depends on the source.',
   aiHintText:'Basira suggests its English equivalent for wider coverage:',
   aiHintBtn:'Search this term',
@@ -742,20 +731,17 @@ async function rawFetch(url,tmo,asText,proxyIdx,token){
 }
 async function resilientFetch(url,tmo,asText,token){
   let lastErr=null;
-  /* المصدر المباشر ثم البوابات الاحتياطية: 403/429/5xx أو استجابة JSON غير صالحة
-     لا تُفشل المصدر فوراً، بل تنتقل إلى المسار البديل. */
+  /* مسار مباشر ثم بوابات احتياطية مرة واحدة فقط؛ منع دورات الإعادة المتكررة يسرّع الفشل
+     في المصادر المتعثرة ويحافظ على فرص الاستعادة دون إطالة زمن البحث. */
   const routes=[null,...CORS_PROXIES.map((_,i)=>i)];
-  for(let attempt=0;attempt<2;attempt++){
-    for(const route of routes){
-      try{return await rawFetch(url,tmo,asText,route,token);}
-      catch(e){lastErr=e;if(e?.name==='AbortError')throw e;}
-    }
-    if(attempt<1)await sleep(450);
+  for(const route of routes){
+    try{return await rawFetch(url,tmo,asText,route,token);}
+    catch(e){lastErr=e;if(e?.name==='AbortError')throw e;}
   }
   throw lastErr||new Error('network');
 }
-function jget(url,token,tmo=10000){return resilientFetch(url,tmo,false,token);}
-function tget(url,token,tmo=10000){return resilientFetch(url,tmo,true,token);}
+function jget(url,token,tmo=7000){return resilientFetch(url,tmo,false,token);}
+function tget(url,token,tmo=7000){return resilientFetch(url,tmo,true,token);}
 const normTitle=s=>String(s||'').toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,'').replace(/\s+/g,' ').trim();
 const normDoi=d=>String(d||'').replace(/^https?:\/\/(dx\.)?doi\.org\//i,'').toLowerCase();
 const cleanJats=s=>String(s||'').replace(/<[^>]+>/g,' ').replace(/&[a-z]+;/gi,' ').replace(/\s+/g,' ').trim();
@@ -775,7 +761,7 @@ function rebuildAbstract(inv){if(!inv)return'';const a=[];
   return a.filter(Boolean).join(' ');}
 const MAIL='&mailto='+encodeURIComponent(CONTACT_EMAIL)+(OPENALEX_KEY?('&api_key='+encodeURIComponent(OPENALEX_KEY)):'');
 
-/* ---------- المحوّلات الثمانية (بحث حيّ) ---------- */
+/* ---------- محوّلات المصادر (بحث حيّ) ---------- */
 async function apiOpenAlex(q,n,yF,yT,tok){
   const fl=[];
   if(yF)fl.push(`from_publication_date:${yF}-01-01`);
@@ -890,11 +876,11 @@ const SOURCE_ORDER=['openalex','s2','crossref','pubmed','epmc','arxiv','doaj','o
 
 /* ---------- خط الأنابيب ---------- */
 let searchSeq=0;                 /* يمنع نتائج بحث قديمة متأخرة من الكتابة فوق بحث أحدث */
-const HARD_TIMEOUT_MS=20000;     /* سقف زمني صلب: الواجهة لا تنتظر أكثر منه مهما تعطّلت مصادر */
-const STALL_HINT_MS=9000;        /* بعده نُخبر المستخدم أن بعض القواعد ما زالت تستجيب */
+const HARD_TIMEOUT_MS=14000;     /* سقف زمني صلب: الواجهة لا تنتظر أكثر منه مهما تعطّلت مصادر */
+const STALL_HINT_MS=6000;        /* بعده نُخبر المستخدم أن بعض القواعد ما زالت تستجيب */
 
 /* ---------- تخزين مؤقت للنتائج (سرعة + شبكة أمان) ---------- */
-const CACHE_TTL_MS=15*60*1000; /* 15 دقيقة — بيانات ببليوغرافية لا تتغيّر لحظياً */
+const CACHE_TTL_MS=30*60*1000; /* 15 دقيقة — بيانات ببليوغرافية لا تتغيّر لحظياً */
 const CACHE_PREFIX='fc:';
 function cacheKeyFor(k,q,yF,yT,per){return CACHE_PREFIX+k+'|'+normTitle(q)+'|'+(yF||'')+'|'+(yT||'')+'|'+per;}
 function cacheGet(key,ignoreTTL){
@@ -1541,8 +1527,14 @@ function applyLang(){
   $('qyAll').textContent=t('qyAll');$('qy5').textContent=t('qy5');$('qy10').textContent=t('qy10');
 
   $('aiHintText').textContent=t('aiHintText');$('aiHintBtn').textContent=t('aiHintBtn');
-  $('bookSearchTitle').textContent=t('bookSearchTitle');$('bookSearchQ').placeholder=t('bookSearchPh');$('bookSearchBtn').textContent=t('bookSearchBtn');$('bookSearchNote').textContent=t('bookSearchNote');
-  $('portalSearchTitle').textContent=t('portalSearchTitle');$('portalSearchQ').placeholder=t('portalSearchPh');$('portalSearchBtn').textContent=t('portalSearchBtn');$('portalSearchNote').textContent=t('portalSearchNote');
+  const portalTitle=$('portalSearchTitle');
+  const portalQ=$('portalSearchQ');
+  const portalBtn=$('portalSearchBtn');
+  const portalNote=$('portalSearchNote');
+  if(portalTitle)portalTitle.textContent=t('portalSearchTitle');
+  if(portalQ)portalQ.placeholder=t('portalSearchPh');
+  if(portalBtn)portalBtn.textContent=t('portalSearchBtn');
+  if(portalNote)portalNote.textContent=t('portalSearchNote');
   $('typeSel').innerHTML=`<option value="all">${esc(t('typeAll'))}</option>`+
     ['article','book','chapter','conference','preprint','thesis'].map(x=>`<option value="${x}">${esc(t('t'+cap(x)))}</option>`).join('');
   $('sortRel').textContent=t('sortRel');$('sortDate').textContent=t('sortDate');$('sortCited').textContent=t('sortCited');
@@ -1596,15 +1588,6 @@ function renderExtLinks(){
   };
   $('portalLinks').innerHTML=targets.map(([n,k,b])=>
     `<a class="portal-link" target="_blank" rel="noopener" href="${urls[k]}${te}">${esc(n)}<span class="status">${esc(b)}</span><svg class="ic"><use href="#i-ext"/></svg></a>`).join('');
-}
-function submitBookSearch(e){
-  e.preventDefault();
-  const q=$('bookSearchQ').value.trim();
-  if(!q)return;
-  $('mainQ').value=q;
-  state.typeFilter='book';
-  $('typeSel').value='book';
-  runSearch(q);
 }
 function submitPortalSearch(e){
   e.preventDefault();
