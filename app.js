@@ -11,6 +11,26 @@ document.querySelectorAll("[data-view]").forEach(x=>x.addEventListener("click",(
 function msg(id,t){const x=document.getElementById(id);x.textContent=t;x.classList.remove("hidden");setTimeout(()=>x.classList.add("hidden"),3500)}
 // إشعار عام مستقل عن القسم الحالي، لاستخدامه مع إجراءات الهيدر (الاستيراد، النواة العلمية) التي قد تُطلق من أي صفحة
 let toastTimer=null;function toast(t){if(!toastEl)return;toastEl.textContent=t;toastEl.classList.remove("hidden");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.add("hidden"),4000)}
+// بحث شامل واحد يغطي كل قواعد البيانات (مصادر، أحاديث، رواة، أحكام، روايات) من أي صفحة، مع زر بحث صريح
+const globalSearchInput=document.getElementById("globalSearch"),globalSearchBtn=document.getElementById("globalSearchBtn");
+function runGlobalSearch(qRaw){const q=(qRaw||"").trim().toLowerCase();if(!q){toast("اكتب كلمة أو أكثر للبحث الشامل.");return}
+const srcM=db.sources.filter(s=>(s.book+" "+s.author+" "+s.editor+" "+s.publisher+" "+(s.notes||"")).toLowerCase().includes(q));
+const hadM=db.hadiths.filter(h=>(h.text+" "+h.narrator+" "+h.chapter+" "+h.keywords+" "+h.number).toLowerCase().includes(q));
+const narM=db.narrators.filter(n=>(n.name+" "+(n.kunya||"")+" "+(n.nisba||"")).toLowerCase().includes(q));
+const judM=db.judgments.filter(j=>(j.scholar+" "+j.judgment+" "+j.source).toLowerCase().includes(q));
+const varM=db.variants.filter(v=>(v.text+" "+v.source+" "+v.method).toLowerCase().includes(q));
+const total=srcM.length+hadM.length+narM.length+judM.length+varM.length;
+const block=(title,items,rowFn)=>items.length?('<h3>'+esc(title)+' ('+items.length+')</h3><div class="table-wrap"><table><tbody>'+items.slice(0,25).map(rowFn).join("")+'</tbody></table></div>'):"";
+const html='<h2>🔎 نتائج البحث الشامل عن: «'+esc(qRaw)+'»</h2>'+
+(total?'<p class="muted">'+total+' نتيجة إجمالًا (تُعرض أول 25 من كل قسم).</p>':'<p class="muted">لا توجد نتائج مطابقة في أي قسم من المنصة.</p>')+
+block("المصادر",srcM,s=>'<tr><td><b>'+esc(s.book)+'</b> — '+esc(s.author||"—")+'</td><td><button class="mini-action" onclick="closeModal();sourceView(\''+s.id+'\')">فتح</button></td></tr>')+
+block("الأحاديث",hadM,h=>'<tr><td class="truncate">'+esc(h.text)+'</td><td><button class="mini-action" onclick="closeModal();hadithView(\''+h.id+'\')">فتح</button></td></tr>')+
+block("الرواة",narM,n=>'<tr><td>'+esc(n.name)+(n.kunya?" — "+esc(n.kunya):"")+'</td><td><button class="mini-action" onclick="closeModal();go(\'narrators\')">عرض القسم</button></td></tr>')+
+block("أحكام العلماء",judM,j=>'<tr><td><b>'+esc(j.scholar)+':</b> <span class="truncate">'+esc(j.judgment)+'</span></td><td><button class="mini-action" onclick="closeModal();go(\'judgments\')">عرض القسم</button></td></tr>')+
+block("الروايات",varM,v=>'<tr><td class="truncate">'+esc(v.text)+'</td><td><button class="mini-action" onclick="closeModal();go(\'variants\')">عرض القسم</button></td></tr>');
+openModal(html)}
+globalSearchBtn?.addEventListener("click",()=>runGlobalSearch(globalSearchInput.value));
+globalSearchInput?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();runGlobalSearch(globalSearchInput.value)}});
 function renderNarrators(){const q=(narratorSearch?.value||"").toLowerCase();narratorRows.innerHTML=db.narrators.filter(n=>(n.name+" "+(n.kunya||"")+" "+(n.nisba||"")).toLowerCase().includes(q)).map(n=>'<tr><td><b>'+esc(n.name)+'</b></td><td>'+esc(n.kunya||"—")+'</td><td>'+esc(n.nisba||"—")+'</td><td>'+esc(n.generation||"—")+'</td><td>'+esc(n.notes||"—")+'</td></tr>').join("")||'<tr><td colspan="5">لا توجد أسماء رواة.</td></tr>'}
 function renderJudgments(){const q=(judgmentSearch?.value||"").toLowerCase();judgmentRows.innerHTML=db.judgments.filter(j=>(j.scholar+" "+j.judgment+" "+j.source).toLowerCase().includes(q)).map(j=>{const h=db.hadiths.find(x=>x.id===j.hadithId);return '<tr><td>'+esc(h?.number||"—")+'</td><td>'+esc(j.scholar)+'</td><td>'+esc(j.judgment)+'</td><td>'+esc(j.source||"—")+'</td><td>'+esc(j.location||"—")+'</td></tr>'}).join("")||'<tr><td colspan="5">لا توجد أحكام علمائية مسجلة.</td></tr>'}
 function renderVariants(){const q=(variantSearch?.value||"").toLowerCase();variantRows.innerHTML=db.variants.filter(v=>(v.text+" "+v.source+" "+v.method).toLowerCase().includes(q)).map(v=>{const h=db.hadiths.find(x=>x.id===v.hadithId);return '<tr><td>'+esc(h?.number||"—")+'</td><td class="truncate">'+esc(v.text)+'</td><td>'+esc(v.source||"—")+'</td><td>'+esc(v.location||"—")+'</td><td>'+esc(v.method||"—")+'</td></tr>'}).join("")||'<tr><td colspan="5">لا توجد روايات مرتبطة.</td></tr>'}
