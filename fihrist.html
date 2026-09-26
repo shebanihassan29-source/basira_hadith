@@ -149,6 +149,24 @@ select{border:1px solid var(--line2);background:var(--card);padding:8px 10px;fon
 .extlink{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);padding:7px 14px;font-size:.82rem;color:var(--ink);background:var(--card);transition:.2s;border-radius:2px}
 .extlink:hover{border-color:var(--brass);color:var(--brass);text-decoration:none}
 .extlink .ic{width:13px;height:13px;color:var(--brass)}
+.search-module{margin-top:24px;width:100%;max-width:860px;background:var(--card);border:1px solid var(--line);padding:14px 16px;box-shadow:0 8px 24px -18px rgba(10,60,100,.25)}
+.search-module .module-title{display:flex;align-items:center;gap:8px;color:var(--ink);font-family:var(--serif);font-weight:700;font-size:1rem;margin-bottom:9px}
+.search-module .module-title .ic{color:var(--brass)}
+.module-search{display:flex;gap:8px}
+.module-search input{flex:1;min-width:0;border:1px solid var(--line2);background:var(--paper);padding:9px 12px;outline:none;font-size:.9rem}
+.module-search input:focus{border-color:var(--brass);box-shadow:0 0 0 2px rgba(13,111,168,.08)}
+.module-search button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--brass-d);background:var(--brass-d);color:#fff;padding:8px 14px;font-size:.82rem;font-weight:700;white-space:nowrap}
+.module-search button:hover{background:var(--brass)}
+.module-note{font-size:.7rem;color:var(--ink2);margin-top:7px}
+.portal-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.portal-link{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);padding:6px 11px;background:var(--paper);font-size:.78rem;color:var(--ink);transition:.15s}
+.portal-link:hover{border-color:var(--brass);color:var(--brass);text-decoration:none}
+.portal-link .status{font-size:.62rem;color:var(--emerald);font-weight:700}
+@media(max-width:640px){
+  .module-search{flex-direction:column}
+  .module-search button{width:100%}
+}
+
 
 /* ===== شاشة النتائج ===== */
 #resultsView{max-width:1220px;margin:0 auto;padding:26px clamp(14px,3vw,34px) 80px}
@@ -424,12 +442,23 @@ footer{border-top:1px solid var(--line)}
         </div>
       </div>
 
-      <div class="srcchips" id="srcChips"></div>
-      <div class="hist-row" id="histRow" hidden></div>
+      <div class="search-module" id="bookSearchModule">
+        <div class="module-title"><svg class="ic"><use href="#i-book"/></svg><span id="bookSearchTitle"></span></div>
+        <form class="module-search" onsubmit="submitBookSearch(event)">
+          <input id="bookSearchQ" type="search" autocomplete="off" placeholder="">
+          <button type="submit"><svg class="ic"><use href="#i-search"/></svg><span id="bookSearchBtn"></span></button>
+        </form>
+        <div class="module-note" id="bookSearchNote"></div>
+      </div>
 
-      <div class="ext-row">
-        <div class="ttl" id="extTtl"></div>
-        <div class="extlinks" id="extLinks"></div>
+      <div class="search-module" id="portalSearchModule">
+        <div class="module-title"><svg class="ic"><use href="#i-ext"/></svg><span id="portalSearchTitle"></span></div>
+        <form class="module-search" onsubmit="submitPortalSearch(event)">
+          <input id="portalSearchQ" type="search" autocomplete="off" placeholder="">
+          <button type="submit"><svg class="ic"><use href="#i-ext"/></svg><span id="portalSearchBtn"></span></button>
+        </form>
+        <div class="module-note" id="portalSearchNote"></div>
+        <div class="portal-links" id="portalLinks"></div>
       </div>
     </div>
   </section>
@@ -524,6 +553,8 @@ ar:{
   lblYears:'نطاق سنوات النشر', lblType:'نوع المصدر', lblLimit:'حجم النتائج',
   qyAll:'الكل', qy5:'آخر ٥ سنوات', qy10:'آخر ١٠ سنوات',
   extTtl:'بحث موازٍ في القواعد العربية والمتخصّصة',
+  bookSearchTitle:'البحث في الكتب والمجاميع', bookSearchPh:'اكتب عنوان كتاب أو مؤلف أو موضوع…', bookSearchBtn:'بحث الكتب', bookSearchNote:'يُرشّح النتائج لإظهار الكتب والمجاميع فقط، مع الاستفادة من قواعد الفهرسة المتاحة.',
+  portalSearchTitle:'البوابات المجانية', portalSearchPh:'اكتب موضوع البحث لتحديث روابط البوابات…', portalSearchBtn:'بحث في البوابات', portalSearchNote:'روابط بحث مجانية أو مفتوحة؛ قد يختلف توفر النص الكامل بحسب المصدر.',
   aiHintText:'يقترح «بصيرة» البحث بالمقابل الإنجليزي لنتائج أوسع:',
   aiHintBtn:'ابحث بهذا المصطلح',
   searching:'يستمسك الفِهرِس خيوط البحث في ٨ قواعد علمية…',
@@ -585,6 +616,8 @@ en:{
   lblYears:'Publication years', lblType:'Source type', lblLimit:'Result size',
   qyAll:'All time', qy5:'Last 5 yrs', qy10:'Last 10 yrs',
   extTtl:'Parallel search in Arabic & specialist databases',
+  bookSearchTitle:'Search books & collections', bookSearchPh:'Enter a book title, author or topic…', bookSearchBtn:'Search books', bookSearchNote:'Results are filtered to books and collections where the indexed source provides that type.',
+  portalSearchTitle:'Free research portals', portalSearchPh:'Enter a topic to update the portal links…', portalSearchBtn:'Search portals', portalSearchNote:'Free/open search portals; full-text availability depends on the source.',
   aiHintText:'Basira suggests its English equivalent for wider coverage:',
   aiHintBtn:'Search this term',
   searching:'Al-Fihrist is threading your query through 8 scholarly databases…',
@@ -1502,8 +1535,10 @@ function applyLang(){
   $('searchBtnLabel').textContent=t('searchBtn');
   $('lblYears').textContent=t('lblYears');$('lblType').textContent=t('lblType');$('lblLimit').textContent=t('lblLimit');
   $('qyAll').textContent=t('qyAll');$('qy5').textContent=t('qy5');$('qy10').textContent=t('qy10');
-  $('extTtl').textContent=t('extTtl');
+
   $('aiHintText').textContent=t('aiHintText');$('aiHintBtn').textContent=t('aiHintBtn');
+  $('bookSearchTitle').textContent=t('bookSearchTitle');$('bookSearchQ').placeholder=t('bookSearchPh');$('bookSearchBtn').textContent=t('bookSearchBtn');$('bookSearchNote').textContent=t('bookSearchNote');
+  $('portalSearchTitle').textContent=t('portalSearchTitle');$('portalSearchQ').placeholder=t('portalSearchPh');$('portalSearchBtn').textContent=t('portalSearchBtn');$('portalSearchNote').textContent=t('portalSearchNote');
   $('typeSel').innerHTML=`<option value="all">${esc(t('typeAll'))}</option>`+
     ['article','book','chapter','conference','preprint','thesis'].map(x=>`<option value="${x}">${esc(t('t'+cap(x)))}</option>`).join('');
   $('sortRel').textContent=t('sortRel');$('sortDate').textContent=t('sortDate');$('sortCited').textContent=t('sortCited');
@@ -1526,15 +1561,54 @@ function toggleTheme(){
   document.documentElement.dataset.theme=state.theme;
   $('themeBtn').innerHTML=`<svg class="ic"><use href="#i-${state.theme==='dark'?'sun':'moon'}"/></svg>`;
   try{localStorage.setItem('fihrist-theme',state.theme)}catch{}}
+function portalQuery(){return $('portalSearchQ').value.trim()||$('mainQ').value.trim();}
 function renderExtLinks(){
+  const q=portalQuery();
+  const te=encodeURIComponent(q);
   const targets=state.lang==='ar'
-    ?[['Google Scholar','scholar'],['دار المنظومة','mandumah'],['منصة شمعة','shamaa'],['Google Books','books'],['WorldCat','worldcat'],['JSTOR','jstor']]
-    :[['Google Scholar','scholar'],['Google Books','books'],['WorldCat','worldcat'],['JSTOR','jstor'],['Dar Almandumah','mandumah'],['Shamaa','shamaa']];
-  const urls={scholar:'https://scholar.google.com/scholar?q=',mandumah:'https://www.google.com/search?q=site:mandumah.com+',
-    shamaa:'https://www.google.com/search?q=site:shamaa.org+',books:'https://www.google.com/search?tbm=bks&q=',
-    worldcat:'https://search.worldcat.org/search?q=',jstor:'https://www.jstor.org/action/doBasicSearch?Query='};
-  $('extLinks').innerHTML=targets.map(([n,k])=>
-    `<a class="extlink" target="_blank" rel="noopener" href="${urls[k]}${encodeURIComponent($('mainQ').value||'')}">${esc(n)}<svg class="ic"><use href="#i-ext"/></svg></a>`).join('');}
+    ?[
+      ['Google Scholar','scholar','مجاني'],['دار المنظومة','mandumah','بحث'],['منصة شمعة','shamaa','مجاني'],
+      ['Google Books','books','مجاني'],['WorldCat','worldcat','بحث'],['DOAJ','doaj','مفتوح'],['PubMed','pubmed','مجاني'],
+      ['Europe PMC','epmc','مجاني'],['arXiv','arxiv','مفتوح'],['Open Library','ol','مجاني'],['Semantic Scholar','s2','مجاني']
+    ]
+    :[
+      ['Google Scholar','scholar','Free'],['Google Books','books','Free'],['WorldCat','worldcat','Search'],['DOAJ','doaj','Open'],
+      ['PubMed','pubmed','Free'],['Europe PMC','epmc','Free'],['arXiv','arxiv','Open'],['Open Library','ol','Free'],
+      ['Semantic Scholar','s2','Free'],['Dar Almandumah','mandumah','Search'],['Shamaa','shamaa','Free']
+    ];
+  const urls={
+    scholar:'https://scholar.google.com/scholar?q=',
+    mandumah:'https://www.google.com/search?q=site:mandumah.com+',
+    shamaa:'https://www.google.com/search?q=site:shamaa.org+',
+    books:'https://books.google.com/books?q=',
+    worldcat:'https://search.worldcat.org/search?q=',
+    jstor:'https://www.jstor.org/action/doBasicSearch?Query=',
+    doaj:'https://doaj.org/search/articles?ref=homepage&q=',
+    pubmed:'https://pubmed.ncbi.nlm.nih.gov/?term=',
+    epmc:'https://europepmc.org/search?query=',
+    arxiv:'https://arxiv.org/search/?query=',
+    ol:'https://openlibrary.org/search?q=',
+    s2:'https://www.semanticscholar.org/search?q='
+  };
+  $('portalLinks').innerHTML=targets.map(([n,k,b])=>
+    `<a class="portal-link" target="_blank" rel="noopener" href="${urls[k]}${te}">${esc(n)}<span class="status">${esc(b)}</span><svg class="ic"><use href="#i-ext"/></svg></a>`).join('');
+}
+function submitBookSearch(e){
+  e.preventDefault();
+  const q=$('bookSearchQ').value.trim();
+  if(!q)return;
+  $('mainQ').value=q;
+  state.typeFilter='book';
+  $('typeSel').value='book';
+  runSearch(q);
+}
+function submitPortalSearch(e){
+  e.preventDefault();
+  const q=$('portalSearchQ').value.trim();
+  if(!q){$('portalSearchQ').focus();return;}
+  $('mainQ').value=q;
+  renderExtLinks();
+}
 
 /* ---------- مساعد «بصيرة» ---------- */
 function detectTerm(q){
@@ -1571,7 +1645,7 @@ document.querySelectorAll('[data-sort]').forEach(b=>b.addEventListener('click',(
  $('fltSrc').addEventListener('change',e=>{state.flt.src=e.target.value;if(state.raw.length)applyAndRender();});
  $('fltPdf').addEventListener('click',()=>{state.flt.pdf=!state.flt.pdf;if(state.raw.length)applyAndRender();});
  $('fltOa').addEventListener('click',()=>{state.flt.oa=!state.flt.oa;if(state.raw.length)applyAndRender();});
- $('mainQ').addEventListener('input',()=>{renderExtLinks();checkAssistant();});
+ $('mainQ').addEventListener('input',()=>{if(!$('portalSearchQ').value) $('portalSearchQ').value=$('mainQ').value;renderExtLinks();checkAssistant();});
  $('dStar').addEventListener('click',()=>{if(detailWork)toggleBasketW(detailWork);});
 
 /* ---------- حالة الاتصال بالشبكة ---------- */
