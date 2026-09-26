@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="د. حسن الشيباني — Dr. Hassan Al-Shaibani">
+<meta name="copyright" content="© 2025 د. حسن الشيباني — جميع الحقوق محفوظة">
+<meta name="description" content="الفِهرِسْ — بوّابة بحث أكاديمي موحّدة تبحث في آنٍ واحد داخل ثماني قواعد علمية عالمية (OpenAlex, Semantic Scholar, Crossref, PubMed, Europe PMC, arXiv, DOAJ, Open Library) مع شبكة استشهادات وتوثيق جاهز للتصدير.">
+<meta name="theme-color" content="#0D6FA8">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="الفِهرِسْ | Al-Fihrist — بوّابة بحث أكاديمي موحّدة">
+<meta property="og:description" content="بحث موحّد في ثماني قواعد بيانات علمية عالمية، مع شبكة استشهادات وتحليل ذكي وتصدير مراجع جاهز.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%230D6FA8' stroke-width='2.6'%3E%3Crect x='9' y='9' width='22' height='22'/%3E%3Crect x='9' y='9' width='22' height='22' transform='rotate(45 20 20)'/%3E%3Ccircle cx='20' cy='20' r='3.2' fill='%230D6FA8' stroke='none'/%3E%3C/g%3E%3C/svg%3E">
+<title>الفِهرِسْ | Al-Fihrist — د. حسن الشيباني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- تسريع أول اتصال بكل قاعدة عبر تهيئة DNS/TLS مبكراً -->
+<link rel="dns-prefetch" href="https://api.openalex.org"><link rel="preconnect" href="https://api.openalex.org" crossorigin>
+<link rel="dns-prefetch" href="https://api.semanticscholar.org"><link rel="preconnect" href="https://api.semanticscholar.org" crossorigin>
+<link rel="dns-prefetch" href="https://api.crossref.org"><link rel="preconnect" href="https://api.crossref.org" crossorigin>
+<link rel="dns-prefetch" href="https://eutils.ncbi.nlm.nih.gov"><link rel="preconnect" href="https://eutils.ncbi.nlm.nih.gov" crossorigin>
+<link rel="dns-prefetch" href="https://export.arxiv.org">
+<link rel="dns-prefetch" href="https://doaj.org"><link rel="preconnect" href="https://doaj.org" crossorigin>
+<link rel="dns-prefetch" href="https://www.ebi.ac.uk"><link rel="preconnect" href="https://www.ebi.ac.uk" crossorigin>
+<link rel="dns-prefetch" href="https://openlibrary.org"><link rel="preconnect" href="https://openlibrary.org" crossorigin>
+<link rel="dns-prefetch" href="https://corsproxy.io">
+<link rel="dns-prefetch" href="https://api.allorigins.win">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Spectral:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   الهوية اللونية — الأزرق السماوي (نهار) / الكحلي (ليل)
+   © تصميم وتطوير: د. حسن الشيباني
+   ========================================================= */
+:root{
+  --paper:#C9E7F8;      /* أزرق سماوي — خلفية المنصة */
+  --paper2:#B5DCF3;     /* سماوي أعمق — تمرير */
+  --card:#F6FBFF;       /* بطاقات شبه بيضاء */
+  --ink:#0D2B4A;        /* كحلي عميق للنصوص */
+  --ink2:#41648A;       /* أزرق رمادي ثانوي */
+  --line:#A3CDE9;
+  --line2:#7FB4D9;
+  --brass:#0D6FA8;      /* أزرق محيطي — اللون المميز */
+  --brass-d:#0B5686;
+  --emerald:#0E7C6B;    /* تيل — وسوم الذكاء */
+  --gold:#B0831F;       /* ذهبي توقيع المصمم */
+  --gold-d:#8F6A12;
+  --shadow:0 18px 50px -18px rgba(10,60,100,.30);
+  --serif:'Amiri',serif; --sans:'IBM Plex Sans Arabic',sans-serif;
+}
+[data-theme="dark"]{
+  --paper:#0B1B2C;      /* كحلي ليلي */
+  --paper2:#10263D;
+  --card:#0F2236;
+  --ink:#D9EDFB;
+  --ink2:#8FB3CF;
+  --line:#1E3A57;
+  --line2:#2C5173;
+  --brass:#62B7EC;
+  --brass-d:#8FD0F5;
+  --emerald:#5FC9B4;
+  --gold:#E4BC63;
+  --gold-d:#EFD193;
+  --shadow:0 18px 50px -18px rgba(0,0,0,.65);
+}
+html[dir="ltr"]{ --serif:'Spectral',serif; }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.7;transition:background .3s,color .3s}
+::selection{background:var(--brass);color:#fff}
+[data-theme="dark"] ::selection{color:#0B1B2C}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:6px}
+button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit}
+input,select,textarea{font-family:inherit;color:inherit}
+a{color:var(--brass);text-decoration:none}
+a:hover{text-decoration:underline}
+.ic{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-3px}
+.ic.lg{width:21px;height:21px}
+.hspace{flex:1}
+
+/* ===== الترويسة ===== */
+header{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:1px solid var(--line);height:60px;display:flex;align-items:center;padding:0 clamp(14px,4vw,40px);gap:14px}
+.brand{display:flex;align-items:center;gap:11px;cursor:pointer}
+.brand .mark{width:36px;height:36px;color:var(--brass)}
+.brand b{font-family:var(--serif);font-size:1.5rem;font-weight:700;letter-spacing:.5px;line-height:1}
+.brand small{display:block;font-size:.58rem;letter-spacing:.34em;color:var(--ink2);font-weight:500;margin-top:2px}
+.hsearch{flex:0 1 430px;display:none;align-items:center;gap:8px;border:1px solid var(--line2);border-radius:2px;background:var(--card);padding:6px 12px}
+body.in-results .hsearch{display:flex}
+.hsearch input{flex:1;border:none;background:none;outline:none;font-size:.92rem;min-width:60px}
+.hsearch .go{color:var(--brass);display:flex}
+.iconbtn{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:2px;color:var(--ink2);transition:.2s;position:relative;background:var(--card)}
+.iconbtn:hover{color:var(--brass);border-color:var(--brass)}
+.iconbtn.on{color:var(--brass);border-color:var(--brass)}
+.iconbtn .cnt{position:absolute;top:-7px;inset-inline-end:-7px;background:var(--brass);color:#fff;font-size:.62rem;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.langbtn{font-weight:700;font-size:.85rem;letter-spacing:.06em;padding:0 12px}
+.langbtn span.sep{color:var(--line2);margin:0 5px}
+
+/* ===== الواجهة الافتتاحية ===== */
+#homeView{min-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 18px 24px;position:relative}
+#homeView[hidden],#resultsView[hidden]{display:none!important}
+.hero-pattern{position:absolute;inset:0;opacity:.06;pointer-events:none;background-image:url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="84" height="84"%3E%3Cg fill="none" stroke="%230D6FA8" stroke-width="1"%3E%3Crect x="21" y="21" width="42" height="42"/%3E%3Crect x="21" y="21" width="42" height="42" transform="rotate(45 42 42)"/%3E%3C/g%3E%3C/svg%3E')}
+.hero{position:relative;text-align:center;max-width:860px;width:100%}
+.hero .kicker{display:inline-flex;align-items:center;gap:10px;color:var(--brass);font-weight:600;font-size:.8rem;letter-spacing:.12em}
+.hero .kicker::before,.hero .kicker::after{content:"";width:34px;height:1px;background:var(--brass)}
+h1.hero-t{font-family:var(--serif);font-size:clamp(2.1rem,5.4vw,3.6rem);font-weight:700;margin:14px 0 10px;line-height:1.35}
+h1.hero-t em{font-style:normal;color:var(--brass)}
+.hero-sub{color:var(--ink2);max-width:640px;margin:0 auto;font-size:1.02rem}
+.bigsearch{display:flex;margin:34px auto 0;max-width:720px;border:1px solid var(--line2);background:var(--card);box-shadow:var(--shadow);position:relative}
+.bigsearch:focus-within{border-color:var(--brass)}
+.bigsearch input{flex:1;border:none;background:none;outline:none;padding:0 20px;font-size:1.12rem;height:64px;min-width:0}
+.bigsearch .submit{background:var(--brass-d);color:#EAF6FF;padding:0 26px;display:flex;align-items:center;gap:9px;font-weight:600;font-size:1rem;transition:.2s;white-space:nowrap}
+.bigsearch .submit:hover{background:var(--brass)}
+[data-theme="dark"] .bigsearch .submit{color:#0B1B2C}
+.ai-hint{display:none;max-width:720px;margin:12px auto 0;text-align:start;background:var(--card);border:1px solid var(--line2);border-inline-start:3px solid var(--emerald);padding:11px 16px;font-size:.9rem;align-items:center;gap:12px;animation:rise .3s}
+.ai-hint.show{display:flex}
+.ai-hint .lbl{color:var(--emerald);font-weight:700;font-size:.72rem;letter-spacing:.08em;display:flex;align-items:center;gap:5px}
+.ai-hint .term{font-family:var(--serif);font-weight:700;font-size:1.05rem}
+.ai-hint button{border:1px solid var(--brass);color:var(--brass);padding:3px 12px;font-size:.8rem;font-weight:600;border-radius:2px;white-space:nowrap}
+.ai-hint button:hover{background:var(--brass);color:#fff}
+[data-theme="dark"] .ai-hint button:hover{color:#0B1B2C}
+.ctrl-row{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 26px;margin-top:26px;align-items:flex-end}
+.ctrl{text-align:start}
+.ctrl>label{display:block;font-size:.72rem;font-weight:700;color:var(--ink2);letter-spacing:.1em;margin-bottom:7px}
+.years{display:flex;align-items:center;gap:7px}
+.years input{width:88px;border:1px solid var(--line2);background:var(--card);padding:7px 9px;font-size:.9rem;text-align:center;outline:none;border-radius:2px}
+.years input:focus{border-color:var(--brass);box-shadow:0 0 0 2px rgba(13,111,168,.10)}
+.years.invalid input{border-color:#B03A2E;background:rgba(176,58,46,.05)}
+.year-note{font-size:.68rem;color:var(--ink2);margin-top:5px;text-align:center}
+.years .dash{color:var(--ink2)}
+select{border:1px solid var(--line2);background:var(--card);padding:8px 10px;font-size:.88rem;outline:none;border-radius:2px;cursor:pointer}
+.srcchips{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-top:24px}
+.srcchip input{display:none}
+.srcchip span{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);padding:7px 15px;font-size:.85rem;font-weight:600;color:var(--ink2);cursor:pointer;transition:.2s;border-radius:2px;background:var(--card)}
+.srcchip span b{font-size:.68rem;color:var(--brass);font-weight:700}
+.srcchip input:checked+span{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.srcchip input:checked+span b{color:var(--brass)}
+.hist-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin-top:20px;max-width:860px;width:100%}
+.hist-row .hlabel{font-size:.72rem;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.hist-chip{border:1px dashed var(--line2);padding:4px 13px;font-size:.8rem;border-radius:20px;color:var(--ink2);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-chip:hover{color:var(--brass);border-color:var(--brass)}
+.hist-clear{font-size:.72rem;color:var(--ink2);text-decoration:underline}
+.ext-row{margin-top:38px;position:relative;width:100%;max-width:860px}
+.ext-row .ttl{display:flex;align-items:center;gap:14px;color:var(--ink2);font-size:.75rem;font-weight:700;letter-spacing:.14em;margin-bottom:14px}
+.ext-row .ttl::before,.ext-row .ttl::after{content:"";flex:1;height:1px;background:var(--line)}
+.extlinks{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
+.extlink{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);padding:7px 14px;font-size:.82rem;color:var(--ink);background:var(--card);transition:.2s;border-radius:2px}
+.extlink:hover{border-color:var(--brass);color:var(--brass);text-decoration:none}
+.extlink .ic{width:13px;height:13px;color:var(--brass)}
+
+/* ===== شاشة النتائج ===== */
+#resultsView{max-width:1220px;margin:0 auto;padding:26px clamp(14px,3vw,34px) 80px}
+.rtoolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:6px}
+.rtoolbar .q{font-family:var(--serif);font-size:1.45rem;font-weight:700}
+.rtoolbar .q::before{content:"«";color:var(--brass)}
+.rtoolbar .q::after{content:"»";color:var(--brass)}
+.rtoolbar .count{color:var(--ink2);font-size:.85rem}
+.rtoolbar .count b{color:var(--brass);font-family:var(--serif);font-size:1.1rem}
+.rtools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rtools .sep{width:1px;height:22px;background:var(--line)}
+.chip{border:1px solid var(--line2);padding:5px 12px;font-size:.8rem;font-weight:600;color:var(--ink2);transition:.15s;border-radius:2px;background:var(--card)}
+.chip:hover{border-color:var(--brass);color:var(--brass)}
+.chip.on{background:var(--emerald);border-color:var(--emerald);color:#fff}
+[data-theme="dark"] .chip.on{color:#04211B}
+.abtn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--ink);padding:6px 14px;font-size:.82rem;font-weight:600;background:var(--card);transition:.2s;border-radius:2px}
+.abtn:hover{background:var(--ink);color:var(--paper)}
+.abtn.primary{background:var(--brass-d);border-color:var(--brass-d);color:#EAF6FF}
+.abtn.primary:hover{background:var(--brass);border-color:var(--brass);color:#fff}
+[data-theme="dark"] .abtn.primary{color:#0B1B2C}
+.export-menu{position:relative}
+.export-pop{position:absolute;top:calc(100% + 8px);inset-inline-end:0;background:var(--card);border:1px solid var(--line2);box-shadow:var(--shadow);min-width:250px;z-index:40;display:none;padding:6px}
+.export-pop.open{display:block}
+.export-pop button{display:flex;width:100%;align-items:center;gap:10px;padding:9px 12px;font-size:.87rem;text-align:start;transition:.15s}
+.export-pop button:hover{background:var(--paper2);color:var(--brass)}
+.srccounts{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.srccounts .sc{font-size:.74rem;color:var(--ink2);border:1px dashed var(--line2);padding:3px 11px;border-radius:20px}
+.srccounts .sc b{color:var(--brass)}
+.flt-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+.flt-row .flbl{font-size:.72rem;font-weight:700;color:var(--ink2);letter-spacing:.06em}
+.flt-row select{padding:5px 9px;font-size:.8rem}
+
+.results-grid{display:grid;grid-template-columns:minmax(0,1fr) 308px;gap:38px;align-items:start;margin-top:14px}
+#worksList{min-height:200px}
+.work{display:flex;gap:18px;padding:22px 6px;border-bottom:1px solid var(--line);animation:rise .45s both}
+.work:hover{background:var(--paper2)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.w-idx{font-family:var(--serif);font-size:1.9rem;font-weight:700;color:var(--line2);line-height:1;min-width:44px;padding-top:6px;transition:.2s;font-style:italic}
+.work:hover .w-idx{color:var(--brass)}
+.w-body{flex:1;min-width:0}
+.w-topmeta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px}
+.badge{font-size:.68rem;font-weight:700;letter-spacing:.05em;padding:2px 9px;border:1px solid var(--line2);color:var(--ink2);border-radius:2px}
+.badge.type{background:var(--emerald);border-color:var(--emerald);color:#fff}
+[data-theme="dark"] .badge.type{color:#04211B}
+.badge.src{color:var(--brass);border-color:var(--brass)}
+.badge.oa{color:var(--emerald);border-color:var(--emerald)}
+.badge.imp{color:var(--brass);border-color:var(--brass)}
+.w-topmeta .yr{font-family:var(--serif);font-weight:700;color:var(--ink2);font-size:.95rem}
+.w-topmeta .cited{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;color:var(--ink2)}
+.w-topmeta .cited .ic{width:13px;height:13px}
+.w-title{font-family:var(--serif);font-size:1.32rem;font-weight:700;line-height:1.55;cursor:pointer;transition:.15s}
+.w-title:hover{color:var(--brass)}
+.w-auth{font-size:.86rem;color:var(--ink2);margin-top:4px}
+.w-auth b{color:var(--ink);font-weight:600}
+.w-abs{font-size:.88rem;color:var(--ink2);margin-top:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.w-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.wbtn{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:var(--ink2);border:1px solid var(--line);padding:5px 11px;transition:.15s;border-radius:2px;background:var(--card)}
+.wbtn:hover{color:var(--brass);border-color:var(--brass)}
+.wbtn .ic{width:14px;height:14px}
+.wbtn.star.on{background:var(--brass);border-color:var(--brass);color:#fff}
+[data-theme="dark"] .wbtn.star.on{color:#0B1B2C}
+.skel{padding:24px 6px;border-bottom:1px solid var(--line);display:flex;gap:18px}
+.skel .bar{height:12px;background:var(--paper2);position:relative;overflow:hidden;border-radius:2px}
+.skel .bar::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(13,111,168,.16),transparent);animation:shim 1.3s infinite}
+@keyframes shim{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.emptybox{text-align:center;padding:70px 20px;color:var(--ink2)}
+.diagList{list-style:none;padding:0;margin:14px auto 0;max-width:380px;text-align:start;font-size:.8rem;color:var(--ink2);
+  border-top:1px solid var(--line);padding-top:12px}
+.diagList li{padding:3px 0;display:flex;justify-content:space-between;gap:10px}
+.emptybox .ic{width:44px;height:44px;color:var(--line2);stroke-width:1.2;margin-bottom:14px}
+.emptybox h3{font-family:var(--serif);font-size:1.4rem;color:var(--ink);margin-bottom:6px}
+
+/* ===== لوحة البصيرة ===== */
+.insights{position:sticky;top:80px;display:flex;flex-direction:column;gap:18px}
+.ins-card{background:var(--card);border:1px solid var(--line);padding:18px}
+.ins-card h4{font-family:var(--serif);font-size:1.06rem;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.ins-card h4 .ic{color:var(--brass)}
+.ins-card h4 .tag{margin-inline-start:auto;font-size:.6rem;letter-spacing:.1em;color:var(--emerald);border:1px solid var(--emerald);padding:1px 7px;border-radius:2px;font-family:var(--sans)}
+.smartread{font-size:.87rem;color:var(--ink2);line-height:1.85}
+.smartread b{color:var(--brass);font-family:var(--serif);font-size:1rem}
+.kw{display:inline-block;font-size:.78rem;font-weight:600;border:1px solid var(--line2);padding:3px 11px;margin:0 4px 7px 0;cursor:pointer;transition:.15s;border-radius:2px;background:var(--paper)}
+.kw:hover{background:var(--brass);border-color:var(--brass);color:#fff}
+[data-theme="dark"] .kw:hover{color:#0B1B2C}
+.spark{display:flex;align-items:flex-end;gap:2px;height:58px;margin-top:4px}
+.spark .col{flex:1;background:var(--line2);min-height:2px;transition:.15s}
+.spark .col:hover{background:var(--brass)}
+.spark .col.peak{background:var(--brass)}
+.spark .yl{display:flex;justify-content:space-between;font-size:.62rem;color:var(--ink2);margin-top:5px}
+.mini-item{display:flex;gap:9px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.82rem;cursor:pointer}
+.mini-item:last-child{border:none}
+.mini-item:hover .mt{color:var(--brass)}
+.mini-item .n{font-family:var(--serif);color:var(--brass);font-weight:700;min-width:20px}
+.mini-item .mt{flex:1;line-height:1.45;transition:.15s}
+.mini-item .mc{color:var(--ink2);font-size:.72rem;white-space:nowrap}
+.statpair{display:flex;gap:10px}
+.statpair .st{flex:1;border:1px solid var(--line);padding:10px;text-align:center}
+.statpair .st b{display:block;font-family:var(--serif);font-size:1.5rem;color:var(--brass);line-height:1.2}
+.statpair .st span{font-size:.68rem;color:var(--ink2)}
+
+/* ===== لوحة التفاصيل ===== */
+.overlay{position:fixed;inset:0;background:rgba(8,30,50,.5);z-index:80;opacity:0;pointer-events:none;transition:.3s}
+.overlay.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(660px,100vw);background:var(--paper);z-index:90;transform:translateX(-105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow)}
+[dir="rtl"] .drawer{transform:translateX(105%)}
+.drawer.open{transform:translateX(0)!important}
+.d-head{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:2px solid var(--ink);flex:none}
+.d-head .t{font-family:var(--serif);font-weight:700;font-size:1.1rem}
+.d-body{overflow-y:auto;padding:24px clamp(16px,4vw,30px) 60px;flex:1}
+.d-type{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.d-title{font-family:var(--serif);font-size:clamp(1.4rem,3vw,1.85rem);font-weight:700;line-height:1.55;margin-bottom:12px}
+.d-auth{color:var(--ink2);font-size:.92rem;margin-bottom:18px}
+.d-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:22px}
+.d-grid .cell{background:var(--card);padding:10px 13px}
+.d-grid .k{font-size:.64rem;letter-spacing:.1em;color:var(--ink2);font-weight:700;margin-bottom:3px}
+.d-grid .v{font-size:.87rem;font-weight:500;word-break:break-word}
+.d-grid .v a{font-weight:600}
+.d-sec{margin-top:24px}
+.d-sec>h5{font-family:var(--serif);font-size:1.12rem;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.d-sec>h5 .ic{color:var(--brass)}
+.d-abs{font-size:.95rem;line-height:1.95;background:var(--card);border:1px solid var(--line);border-inline-start:3px solid var(--brass);padding:16px 18px}
+.d-abs.none{color:var(--ink2);font-style:italic}
+.sumbox{border:1px solid var(--emerald);background:var(--card);padding:14px 17px;font-size:.9rem;line-height:1.9;margin-top:10px}
+.sumbox .tag{font-size:.62rem;font-weight:700;letter-spacing:.1em;color:var(--emerald);display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.styletabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.styletabs button{border:1px solid var(--line2);padding:4px 13px;font-size:.78rem;font-weight:700;color:var(--ink2);transition:.15s;border-radius:2px}
+.styletabs button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.citebox{width:100%;border:1px solid var(--line2);background:var(--card);padding:13px 15px;font-family:var(--serif);font-size:.95rem;line-height:1.9;resize:vertical;min-height:110px;outline:none}
+.tracelinks{display:flex;flex-wrap:wrap;gap:8px}
+.tracelinks a{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);padding:7px 14px;font-size:.82rem;font-weight:600;color:var(--ink);transition:.15s;background:var(--card)}
+.tracelinks a:hover{border-color:var(--brass);color:var(--brass);text-decoration:none}
+.tracelinks a .ic{width:13px;height:13px;color:var(--brass)}
+.srcnote{font-size:.72rem;color:var(--ink2);margin-top:10px}
+
+/* ===== الشبكة الاستشهادية ===== */
+.net-tabs{display:flex;gap:6px;margin-bottom:8px}
+.net-tabs button{border:1px solid var(--line2);padding:5px 14px;font-size:.8rem;font-weight:700;color:var(--ink2);border-radius:2px;transition:.15s}
+.net-tabs button.on{background:var(--emerald);border-color:var(--emerald);color:#fff}
+[data-theme="dark"] .net-tabs button.on{color:#04211B}
+.net-load{font-size:.82rem;color:var(--ink2);padding:14px 4px;font-style:italic}
+.net-item{display:flex;gap:10px;align-items:center;padding:8px 2px;border-bottom:1px dashed var(--line);font-size:.84rem}
+.net-item .n{font-family:var(--serif);color:var(--brass);font-weight:700;min-width:22px}
+.net-item .mt{flex:1;cursor:pointer;line-height:1.5}
+.net-item .mt:hover{color:var(--brass)}
+.net-item .mc{font-size:.72rem;color:var(--ink2);white-space:nowrap}
+
+/* ===== سلة المراجع ===== */
+.b-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.b-item .bt{flex:1;font-size:.87rem;line-height:1.55;cursor:pointer}
+.b-item .bt:hover{color:var(--brass)}
+.b-item .by{font-size:.72rem;color:var(--ink2)}
+
+#netBanner{position:fixed;top:0;inset-inline:0;z-index:300;background:#B03A2E;color:#fff;text-align:center;font-size:.82rem;font-weight:600;padding:8px 14px;transform:translateY(-100%);transition:transform .3s}
+#netBanner.show{transform:translateY(0)}
+#toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center}
+.toast{background:var(--ink);color:var(--paper);padding:11px 20px;font-size:.86rem;font-weight:500;display:flex;align-items:center;gap:9px;box-shadow:var(--shadow);animation:rise .3s;border-inline-start:3px solid var(--brass);max-width:92vw}
+.toast.err{border-inline-start-color:#B03A2E}
+.toast .ic{color:var(--brass)}
+.toast.err .ic{color:#E3938A}
+
+/* ===== التذييل + لوحة توقيع المصمم ===== */
+footer{border-top:1px solid var(--line)}
+.foot-top{max-width:1220px;margin:0 auto;padding:22px clamp(14px,4vw,40px) 6px;display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:space-between;color:var(--ink2);font-size:.78rem}
+.foot-top b{font-family:var(--serif);color:var(--brass);font-size:1rem}
+.sig-plate{text-align:center;padding:16px 20px 32px}
+.sig-orn{display:flex;align-items:center;justify-content:center;gap:14px;color:var(--gold)}
+.sig-orn::before{content:"";height:1px;width:min(160px,30vw);background:linear-gradient(to left,var(--gold),transparent)}
+.sig-orn::after{content:"";height:1px;width:min(160px,30vw);background:linear-gradient(to right,var(--gold),transparent)}
+.sig-orn .ic{width:20px;height:20px}
+.sig-lbl{font-size:.64rem;letter-spacing:.32em;color:var(--ink2);margin-top:12px;font-weight:700}
+.sig-name{font-family:var(--serif);font-size:1.75rem;font-weight:700;color:var(--gold-d);line-height:1.45;margin-top:3px}
+[data-theme="dark"] .sig-name{color:var(--gold)}
+.sig-sub{font-size:.8rem;color:var(--ink2);letter-spacing:.08em;margin-top:1px}
+.sig-rights{font-size:.72rem;color:var(--ink2);margin-top:7px}
+.sig-rights b{color:var(--gold);font-weight:700}
+
+.spin{display:inline-block;animation:rot 1s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+@media(max-width:1000px){.results-grid{grid-template-columns:1fr}.insights{position:static}}
+@media(max-width:640px){
+  .bigsearch .submit span{display:none}.bigsearch .submit{padding:0 18px}
+  .work{gap:12px}.w-idx{min-width:30px;font-size:1.4rem}
+  body.in-results .hsearch{display:none}
+  .sig-name{font-size:1.45rem}
+}
+</style>
+</head>
+<body>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-logo" viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="22" height="22"/><rect x="9" y="9" width="22" height="22" transform="rotate(45 20 20)"/><circle cx="20" cy="20" r="3.2" fill="currentColor" stroke="none"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.3 1.1 6-5.4-2.9-5.4 2.9 1.1-6L3.2 9.4l6.1-.8z"/></symbol>
+  <symbol id="i-quote" viewBox="0 0 24 24"><path d="M9 7H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2c0 2.5-1 3.5-3 4M20 7h-4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2c0 2.5-1 3.5-3 4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4L11 13M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H4a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-3"/><rect x="7" y="14" width="10" height="7"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="1"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 13.5A8.5 8.5 0 0 1 10.5 4 8.5 8.5 0 1 0 20 13.5z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2 6.5L20 10l-6 1.5L12 18l-2-6.5L4 10l6-1.5zM19 16l.9 2.6L22.5 19l-2.6.9L19 22.5l-.9-2.6L15.5 19l2.6-.9z"/></symbol>
+  <symbol id="i-cite" viewBox="0 0 24 24"><path d="M4 19V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12M8 9h8M8 13h8M8 17h5"/></symbol>
+  <symbol id="i-fil" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17.5H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+  <symbol id="i-doi" viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5"/></symbol>
+  <symbol id="i-net" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.2"/><circle cx="19" cy="5" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M7 11l9.5-5M7 13l9.5 5"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 19l7-7-3-3-7 7-1.5 4.5zM15 8l1.5-1.5a2.12 2.12 0 0 1 3 3L18 11"/><circle cx="4.5" cy="19.5" r=".8" fill="currentColor" stroke="none"/><circle cx="19.5" cy="4.5" r=".8" fill="currentColor" stroke="none"/></symbol>
+</svg>
+
+<header>
+  <div class="brand" onclick="goHome()" title="تصميم: د. حسن الشيباني">
+    <svg class="mark"><use href="#i-logo"/></svg>
+    <div><b id="brandName">الفِهرِسْ</b><small id="brandLatin">AL-FIHRIST</small></div>
+  </div>
+  <div class="hspace"></div>
+  <form class="hsearch" onsubmit="submitMini(event)">
+    <input id="miniQ" type="search" placeholder="">
+    <button class="go" type="submit"><svg class="ic"><use href="#i-search"/></svg></button>
+  </form>
+  <button class="iconbtn" onclick="openBasket()" title="سلة المراجع">
+    <svg class="ic"><use href="#i-book"/></svg><span class="cnt" id="basketCount" style="display:none">0</span>
+  </button>
+  <button class="iconbtn langbtn" onclick="toggleLang()"><span id="langLabel">EN</span><span class="sep">|</span>ع</button>
+  <button class="iconbtn" onclick="toggleTheme()" id="themeBtn"><svg class="ic"><use href="#i-moon"/></svg></button>
+</header>
+
+<main>
+  <section id="homeView">
+    <div class="hero-pattern"></div>
+    <div class="hero">
+      <span class="kicker" id="kicker"></span>
+      <h1 class="hero-t" id="heroTitle"></h1>
+      <p class="hero-sub" id="heroSub"></p>
+
+      <form class="bigsearch" onsubmit="submitSearch(event)">
+        <input id="mainQ" type="search" autocomplete="off" placeholder="">
+        <button class="submit" type="submit"><svg class="ic lg"><use href="#i-search"/></svg><span id="searchBtnLabel"></span></button>
+      </form>
+
+      <div class="ai-hint" id="aiHint">
+        <span class="lbl"><svg class="ic"><use href="#i-spark"/></svg><span id="aiHintLabel">بصيرة</span></span>
+        <span><span id="aiHintText"></span> <b class="term" id="aiHintTerm"></b></span>
+        <button type="button" id="aiHintBtn"></button>
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl">
+          <label id="lblYears"></label>
+          <div class="years">
+            <input type="number" id="yFrom" min="1400" max="2100" inputmode="numeric" autocomplete="off" placeholder="من" aria-label="سنة البداية">
+            <span class="dash">—</span>
+            <input type="number" id="yTo" min="1400" max="2100" inputmode="numeric" autocomplete="off" placeholder="إلى" aria-label="سنة النهاية">
+          </div>
+          <div class="year-note" id="yearNote"></div>
+        </div>
+        <div class="ctrl">
+          <label id="lblType"></label>
+          <select id="typeSel"></select>
+        </div>
+        <div class="ctrl">
+          <label id="lblLimit"></label>
+          <select id="limitSel">
+            <option value="24">24</option><option value="48" selected>48</option><option value="72">72</option>
+          </select>
+        </div>
+        <div class="ctrl">
+          <button type="button" class="chip on" onclick="quickYears(0)" id="qyAll" title="مسح نطاق السنوات والبحث في جميع السنوات"></button>
+          <button type="button" class="chip" onclick="quickYears(5)" id="qy5"></button>
+          <button type="button" class="chip" onclick="quickYears(10)" id="qy10"></button>
+        </div>
+      </div>
+
+      <div class="srcchips" id="srcChips"></div>
+      <div class="hist-row" id="histRow" hidden></div>
+
+      <div class="ext-row">
+        <div class="ttl" id="extTtl"></div>
+        <div class="extlinks" id="extLinks"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="resultsView" hidden>
+    <div class="rtoolbar">
+      <div>
+        <div class="q" id="qEcho"></div>
+        <div class="count" id="countEcho"></div>
+      </div>
+      <div class="hspace"></div>
+      <div class="rtools">
+        <span id="lblSort" style="font-size:.72rem;font-weight:700;color:var(--ink2);letter-spacing:.08em"></span>
+        <button class="chip" data-sort="rel" id="sortRel"></button>
+        <button class="chip" data-sort="date" id="sortDate"></button>
+        <button class="chip" data-sort="cited" id="sortCited"></button>
+        <span class="sep"></span>
+        <div class="export-menu">
+          <button class="abtn primary" onclick="toggleExportPop(event)"><svg class="ic"><use href="#i-down"/></svg><span id="lblExport"></span></button>
+          <div class="export-pop" id="exportPop"></div>
+        </div>
+      </div>
+    </div>
+    <div class="srccounts" id="srcCounts"></div>
+    <div class="flt-row">
+      <span class="flbl" id="lblFltSrc"></span>
+      <select id="fltSrc"></select>
+      <button class="chip" id="fltPdf"></button>
+      <button class="chip" id="fltOa"></button>
+    </div>
+    <div class="results-grid">
+      <div id="worksList"></div>
+      <aside class="insights" id="insights" hidden></aside>
+    </div>
+  </section>
+</main>
+
+<div class="overlay" id="overlay" onclick="closeDrawers()"></div>
+
+<aside class="drawer" id="detailDrawer" aria-hidden="true">
+  <div class="d-head">
+    <div class="t" id="dHeadTitle"></div>
+    <div class="hspace"></div>
+    <button class="iconbtn" id="dStar"><svg class="ic"><use href="#i-star"/></svg></button>
+    <button class="iconbtn" onclick="closeDrawers()"><svg class="ic"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="d-body" id="dBody"></div>
+</aside>
+
+<aside class="drawer" id="basketDrawer" aria-hidden="true">
+  <div class="d-head">
+    <div class="t" id="bHeadTitle"></div>
+    <div class="hspace"></div>
+    <button class="iconbtn" onclick="clearBasket()"><svg class="ic"><use href="#i-trash"/></svg></button>
+    <button class="iconbtn" onclick="closeDrawers()"><svg class="ic"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="d-body" id="bBody"></div>
+</aside>
+
+<div id="netBanner"></div>
+<div id="toasts"></div>
+
+<!-- التذييل + لوحة توقيع المصمم © -->
+<footer>
+  <div class="foot-top">
+    <div><b id="brandName2">الفِهرِسْ</b> — <span id="footNote"></span></div>
+    <div id="footSources">OpenAlex · Semantic Scholar · Crossref · PubMed · Europe PMC · arXiv · DOAJ · Open Library</div>
+  </div>
+  <div class="sig-plate">
+    <div class="sig-orn"><svg class="ic"><use href="#i-pen"/></svg></div>
+    <div class="sig-lbl" id="sigLbl"></div>
+    <div class="sig-name" id="sigName"></div>
+    <div class="sig-sub" id="sigSub"></div>
+    <div class="sig-rights" id="sigRights"></div>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   الفِهرِسْ — الإصدار الثالث (الهوية السماوية)
+   8 قواعد حيّة · شبكة استشهادات · RIS · © د. حسن الشيباني
+   ========================================================= */
+
+const I18N={
+ar:{
+  kicker:'منصّة بحث أكاديمي موحّدة',
+  heroTitle:'كلّ المصادر العلمية… من <em>بوّابة واحدة</em>',
+  heroSub:'ابحث في آنٍ واحد داخل ٨ قواعد بيانات عالمية — OpenAlex وSemantic Scholar وCrossref وPubMed وEurope PMC وarXiv وDOAJ وOpen Library — ملايين المصادر العربية والعالمية، القديمة والحديثة، مع شبكة استشهادات حيّة وتحليل ذكي وتوثيق جاهز للتصدير.',
+  searchPh:'اكتب عنوان البحث أو الموضوع… (عربي أو English)',
+  searchBtn:'ابحث',
+  lblYears:'نطاق سنوات النشر', lblType:'نوع المصدر', lblLimit:'حجم النتائج',
+  qyAll:'الكل', qy5:'آخر ٥ سنوات', qy10:'آخر ١٠ سنوات',
+  extTtl:'بحث موازٍ في القواعد العربية والمتخصّصة',
+  aiHintText:'يقترح «بصيرة» البحث بالمقابل الإنجليزي لنتائج أوسع:',
+  aiHintBtn:'ابحث بهذا المصطلح',
+  searching:'يستمسك الفِهرِس خيوط البحث في ٨ قواعد علمية…',
+  results:'نتيجة', found:'عُثر على',
+  sortRel:'الصلة الذكية', sortDate:'الأحدث', sortCited:'الأكثر استشهاداً',
+  lblSort:'ترتيب:', lblExport:'تصدير',
+  exCopy:'نسخ المراجع إلى الحافظة', exDoc:'تنزيل مستند Word', exBib:'تنزيل BibTeX', exPdf:'تصدير PDF (جاهز للطباعة)', exRis:'تنزيل RIS (EndNote / Zotero)',
+  detail:'التفاصيل الكاملة', cite:'اقتباس', save:'حفظ', saved:'محفوظ',
+  citations:'استشهاد', dTitle:'بطاقة المصدر',
+  dType:'النوع', dYear:'السنة', dVenue:'مصدر النشر', dPub:'الناشر', dDoi:'المعرّف DOI', dCited:'الاستشهادات', dLang:'اللغة',
+  dAbs:'الملخص العلمي', dAbsNone:'لم يتوفّر ملخص لهذا العمل في القواعد المفهرسة — افتح المصدر الأصلي أدناه للنص الكامل.',
+  dCite:'التوثيق الأكاديمي', dTrace:'تتبّع المصدر الحقيقي للعنوان', dTraceSub:'روابط بحث مباشرة داخل القواعد العربية والعالمية:',
+  smart:'تلخيص ذكي', smartTag:'تحليل محلي بواسطة «بصيرة»',
+  openSrc:'فتح المصدر الأصلي', openPdf:'فتح ملف PDF',
+  basket:'سلة المراجع', basketEmpty:'سلتك فارغة — احفظ المراجع المهمة بنجمة، ثم صدّرها بنظام التوثيق الذي تختاره.',
+  clearAll:'تفريغ السلة', bStyle:'نظام التوثيق',
+  footNote:'بوّابة موحّدة لثماني قواعد علمية كبرى، بروح فهرس ابن النديم.',
+  noRes:'لا نتائج مطابقة', noResSub:'جرّب مصطلحات أعمّ، أو وسّع نطاق السنوات، أو فعّل قواعد بيانات إضافية.',
+  netErr:'تعذّر الوصول إلى قواعد البيانات — تحقّق من الاتصال ثم أعد المحاولة.',
+  netErrSub:'قد يكون السبب انقطاع الشبكة أو ازدحام مؤقت في إحدى القواعد. أعد المحاولة أو فعّل قواعد أقل من الشريط الجانبي.',
+  s2Limit:'بلغ Semantic Scholar حده المؤقت — استُكمِلت النتائج من بقية القواعد.',
+  retry:'إعادة المحاولة', offlineTitle:'لا يوجد اتصال بالإنترنت',
+  offlineSub:'الفِهرِس يحتاج اتصالاً فعّالاً للبحث في القواعد الثماني. تحقّق من الشبكة ثم أعد المحاولة.',
+  backOnline:'عاد الاتصال — يمكنك إعادة البحث الآن.',
+  noSrcTitle:'لم تُفعَّل أي قاعدة بيانات', noSrcSub:'فعّل قاعدة واحدة على الأقل من الشريط الجانبي للبحث.',
+  stillSearching:'ما زال البحث جاريًا في بعض القواعد — قد يستغرق بضع ثوانٍ إضافية…',
+  partialTitle:'اكتملت بعض القواعد فقط', partialSub:'انقطع الاتصال ببعض القواعد قبل استكمال الرد. النتائج أدناه من القواعد التي استجابت.',
+  staleNote:'بعض النتائج من نسخة محفوظة مؤقتاً من هذه الجلسة لتعذّر تحديثها الآن.',
+  errTimeout:'انتهت المهلة الزمنية دون رد', errNet:'تعذّر الاتصال (شبكة أو CORS)',
+  errRate:'تجاوز حدّ الطلبات المسموح (429)', errServer:'خطأ من خادم المصدر (5xx)',
+  errHttp:'خطأ HTTP', errUnknown:'خطأ غير معروف', copyDiag:'نسخ تقرير تقني',
+  copied:'نُسخ إلى الحافظة', addedBasket:'أُضيف إلى سلة المراجع', removedBasket:'أُزيل من السلة',
+  cleared:'فُرِّغت السلة', noBasket:'السلة فارغة', fileErr:'تعذّر إنشاء الملف',
+  insTitle:'قراءة ذكية للنتائج', kwTitle:'المفاهيم المتقاطعة (انقر للتركيز)', yearsTitle:'التوزّع الزمني للنشر',
+  topCited:'الأكثر تأثيراً (استشهادات)', topAuth:'أكثر الباحثين حضوراً',
+  oaRatio:'وصول مفتوح', span:'الامتداد الزمني',
+  tArticle:'مقال محكّم', tBook:'كتاب', tChapter:'فصل في كتاب', tConference:'ورقة مؤتمر', tPreprint:'طليعة بحثية', tThesis:'رسالة جامعية',
+  typeAll:'كل الأنواع', citeCopied:'نُسخ الاقتباس', summNone:'لا يتوفّر ملخص كافٍ للتلخيص الذكي.',
+  ofSources:'من القواعد',
+  histT:'بحثت مؤخراً:', histClear:'مسح السجل',
+  fltSrc:'تصفية بالقاعدة', fltAllSrcs:'كل القواعد', fltPdf:'متاح PDF', fltOa:'وصول مفتوح فقط',
+  oaTag:'وصول مفتوح', impact:'تأثير مُوزّن',
+  netTitle:'الشبكة الاستشهادية', netRefs:'مراجعه الأساسية', netCited:'من استشهد به',
+  netLoading:'يستمسك الفِهرِس خيوط الاستشهاد…', netEmpty:'لا سجلات ظاهرة في هذا الاتجاه',
+  netHint:'انقر أي عنوان للبحث عنه مباشرة، أو احفظه بنجمة',
+  netNoKey:'لا يتوفّر معرّف (DOI / OpenAlex) يتيح تتبّع شبكة الاستشهادات لهذا العمل.',
+  sigLbl:'تصميم وتطوير',
+  sigName:'د. حسن الشيباني',
+  sigSub:'Dr. Hassan Al-Shaibani',
+  sigRights:'© ٢٠٢٥ <b>الفِهرِسْ</b> — جميع الحقوق محفوظة',
+  printCredit:'تصميم المنصة: د. حسن الشيباني',
+},
+en:{
+  kicker:'UNIFIED SCHOLARLY DISCOVERY',
+  heroTitle:'Every scholarly source. <em>One gateway.</em>',
+  heroSub:'Search simultaneously across eight databases — OpenAlex, Semantic Scholar, Crossref, PubMed, Europe PMC, arXiv, DOAJ and Open Library — millions of Arabic and global records, classic and contemporary, with a live citation network, AI-assisted analysis and export-ready citations.',
+  searchPh:'Type a topic, title or author… (Arabic or English)',
+  searchBtn:'Search',
+  lblYears:'Publication years', lblType:'Source type', lblLimit:'Result size',
+  qyAll:'All time', qy5:'Last 5 yrs', qy10:'Last 10 yrs',
+  extTtl:'Parallel search in Arabic & specialist databases',
+  aiHintText:'Basira suggests its English equivalent for wider coverage:',
+  aiHintBtn:'Search this term',
+  searching:'Al-Fihrist is threading your query through 8 scholarly databases…',
+  results:'results', found:'Found',
+  sortRel:'Smart relevance', sortDate:'Newest', sortCited:'Most cited',
+  lblSort:'Sort:', lblExport:'Export',
+  exCopy:'Copy references to clipboard', exDoc:'Download Word document', exBib:'Download BibTeX', exPdf:'Export PDF (print-ready)', exRis:'Download RIS (EndNote / Zotero)',
+  detail:'Full details', cite:'Cite', save:'Save', saved:'Saved',
+  citations:'citations', dTitle:'Source Record',
+  dType:'Type', dYear:'Year', dVenue:'Venue', dPub:'Publisher', dDoi:'DOI', dCited:'Citations', dLang:'Language',
+  dAbs:'Abstract', dAbsNone:'No abstract indexed — open the original source below for the full text.',
+  dCite:'Academic citation', dTrace:'Trace the real source of this title', dTraceSub:'Direct in-database search links (Arabic & global):',
+  smart:'Smart summary', smartTag:'On-device analysis by Basira',
+  openSrc:'Open original source', openPdf:'Open PDF',
+  basket:'Reference basket', basketEmpty:'Your basket is empty — star key references, then export them in your chosen style.',
+  clearAll:'Clear basket', bStyle:'Citation style',
+  footNote:'A unified gateway to eight major scholarly databases.',
+  noRes:'No matching results', noResSub:'Try broader terms, widen the year range, or enable more databases.',
+  netErr:'Could not reach the databases — check your connection and retry.',
+  netErrSub:'This can happen from a network drop or a temporary overload on one database. Retry, or enable fewer databases in the sidebar.',
+  s2Limit:'Semantic Scholar hit its temporary limit — results completed from the other databases.',
+  retry:'Retry', offlineTitle:'No internet connection',
+  offlineSub:'Al-Fihrist needs an active connection to query the eight databases. Check your network, then retry.',
+  backOnline:'Connection restored — you can search again.',
+  noSrcTitle:'No database is enabled', noSrcSub:'Enable at least one database from the sidebar to search.',
+  stillSearching:'Still waiting on a few databases — this can take a few more seconds…',
+  partialTitle:'Only some databases finished', partialSub:'A few databases timed out before responding. Results below are from the ones that answered.',
+  staleNote:'Some results are from a cached copy from this session — could not refresh them now.',
+  errTimeout:'Timed out with no response', errNet:'Could not connect (network or CORS)',
+  errRate:'Rate limit exceeded (429)', errServer:'Error from the source server (5xx)',
+  errHttp:'HTTP error', errUnknown:'Unknown error', copyDiag:'Copy technical report',
+  copied:'Copied to clipboard', addedBasket:'Added to reference basket', removedBasket:'Removed from basket',
+  cleared:'Basket cleared', noBasket:'Basket is empty', fileErr:'File could not be generated',
+  insTitle:'Smart reading of results', kwTitle:'Cross-cutting concepts (click to focus)', yearsTitle:'Publication timeline',
+  topCited:'Most influential (citations)', topAuth:'Most present authors',
+  oaRatio:'Open access', span:'Time span',
+  tArticle:'Journal article', tBook:'Book', tChapter:'Book chapter', tConference:'Conference paper', tPreprint:'Preprint', tThesis:'Thesis',
+  typeAll:'All types', citeCopied:'Citation copied', summNone:'No sufficient abstract for smart summarization.',
+  ofSources:'of databases',
+  histT:'Recent searches:', histClear:'Clear',
+  fltSrc:'Filter by database', fltAllSrcs:'All databases', fltPdf:'PDF available', fltOa:'Open access only',
+  oaTag:'Open access', impact:'impact',
+  netTitle:'Citation network', netRefs:'Its core references', netCited:'Cited by',
+  netLoading:'Al-Fihrist is threading the citations…', netEmpty:'No visible records in this direction',
+  netHint:'Click any title to search it directly, or star to save it',
+  netNoKey:'No identifier (DOI / OpenAlex) available to trace this work\u2019s citation network.',
+  sigLbl:'DESIGNED & DEVELOPED BY',
+  sigName:'Dr. Hassan Al-Shaibani',
+  sigSub:'د. حسن الشيباني',
+  sigRights:'© 2025 <b>Al-Fihrist</b> — All rights reserved',
+  printCredit:'Platform design: Dr. Hassan Al-Shaibani',
+}};
+
+/* قاموس «بصيرة» الثنائي */
+const TERMS=[
+["الذكاء الاصطناعي","artificial intelligence"],["التعلم العميق","deep learning"],["التعلم الآلي","machine learning"],
+["التعليم الإلكتروني","e-learning"],["التعلم عن بعد","distance education"],["التحصيل الدراسي","academic achievement"],
+["المنهج الدراسي","curriculum"],["التعليم العالي","higher education"],["ريادة الأعمال","entrepreneurship"],
+["صعوبات التعلم","learning disabilities"],["الصحة النفسية","mental health"],["التوحد","autism"],
+["الوسائط المتعددة","multimedia"],["الشبكات الاجتماعية","social media"],["التنمية المستدامة","sustainable development"],
+["الحوكمة","governance"],["إدارة الجودة","quality management"],["الموارد البشرية","human resource management"],
+["التسويق الرقمي","digital marketing"],["الأمن السيبراني","cybersecurity"],["البيانات الضخمة","big data"],
+["الحوسبة السحابية","cloud computing"],["إنترنت الأشياء","internet of things"],["المعالجة الطبيعية للغة","natural language processing"],
+["الرؤية الحاسوبية","computer vision"],["اللغة العربية","arabic language"],["الدراسات القرآنية","quranic studies"],
+["الفقه الإسلامي","islamic jurisprudence"],["التاريخ الإسلامي","islamic history"],["الترجمة","translation"],
+["التقويم التربوي","educational assessment"],["الرياضيات","mathematics"],["الفيزياء","physics"],
+["التغير المناخي","climate change"],["الطاقة المتجددة","renewable energy"],["التخطيط العمراني","urban planning"],
+["حقوق الإنسان","human rights"],["الإعلام","media"],["الصحافة","journalism"],["التمريض","nursing"],["التغذية","nutrition"]
+];
+const STOP_AR=new Set("من في على إلى عن أن إن التي الذي هذا هذه ذلك تلك بين بعد قبل خلال لدى عند كل بعض وقد قد كان كانت يكون تكون هو هي هم نحن أنا أنت أو أم أيضا أيضًا حيث كما له لها لهم به بها بهم فيه فيها منها منه عليه عليها إذا إنه إنها لكن حتى دون سوف تم يمكن غير ما لا لم لن وهو وهي وقد دراسة دراسات مجلة ع د وال".split(/\s+/));
+const STOP_EN=new Set("the of in and to a for on with by is are was were from that this these those we as an be at it its their our not or using based study paper research results result methods method approach analysis data can may between during through than then more most such other which what when where who how has have had been also into over under article journal review".split(/\s+/));
+
+const state={lang:'ar',theme:'light',raw:[],view:[],basket:new Map(),query:'',
+  enabled:new Set(['openalex','s2','crossref','pubmed','arxiv','doaj','epmc','ol']),
+  sort:'rel',typeFilter:'all',srcCounts:{},flt:{src:'all',pdf:false,oa:false}};
+const t=k=>I18N[state.lang][k]||k;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+
+/* ---------- أدوات الشبكة ---------- */
+/* عنوان بريدي حقيقي يُستحسن استبداله ببريد د. حسن الرسمي — OpenAlex يمنح
+   أولوية أسرع (polite pool) لمن يُرفق بريداً صالحاً؛ العنوان الحالي وهمي. */
+const CONTACT_EMAIL='fihrist-research@example.org';
+/* بوابة احتياطية لتجاوز رفض CORS من بعض القواعد (arXiv تحديداً لا ترسل
+   ترويسة Access-Control-Allow-Origin دوماً) — تُستخدم فقط عند فشل الطلب
+   المباشر بخطأ شبكي، وليست وسيطاً دائماً لبقية القواعد. */
+/* بوابتان احتياطيتان بالتتابع (وليس بوابة واحدة) — corsproxy.io يفرض أحياناً
+   حدوداً صارمة أو يتعطل مؤقتاً، وحين يحدث ذلك سابقاً كان مصدر arXiv (وأي
+   مصدر آخر يرفض CORS) يفشل بلا أي بديل. */
+const CORS_PROXIES=['https://corsproxy.io/?url=','https://api.allorigins.win/raw?url='];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+/* سجلّ التحكّم بالإلغاء: كل طلب مسجَّل تحت رمز (token) بحثه — يتيح إيقاف
+   طلبات بحث سابق مهجور فوراً بدل تركها تستهلك الشبكة والمعالج في الخلفية. */
+const tokenControllers=new Map();
+function abortToken(token){
+  const set=tokenControllers.get(token);
+  if(set)set.forEach(c=>{try{c.abort();}catch{}});
+  tokenControllers.delete(token);
+}
+function abortAllTokens(){[...tokenControllers.keys()].forEach(abortToken);}
+async function rawFetch(url,tmo,asText,proxyIdx,token){
+  const c=new AbortController();const id=setTimeout(()=>c.abort(),tmo);
+  if(token!=null){if(!tokenControllers.has(token))tokenControllers.set(token,new Set());tokenControllers.get(token).add(c);}
+  try{
+    const target=proxyIdx==null?url:CORS_PROXIES[proxyIdx]+encodeURIComponent(url);
+    const r=await fetch(target,{signal:c.signal,headers:{'Accept':asText?'application/xml,text/xml,text/plain,*/*':'application/json,text/plain,*/*'}});
+    if(r.status===408||r.status===425||r.status===429||r.status===403||r.status>=500)
+      throw Object.assign(new Error('http'+r.status),{retriable:true});
+    if(!r.ok)throw new Error('http'+r.status);
+    if(asText)return await r.text();
+    const txt=await r.text();
+    try{return JSON.parse(txt);}catch(parseErr){throw Object.assign(new Error('invalid-json'),{retriable:true,cause:parseErr});}
+  }finally{clearTimeout(id);if(token!=null)tokenControllers.get(token)?.delete(c);}
+}
+async function resilientFetch(url,tmo,asText,token){
+  let lastErr=null;
+  /* المصدر المباشر ثم البوابات الاحتياطية: 403/429/5xx أو استجابة JSON غير صالحة
+     لا تُفشل المصدر فوراً، بل تنتقل إلى المسار البديل. */
+  const routes=[null,...CORS_PROXIES.map((_,i)=>i)];
+  for(let attempt=0;attempt<2;attempt++){
+    for(const route of routes){
+      try{return await rawFetch(url,tmo,asText,route,token);}
+      catch(e){lastErr=e;if(e?.name==='AbortError')throw e;}
+    }
+    if(attempt<1)await sleep(450);
+  }
+  throw lastErr||new Error('network');
+}
+function jget(url,token,tmo=10000){return resilientFetch(url,tmo,false,token);}
+function tget(url,token,tmo=10000){return resilientFetch(url,tmo,true,token);}
+const normTitle=s=>String(s||'').toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,'').replace(/\s+/g,' ').trim();
+const normDoi=d=>String(d||'').replace(/^https?:\/\/(dx\.)?doi\.org\//i,'').toLowerCase();
+const cleanJats=s=>String(s||'').replace(/<[^>]+>/g,' ').replace(/&[a-z]+;/gi,' ').replace(/\s+/g,' ').trim();
+function yearOf(v){const m=String(v||'').match(/\d{4}/);return m?+m[0]:null;}
+function splitName(n){n=String(n||'').trim().replace(/\s+/g,' ');
+  if(n.includes(',')){const[f,g]=n.split(',');return{family:f.trim(),given:(g||'').trim()};}
+  const p=n.split(' ');if(p.length<2)return{family:n,given:''};
+  return{family:p.pop(),given:p.join(' ')};}
+const initials=g=>g?g.split(/[\s\-\.]+/).filter(Boolean).map(w=>w[0].toUpperCase()+'.').join(' '):'';
+function normType(x){x=String(x||'').toLowerCase();
+  if(x.includes('chapter'))return'chapter';if(x.includes('book'))return'book';
+  if(x.includes('proceedings')||x.includes('conference'))return'conference';
+  if(x.includes('preprint'))return'preprint';if(x.includes('thesis'))return'thesis';
+  return'article';}
+function rebuildAbstract(inv){if(!inv)return'';const a=[];
+  for(const w in inv)inv[w].forEach(p=>a[p]=w);
+  return a.filter(Boolean).join(' ');}
+const MAIL='&mailto='+encodeURIComponent(CONTACT_EMAIL);
+
+/* ---------- المحوّلات الثمانية (بحث حيّ) ---------- */
+async function apiOpenAlex(q,n,yF,yT,tok){
+  const fl=[];
+  if(yF)fl.push(`from_publication_date:${yF}-01-01`);
+  if(yT)fl.push(`to_publication_date:${yT}-12-31`);
+  let u=`https://api.openalex.org/works?search=${encodeURIComponent(q)}&per-page=${n}${MAIL}`;
+  if(fl.length)u+=`&filter=${fl.join(',')}`;
+  const d=await jget(u,tok);
+  return (d.results||[]).map(w=>({id:'oa:'+w.id,oaid:(w.id||'').split('/').pop(),
+    title:w.display_name||'',authors:(w.authorships||[]).map(a=>a.author?.display_name).filter(Boolean),
+    year:w.publication_year||null,type:normType(w.type),venue:w.primary_location?.source?.display_name||'',
+    publisher:'',doi:normDoi(w.doi),url:w.doi||w.id,pdf:w.open_access?.oa_url||w.best_oa_location?.pdf_url||'',
+    cited:w.cited_by_count||0,abstract:rebuildAbstract(w.abstract_inverted_index),
+    volume:w.biblio?.volume||'',issue:w.biblio?.issue||'',pages:[w.biblio?.first_page,w.biblio?.last_page].filter(Boolean).join('–'),
+    lang:(w.language||'').toUpperCase(),srcs:['OpenAlex'],oa:!!w.open_access?.is_oa,fwci:w.fwci||null}));
+}
+async function apiS2(q,n,yF,yT,tok){
+  let u=`https://api.semanticscholar.org/graph/v1/paper/search?query=${encodeURIComponent(q)}&limit=${Math.min(n,99)}`+
+    `&fields=title,authors,year,abstract,venue,citationCount,externalIds,openAccessPdf,url,publicationTypes,journal`;
+  if(yF||yT)u+=`&year=${yF||''}-${yT||''}`;
+  const d=await jget(u,tok);
+  return (d.data||[]).filter(p=>p.title).map(p=>({id:'s2:'+(p.paperId||p.title),s2id:p.paperId||null,
+    title:p.title,authors:(p.authors||[]).map(a=>a.name),year:p.year||null,type:'article',
+    venue:p.venue||p.journal?.name||'',publisher:'',doi:normDoi(p.externalIds?.DOI),
+    url:p.externalIds?.DOI?('https://doi.org/'+normDoi(p.externalIds.DOI)):(p.url||''),
+    pdf:p.openAccessPdf?.url||'',cited:p.citationCount||0,abstract:p.abstract||'',
+    volume:p.journal?.volume||'',issue:'',pages:p.journal?.pages||'',lang:'',
+    srcs:['Semantic Scholar'],oa:!!p.openAccessPdf}));
+}
+async function apiCrossref(q,n,yF,yT,tok){
+  const fl=[];
+  if(yF)fl.push('from-pub-date:'+yF+'-01-01');if(yT)fl.push('until-pub-date:'+yT+'-12-31');
+  let u=`https://api.crossref.org/works?query=${encodeURIComponent(q)}&rows=${n}`+
+    `&select=DOI,title,author,issued,container-title,abstract,is-referenced-by-count,type,publisher,URL,volume,issue,page,link`;
+  if(fl.length)u+=`&filter=${fl.join(',')}`;
+  const d=await jget(u,tok);
+  return ((d.message||{}).items||[]).map(w=>{const pdf=(w.link||[]).find(l=>l['content-type']==='application/pdf');
+    return{id:'cr:'+w.DOI,title:(w.title||[])[0]||'',
+    authors:(w.author||[]).map(a=>[a.family,a.given].filter(Boolean).join(', ')),
+    year:w.issued?.['date-parts']?.[0]?.[0]||null,type:normType(w.type),
+    venue:(w['container-title']||[])[0]||'',publisher:w.publisher||'',doi:normDoi(w.DOI),
+    url:w.DOI?('https://doi.org/'+w.DOI):(w.URL||''),pdf:pdf?.URL||'',
+    cited:w['is-referenced-by-count']||0,abstract:cleanJats(w.abstract),
+    volume:w.volume||'',issue:w.issue||'',pages:(w.page||''),lang:'',srcs:['Crossref'],oa:false};});
+}
+async function apiPubMed(q,n,yF,yT,tok){
+  let e=`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(q)}&retmax=${n}&retmode=json&sort=relevance`;
+  if(yF||yT)e+=`&datetype=pdat&mindate=${yF||1400}&maxdate=${yT||2100}`;
+  const d=await jget(e,tok);const ids=(d.esearchresult?.idlist||[]);if(!ids.length)return[];
+  const s=await jget(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${ids.join(',')}&retmode=json`,tok);
+  return ids.map(id=>{const r=s.result?.[id];if(!r)return null;const doiA=(r.articleids||[]).find(a=>a.idtype==='doi');
+    return{id:'pm:'+id,pmid:id,title:(r.title||'').replace(/\.$/,''),authors:(r.authors||[]).map(a=>a.name),
+    year:yearOf(r.pubdate),type:'article',venue:r.source||'',publisher:'',
+    doi:normDoi(doiA?.value||''),url:id?('https://pubmed.ncbi.nlm.nih.gov/'+id+'/'):'',pdf:'',
+    cited:0,abstract:'',volume:r.volume||'',issue:r.issue||'',pages:r.pages||'',
+    lang:(r.lang||[])[0]?.toUpperCase()||'',srcs:['PubMed'],oa:false};}).filter(Boolean);
+}
+async function apiArxiv(q,n,yF,yT,tok){
+  let sq=`all:"${q.replace(/"/g,'')}"`;
+  if(yF||yT)sq+=` AND submittedDate:[${yF||1400}010000 TO ${yT||2100}123159]`;
+  const x=await tget(`https://export.arxiv.org/api/query?search_query=${encodeURIComponent(sq)}&max_results=${n}&sortBy=relevance`,tok);
+  const doc=new DOMParser().parseFromString(x,'application/xml');
+  return[...doc.getElementsByTagName('entry')].map(e=>{const g=tag=>e.getElementsByTagName(tag)[0]?.textContent?.trim()||'';
+    const pdfLink=[...e.getElementsByTagName('link')].find(l=>l.getAttribute('title')==='pdf')?.getAttribute('href')||'';
+    return{id:'ax:'+g('id'),title:g('title').replace(/\s+/g,' '),
+    authors:[...e.getElementsByTagName('author')].map(a=>a.getElementsByTagName('name')[0]?.textContent).filter(Boolean),
+    year:yearOf(g('published')),type:'preprint',venue:'arXiv',publisher:'',
+    doi:normDoi(g('arxiv:doi')||''),url:g('id'),pdf:pdfLink,cited:0,abstract:g('summary').replace(/\s+/g,' '),
+    volume:'',issue:'',pages:'',lang:'',srcs:['arXiv'],oa:!!pdfLink};});
+}
+async function apiDOAJ(q,n,yF,yT,tok){
+  const d=await jget(`https://doaj.org/api/v3/search/articles/${encodeURIComponent(q)}?pageSize=${n}`,tok);
+  return (d.results||[]).map(r=>{const b=r.bibjson||{};const doiI=(b.identifier||[]).find(i=>i.type==='doi');
+    const lt=(b.link||[]).find(l=>l.type==='fulltext');const y=+b.year||null;
+    if((yF&&(!y||y<yF))||(yT&&(!y||y>yT)))return null;
+    return{id:'dj:'+(doiI?doiI.id:b.title),title:b.title||'',authors:(b.author||[]).map(a=>a.name),
+    year:y,type:'article',venue:(b.journal&&b.journal.title)||'',publisher:(b.journal&&b.journal.publisher)||'',
+    doi:normDoi(doiI?doiI.id:''),url:doiI?('https://doi.org/'+doiI.id):((lt&&lt.url)||''),
+    pdf:(lt&&lt.url)||'',cited:0,abstract:(b.abstract||'').replace(/<[^>]+>/g,' ').trim(),
+    volume:(b.journal&&b.journal.volume)||'',issue:(b.journal&&b.journal.number)||'',
+    pages:b.start_page?`${b.start_page}–${b.end_page||''}`:'',lang:'',srcs:['DOAJ'],oa:true};}).filter(Boolean);
+}
+async function apiEPMC(q,n,yF,yT,tok){
+  let query=q;
+  if(yF||yT)query+=` AND (PUB_YEAR:[${yF||1400} TO ${yT||2100}])`;
+  const d=await jget(`https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=${encodeURIComponent(query)}&format=json&pageSize=${n}&resultType=core`,tok);
+  return (d.resultList?.result||[]).filter(r=>r.title).map(r=>({
+    id:'ep:'+(r.doi||r.pmid||r.title),title:r.title.replace(/\.$/,''),
+    authors:(r.authorString||'').split(',').map(s=>s.trim()).filter(Boolean),
+    year:+r.pubYear||null,type:'article',
+    venue:r.journalInfo?.journal?.title||r.bookOrReportDetails?.publisher||'',
+    publisher:'',doi:normDoi(r.doi),
+    url:r.doi?('https://doi.org/'+r.doi):(r.pmid?('https://europepmc.org/article/MED/'+r.pmid):''),
+    pdf:(r.fullTextUrlList?.fullTextUrl||[]).find(u=>u.documentStyle==='pdf')?.url||'',
+    cited:r.citedByCount||0,abstract:(r.abstractText||'').replace(/<[^>]+>/g,' ').trim(),
+    volume:r.journalInfo?.volume||'',issue:r.journalInfo?.issue||'',pages:r.pageInfo||'',
+    lang:(r.language||'').toUpperCase(),srcs:['Europe PMC'],oa:r.isOpenAccess==='Y'}));
+}
+async function apiOL(q,n,yF,yT,tok){
+  let sq=q;
+  if(yF||yT)sq+=` AND first_publish_year:[${yF||1400} TO ${yT||2100}]`;
+  const d=await jget(`https://openlibrary.org/search.json?q=${encodeURIComponent(sq)}&limit=${n}&fields=key,title,author_name,first_publish_year,publisher,ia`,tok,12000);
+  return (d.docs||[]).filter(x=>x.title).map(x=>({
+    id:'ol:'+x.key,title:x.title,authors:x.author_name||[],year:x.first_publish_year||null,
+    type:'book',venue:(x.publisher&&x.publisher[0])||'Open Library',
+    publisher:(x.publisher&&x.publisher[0])||'',doi:'',
+    url:'https://openlibrary.org'+x.key,pdf:x.ia?('https://archive.org/details/'+x.ia[0]):'',
+    cited:0,abstract:'',volume:'',issue:'',pages:'',lang:'',srcs:['Open Library'],oa:!!x.ia}));
+}
+const ADAPTERS={openalex:apiOpenAlex,s2:apiS2,crossref:apiCrossref,pubmed:apiPubMed,arxiv:apiArxiv,doaj:apiDOAJ,epmc:apiEPMC,ol:apiOL};
+const SOURCES={openalex:'OpenAlex',s2:'Semantic Scholar',crossref:'Crossref',pubmed:'PubMed',arxiv:'arXiv',doaj:'DOAJ',epmc:'Europe PMC',ol:'Open Library'};
+const SOURCE_ORDER=['openalex','s2','crossref','pubmed','epmc','arxiv','doaj','ol'];
+
+/* ---------- خط الأنابيب ---------- */
+let searchSeq=0;                 /* يمنع نتائج بحث قديمة متأخرة من الكتابة فوق بحث أحدث */
+const HARD_TIMEOUT_MS=20000;     /* سقف زمني صلب: الواجهة لا تنتظر أكثر منه مهما تعطّلت مصادر */
+const STALL_HINT_MS=9000;        /* بعده نُخبر المستخدم أن بعض القواعد ما زالت تستجيب */
+
+/* ---------- تخزين مؤقت للنتائج (سرعة + شبكة أمان) ---------- */
+const CACHE_TTL_MS=15*60*1000; /* 15 دقيقة — بيانات ببليوغرافية لا تتغيّر لحظياً */
+const CACHE_PREFIX='fc:';
+function cacheKeyFor(k,q,yF,yT,per){return CACHE_PREFIX+k+'|'+normTitle(q)+'|'+(yF||'')+'|'+(yT||'')+'|'+per;}
+function cacheGet(key,ignoreTTL){
+  try{const raw=sessionStorage.getItem(key);if(!raw)return null;
+    const o=JSON.parse(raw);
+    if(!ignoreTTL&&Date.now()-o.t>CACHE_TTL_MS)return null;
+    return o.v;
+  }catch{return null;}
+}
+function cacheSet(key,val){
+  try{sessionStorage.setItem(key,JSON.stringify({t:Date.now(),v:val}));}
+  catch{ /* امتلاء التخزين ليس عطلاً حرجاً — نتجاهله ونكمل من الشبكة فقط */
+    try{ /* أفرغ أقدم مدخلات الفهرس ثم أعد المحاولة مرة واحدة */
+      const keys=Object.keys(sessionStorage).filter(x=>x.startsWith(CACHE_PREFIX));
+      keys.slice(0,Math.ceil(keys.length/3)).forEach(k=>sessionStorage.removeItem(k));
+      sessionStorage.setItem(key,JSON.stringify({t:Date.now(),v:val}));
+    }catch{}
+  }
+}
+
+function classifyErr(e){
+  if(e && e.name==='AbortError')return t('errTimeout');
+  if(e instanceof TypeError)return t('errNet');
+  const m=String(e&&e.message||'');
+  const code=(m.match(/^http(\d+)/)||[])[1];
+  if(code==='429')return t('errRate');
+  if(code&&+code>=500)return t('errServer');
+  if(code)return t('errHttp')+' '+code;
+  return m||t('errUnknown');
+}
+function mergeWorks(items){
+  items.forEach(w=>{
+    if(!w.title)return;
+    const key=w.doi?('doi:'+normDoi(w.doi)):('t:'+normTitle(w.title)+':'+(w.year||''));
+    const ex=state._map.get(key);
+    if(ex){new Set([...ex.srcs,...w.srcs]).forEach(s=>{if(!ex.srcs.includes(s))ex.srcs.push(s);});
+      if(!ex.abstract&&w.abstract)ex.abstract=w.abstract;
+      if(!ex.pdf&&w.pdf)ex.pdf=w.pdf;if(!ex.doi&&w.doi)ex.doi=w.doi;
+      if(!ex.venue&&w.venue)ex.venue=w.venue;if(!ex.publisher&&w.publisher)ex.publisher=w.publisher;
+      if((w.cited||0)>ex.cited)ex.cited=w.cited;
+      if(w.authors.length>ex.authors.length)ex.authors=w.authors;
+      if(!ex.volume&&w.volume)ex.volume=w.volume;if(!ex.pages&&w.pages)ex.pages=w.pages;
+      if(!ex.issue&&w.issue)ex.issue=w.issue;
+      if(!ex.oaid&&w.oaid)ex.oaid=w.oaid;if(!ex.s2id&&w.s2id)ex.s2id=w.s2id;
+      if(!ex.fwci&&w.fwci)ex.fwci=w.fwci;if(!ex.oa&&w.oa)ex.oa=w.oa;}
+    else state._map.set(key,w);
+  });
+  state.raw=[...state._map.values()];
+}
+function retryHtml(){return `<button class="wbtn" style="margin-top:14px" onclick="runSearch(state.query)">
+  <svg class="ic"><use href="#i-search"/></svg>${esc(t('retry'))}</button>`;}
+
+async function runSearch(q){
+  q=q.trim();if(!q)return;
+  abortAllTokens();                              /* أوقف فوراً أي طلبات بحث سابق مهجور */
+  const mySeq=++searchSeq;                       /* بطاقة هوية لهذا البحث تحديداً */
+  state.query=q;pushHist(q);
+  document.body.classList.add('in-results');
+  $('homeView').hidden=true;$('resultsView').hidden=false;
+  $('miniQ').value=q;$('qEcho').textContent=q;
+  $('insights').hidden=true;$('insights').innerHTML='';
+  state.raw=[];state._map=new Map();state.view=[];
+  state.flt={src:'all',pdf:false,oa:false};
+  renderSkeleton();window.scrollTo({top:0,behavior:'smooth'});
+  updateURLForQuery(q);
+
+  if('onLine' in navigator && navigator.onLine===false){
+    $('countEcho').textContent='';
+    $('worksList').innerHTML=`<div class="emptybox"><svg class="ic"><use href="#i-ext"/></svg>
+      <h3>${esc(t('offlineTitle'))}</h3><p>${esc(t('offlineSub'))}</p>${retryHtml()}</div>`;
+    return;
+  }
+
+  const yr=validateYearRange(true);if(!yr)return;
+  const yF=yr.from,yT=yr.to,lim=+$('limitSel').value;
+  const on=SOURCE_ORDER.filter(k=>state.enabled.has(k));
+  if(!on.length){
+    $('countEcho').textContent='';
+    $('worksList').innerHTML=`<div class="emptybox"><svg class="ic"><use href="#i-ext"/></svg>
+      <h3>${esc(t('noSrcTitle'))}</h3><p>${esc(t('noSrcSub'))}</p></div>`;
+    return;
+  }
+  const per=Math.max(6,Math.round(lim/on.length));
+
+  const counts={};const errs={};on.forEach(k=>counts[SOURCES[k]]=null); /* null = لا تزال القاعدة تستجيب */
+  state.srcCounts=counts;renderSrcCounts();
+  $('countEcho').innerHTML=`<span class="spin">◌</span> ${esc(t('searching'))}`;
+
+  let doneN=0,okN=0,finalized=false,staleUsed=false;
+  let renderQueued=false;
+  function scheduleRender(){ /* يجمّع عدّة استجابات متقاربة زمنياً في رسم DOM واحد بدل رسم مكرر متتابع */
+    if(renderQueued)return;renderQueued=true;
+    requestAnimationFrame(()=>{renderQueued=false;if(mySeq===searchSeq&&!finalized)applyAndRender();});
+  }
+  const stallTimer=setTimeout(()=>{if(mySeq===searchSeq&&!finalized)toast(t('stillSearching'));},STALL_HINT_MS);
+  const hardTimer=setTimeout(()=>{if(mySeq===searchSeq)finalize(true);},HARD_TIMEOUT_MS);
+
+  function diagReport(){
+    const lines=[`Al-Fihrist diag — ${new Date().toISOString()}`,`query: ${q}`,`origin: ${location.href}`,
+      `online: ${navigator.onLine}`,`UA: ${navigator.userAgent}`,'---'];
+    on.forEach(k=>lines.push(`${SOURCES[k]}: ${counts[SOURCES[k]]===null?'—':counts[SOURCES[k]]}${errs[SOURCES[k]]?' ('+errs[SOURCES[k]]+')':''}`));
+    return lines.join('\n');
+  }
+  window._fihristDiag=diagReport; /* يمكن استدعاؤها من console عند الحاجة أيضاً */
+
+  function finalize(timedOut){
+    if(finalized||mySeq!==searchSeq)return;finalized=true;
+    clearTimeout(stallTimer);clearTimeout(hardTimer);
+    if(timedOut)abortToken(mySeq); /* لا فائدة من إبقاء الطلبات المتأخرة تعمل بعد انتهاء الانتظار */
+    on.forEach(k=>{if(counts[SOURCES[k]]===null){counts[SOURCES[k]]=0;errs[SOURCES[k]]=t('errTimeout');}});
+    state.srcCounts={...counts};
+    if(okN===0&&!state.raw.length){
+      $('countEcho').textContent='';
+      const rows=on.map(k=>`<li><b>${esc(SOURCES[k])}</b> — ${esc(errs[SOURCES[k]]||t('errUnknown'))}</li>`).join('');
+      $('worksList').innerHTML=`<div class="emptybox"><svg class="ic"><use href="#i-ext"/></svg>
+        <h3>${esc(t('netErr'))}</h3><p>${esc(t('netErrSub'))}</p>
+        <ul class="diagList">${rows}</ul>
+        ${retryHtml()}
+        <button class="wbtn" style="margin-top:8px" onclick="copyText(window._fihristDiag())">
+          <svg class="ic"><use href="#i-copy"/></svg>${esc(t('copyDiag'))}</button></div>`;
+      return;
+    }
+    if(timedOut&&okN<on.length)toast(t('partialSub'));
+    if(staleUsed)toast(t('staleNote'));
+    applyAndRender();
+  }
+
+  await Promise.all(on.map(async k=>{
+    const ck=cacheKeyFor(k,q,yF,yT,per);
+    try{
+      let items=cacheGet(ck,false);
+      if(!items){items=await ADAPTERS[k](q,per,yF,yT,mySeq);cacheSet(ck,items);}
+      if(mySeq!==searchSeq)return;
+      counts[SOURCES[k]]=items.length;okN++;
+      mergeWorks(items);
+    }catch(e){
+      if(mySeq!==searchSeq)return;
+      errs[SOURCES[k]]=classifyErr(e);
+      const stale=cacheGet(ck,true); /* حتى لو تجاوزت صلاحيتها — أفضل من نتيجة فارغة عند تعطّل مؤقت */
+      if(stale&&stale.length){counts[SOURCES[k]]=stale.length;okN++;staleUsed=true;mergeWorks(stale);}
+      else counts[SOURCES[k]]=0;
+      if(k==='s2')toast(t('s2Limit'));
+    }finally{
+      doneN++;
