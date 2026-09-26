@@ -89,66 +89,58 @@ function renderSites(){
   document.getElementById('sites').innerHTML=sites.map(s=>'<article class="card"><h3>'+esc(s.name)+'</h3><div class="meta">'+esc(s.type)+'</div><p>'+esc(s.desc)+'</p><div class="mini-note">'+(q?'سيُفتح البحث بالعبارة: «'+esc(q)+'»':'أدخل عبارة للبحث الموحد في البوابات')+'</div><a target="_blank" rel="noopener" href="'+buildSiteUrl(s,q)+'">'+(q?'بحث في المصدر ↗':'فتح المصدر ↗')+'</a></article>').join('')
 }
 function initCats(){let cats=[...new Set(books.map(x=>x[3]))];document.getElementById('cat').innerHTML='<option value="all">كل التصنيفات</option>'+cats.map(x=>'<option>'+esc(x)+'</option>').join('')}
+function normalizeArabic(s){return String(s??'').toLowerCase().replace(/[إأآٱ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[ًٌٍَُِّْـ]/g,'').replace(/[ؤئ]/g,'ء').trim()}
+function categoryMatch(text,cat){
+  if(cat==='all')return true;
+  const t=normalizeArabic(text),c=normalizeArabic(cat);
+  if(t.includes(c))return true;
+  const aliases={'الكتب التسعة':['كتب التسعة','الصحيحان','سنن','موطأ','مسند'],'الجرح والتعديل':['رجال','جرح','تعديل','تهذيب','تقريب','ميزان','كاشف','ثقات'],'علوم الحديث':['علل','علوم الحديث'],'المسانيد والجوامع':['مسند','معجم','جامع'],'السنن والجوامع':['سنن','جامع'],'مجاميع حديثية':['مجاميع','منتقى','زوائد','شمائل','رياض'],'صحاح ومجاميع':['صحيح','مستدرك','مجاميع'],'المصنفات':['مصنف'],'المسانيد':['مسند'],'باقي المجموعات':['سنة','شرح','تصحيح','ضعيف']};
+  return (aliases[cat]||[]).some(a=>t.includes(normalizeArabic(a)))
+}
+let externalBookResults=[],bookSearchState={q:'',cat:'all',status:''};
+
 function renderBooks(){
-  if(externalBookResults.length && document.getElementById('filter').value.trim()) return;
-  let cat=document.getElementById('cat').value,f=document.getElementById('filter').value.trim().toLowerCase(),sort=document.getElementById('bookSort')?.value||'title',view=document.getElementById('bookView')?.value||'all';
-  let arr=books.map((x,i)=>({...x,i})).filter(x=>(cat==='all'||x[3]===cat)&&(!f||x.join(' ').toLowerCase().includes(f))&&(view==='all'||selectedBooks.has(x.i)));
-  arr.sort((a,b)=>String(a[sort==='title'?0:sort==='author'?1:3]).localeCompare(String(b[sort==='title'?0:sort==='author'?1:3]),'ar'));
-  document.getElementById('count').textContent='إظهار '+arr.length+' من '+books.length+' مصدرًا مفهرسًا';
-  document.getElementById('books').innerHTML=arr.length?arr.map(x=>'<article class="card"><h3>'+esc(x[0])+'</h3><div class="meta">'+esc(x[1])+'</div><div><span class="tag">'+esc(x[2])+'</span><span class="tag">'+esc(x[3])+'</span></div><div class="checkrow"><input type="checkbox" '+(selectedBooks.has(x.i)?'checked':'')+' onchange="toggleBook('+x.i+',this.checked)"><span>إضافة إلى التصدير</span></div><div class="book-tools"><button class="alt" onclick="copyBookWithMenu('+x.i+')">📋 نسخ التوثيق</button><a class="result-link" style="padding:8px 10px" target="_blank" rel="noopener" href="https://www.google.com/search?q='+encodeURIComponent('"'+x[0]+'" '+x[1]+' حديث')+'">البحث عن المصدر ↗</a></div></article>').join(''):'<div class="empty">لا توجد مصادر مطابقة للبحث الحالي.</div>';
-  updateBookSelected()
-}
-let externalBookResults=[];
-async function searchBooks(){
-  const q=document.getElementById('filter').value.trim();
-  const box=document.getElementById('books');
-  if(!q){externalBookResults=[];renderBooks();box?.scrollIntoView({behavior:'smooth',block:'start'});return}
-  const local=books.map((x,i)=>({...x,i,source:'فهرس المنصة'})).filter(x=>x.join(' ').toLowerCase().includes(q.toLowerCase()));
-  externalBookResults=[];
-  renderBookSearchResults(local,q,'جارٍ البحث في المصدر المفتوح…');
-  box?.scrollIntoView({behavior:'smooth',block:'start'});
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),7000);
-  try{
-    const u='https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=20&fields=key,title,author_name,first_publish_year,publisher,isbn,subject';
-    const res=await fetch(u,{signal:controller.signal,mode:'cors',cache:'no-store'});
-    clearTimeout(timer);
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    const data=await res.json();
-    externalBookResults=(data.docs||[]).map((x,i)=>({
-      ext:true,i,title:x.title||'بدون عنوان',
-      author:(x.author_name||[]).slice(0,5).join('؛ '),
-      year:x.first_publish_year||'',
-      publisher:(x.publisher||[])[0]||'',
-      isbn:(x.isbn||[])[0]||'',
-      subject:(x.subject||[]).slice(0,3).join('؛ '),
-      key:x.key||''
-    }));
-    renderBookSearchResults(local,q,externalBookResults.length?'تم جلب النتائج المفتوحة.':'لم يعثر المصدر المفتوح على نتائج.');
-  }catch(e){
-    clearTimeout(timer);
-    externalBookResults=[];
-    renderBookSearchResults(local,q,'تعذر الوصول إلى المصدر المفتوح حاليًا؛ عُرضت نتائج الفهرس المحلي فقط.');
+  const cat=document.getElementById('cat').value,f=normalizeArabic(document.getElementById('filter').value),sort=document.getElementById('bookSort')?.value||'title',view=document.getElementById('bookView')?.value||'all';
+  if(f){
+    const local=books.map((x,i)=>({...x,i})).filter(x=>categoryMatch(x.join(' '),cat)&&normalizeArabic(x.join(' ')).includes(f)&&(view==='all'||selectedBooks.has(x.i)));
+    const ext=externalBookResults.filter(x=>categoryMatch((x.title+' '+x.author+' '+x.subject),cat));
+    document.getElementById('count').textContent='نتائج «'+document.getElementById('filter').value+'»: '+(local.length+ext.length)+' · '+(cat==='all'?'جميع التصنيفات':cat);
+    renderBookSearchResults(local,document.getElementById('filter').value,ext,bookSearchState.status||'');
+    updateBookSelected();
+    return;
   }
+  let arr=books.map((x,i)=>({...x,i})).filter(x=>categoryMatch(x.join(' '),cat)&&(view==='all'||selectedBooks.has(x.i)));
+  arr.sort((a,b)=>String(a[sort==='title'?0:sort==='author'?1:3]).localeCompare(String(b[sort==='title'?0:sort==='author'?1:3]),'ar'));
+  document.getElementById('count').textContent='إظهار '+arr.length+' من '+books.length+' مصدرًا مفهرسًا · '+(cat==='all'?'جميع التصنيفات':cat);
+  document.getElementById('books').innerHTML=arr.length?arr.map(x=>'<article class="card"><h3>'+esc(x[0])+'</h3><div class="meta">'+esc(x[1])+'</div><div><span class="tag">'+esc(x[2])+'</span><span class="tag">'+esc(x[3])+'</span></div><div class="checkrow"><input type="checkbox" '+(selectedBooks.has(x.i)?'checked':'')+' onchange="toggleBook('+x.i+',this.checked)"><span>إضافة إلى التصدير</span></div><div class="book-tools"><button class="alt" onclick="copyBookWithMenu('+x.i+')">📋 نسخ التوثيق</button><a class="result-link" style="padding:8px 10px" target="_blank" rel="noopener" href="https://www.google.com/search?q='+encodeURIComponent('"'+x[0]+'" '+x[1]+' حديث')+'">البحث عن المصدر ↗</a></div></article>').join(''):'<div class="empty">لا توجد مصادر مطابقة.</div>';
+  updateBookSelected();
 }
-function renderBookSearchResults(local,q,statusText=''){
+function searchBooks(){
+  const q=document.getElementById('filter').value.trim(),cat=document.getElementById('cat').value,box=document.getElementById('books');
+  bookSearchState={q,cat,status:''};
+  if(!q){externalBookResults=[];renderBooks();box?.scrollIntoView({behavior:'smooth',block:'start'});return}
+  const local=books.map((x,i)=>({...x,i})).filter(x=>categoryMatch(x.join(' '),cat)&&normalizeArabic(x.join(' ')).includes(normalizeArabic(q)));
+  externalBookResults=[];
+  bookSearchState.status='جارٍ البحث في المصدر المفتوح…';
+  renderBookSearchResults(local,q,[],bookSearchState.status);
+  box?.scrollIntoView({behavior:'smooth',block:'start'});
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),7000);
+  fetch('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=40&fields=key,title,author_name,first_publish_year,publisher,isbn,subject',{signal:controller.signal,mode:'cors',cache:'no-store'})
+  .then(res=>{clearTimeout(timer);if(!res.ok)throw new Error('HTTP '+res.status);return res.json()})
+  .then(data=>{externalBookResults=(data.docs||[]).map((x,i)=>({ext:true,i,title:x.title||'بدون عنوان',author:(x.author_name||[]).slice(0,5).join('؛ '),year:x.first_publish_year||'',publisher:(x.publisher||[])[0]||'',isbn:(x.isbn||[])[0]||'',subject:(x.subject||[]).slice(0,8).join('؛ '),key:x.key||''}));bookSearchState.status=externalBookResults.length?'تم جلب النتائج المفتوحة.':'لم يعثر المصدر المفتوح على نتائج.';renderBooks()})
+  .catch(()=>{clearTimeout(timer);externalBookResults=[];bookSearchState.status='تعذر الوصول إلى المصدر المفتوح حاليًا؛ عُرضت نتائج الفهرس المحلي فقط.';renderBooks()});
+}
+function renderBookSearchResults(local,q,extList,statusText=''){
   const box=document.getElementById('books');
   const localHtml=local.map(x=>'<article class="card"><h3>'+esc(x[0])+'</h3><div class="meta">'+esc(x[1])+' — فهرس المنصة</div><div><span class="tag">'+esc(x[2])+'</span><span class="tag">'+esc(x[3])+'</span></div><div class="book-tools"><button class="alt" onclick="copyBookWithMenu('+x.i+')">📋 نسخ التوثيق</button><a class="result-link" style="padding:8px 10px" target="_blank" rel="noopener" href="https://openlibrary.org/search?q='+encodeURIComponent(x[0]+' '+x[1])+'">عرض في Open Library ↗</a></div></article>').join('');
-  const extHtml=externalBookResults.map(x=>'<article class="card"><h3>'+esc(x.title)+'</h3><div class="meta">'+esc(x.author||'المؤلف غير مفهرس')+' — Open Library</div><div><span class="tag">'+esc(x.year||'السنة غير متاحة')+'</span>'+(x.publisher?'<span class="tag">'+esc(x.publisher)+'</span>':'')+'</div><p class="mini-note">'+(x.subject?'موضوعات: '+esc(x.subject):'')+(x.isbn?' · ISBN: '+esc(x.isbn):'')+'</p><div class="book-tools"><a class="result-link" style="padding:8px 10px" target="_blank" rel="noopener" href="https://openlibrary.org'+esc(x.key)+'">فتح السجل ↗</a><button class="alt" onclick="copyExternalBookCitation('+x.i+')">📋 نسخ التوثيق</button></div></article>').join('');
-  const state=statusText?'<div class="mini-note">'+esc(statusText)+'</div>':'';
-  const summary='<div class="result-panel" style="grid-column:1/-1"><h3>نتائج البحث عن: «'+esc(q)+'»</h3>'+state+'<div class="mini-note">الفهرس المحلي: '+local.length+' · المصدر المفتوح: '+externalBookResults.length+'. تظهر النتائج هنا مباشرة أسفل أدوات البحث.</div></div>';
-  box.innerHTML=summary+((localHtml||extHtml)?localHtml+extHtml:'<div class="empty">لم تُعثر على نتائج حتى الآن.</div>');
-  document.getElementById('count').textContent='نتائج البحث: '+(local.length+externalBookResults.length);
+  const extHtml=extList.map(x=>'<article class="card"><h3>'+esc(x.title)+'</h3><div class="meta">'+esc(x.author||'المؤلف غير مفهرس')+' — Open Library</div><div><span class="tag">'+esc(x.year||'السنة غير متاحة')+'</span>'+(x.publisher?'<span class="tag">'+esc(x.publisher)+'</span>':'')+'</div><p class="mini-note">'+(x.subject?'موضوعات: '+esc(x.subject):'')+(x.isbn?' · ISBN: '+esc(x.isbn):'')+'</p><div class="book-tools"><a class="result-link" style="padding:8px 10px" target="_blank" rel="noopener" href="https://openlibrary.org'+esc(x.key)+'">فتح السجل ↗</a><button class="alt" onclick="copyExternalBookCitation('+x.i+')">📋 نسخ التوثيق</button></div></article>').join('');
+  box.innerHTML='<div class="result-panel" style="grid-column:1/-1"><h3>نتائج البحث: «'+esc(q)+'»</h3><div class="mini-note">'+esc(statusText)+'</div><div class="mini-note">الفهرس المحلي: '+local.length+' · المصدر المفتوح: '+extList.length+' · التصنيف: '+(document.getElementById('cat').value==='all'?'جميع التصنيفات':esc(document.getElementById('cat').value))+'</div></div>'+((localHtml||extHtml)?localHtml+extHtml:'<div class="empty">لم تُعثر على نتائج.</div>');
 }
-function copyExternalBookCitation(i){
-  const x=externalBookResults[i];if(!x)return;
-  const c=(x.author||'مؤلف غير محدد')+' ('+(x.year||'د.ت.')+'). '+x.title+'. '+(x.publisher||'بيانات الناشر غير متاحة')+'. Open Library. '+(x.key?'https://openlibrary.org'+x.key:'');
-  copyText(c);
-}
-function showAllBooks(){externalBookResults=[];document.getElementById('filter').value='';document.getElementById('cat').value='all';document.getElementById('bookView').value='all';renderBooks()}
-function clearBookSearch(){externalBookResults=[];document.getElementById('filter').value='';document.getElementById('cat').value='all';renderBooks()}
+function copyExternalBookCitation(i){const x=externalBookResults[i];if(!x)return;copyText((x.author||'مؤلف غير محدد')+' ('+(x.year||'د.ت.')+'). '+x.title+'. '+(x.publisher||'بيانات الناشر غير متاحة')+'. Open Library. '+(x.key?'https://openlibrary.org'+x.key:''))}
+function showAllBooks(){externalBookResults=[];bookSearchState={q:'',cat:'all',status:''};document.getElementById('filter').value='';document.getElementById('cat').value='all';document.getElementById('bookView').value='all';renderBooks()}
+function clearBookSearch(){externalBookResults=[];bookSearchState={q:'',cat:document.getElementById('cat').value,status:''};document.getElementById('filter').value='';renderBooks()}
 function setBookSelectionView(v){document.getElementById('bookView').value=v;renderBooks()}
-function toggleBook(i,on){on?selectedBooks.add(i):selectedBooks.delete(i);updateBookSelected()}
+function toggleBook(i,on){on?selectedBooks.add(i):selectedBooks.delete(i)}
 function updateBookSelected(){document.getElementById('bookSelected').textContent=selectedBooks.size+' محدد'}
 function selectAllBooks(on){let cat=document.getElementById('cat').value,f=document.getElementById('filter').value.trim().toLowerCase();books.forEach((x,i)=>{if((cat==='all'||x[3]===cat)&&(!f||x.join(' ').toLowerCase().includes(f))){on?selectedBooks.add(i):selectedBooks.delete(i)}});renderBooks()}
 function download(name,text,mime){let blob=new Blob([text],{type:mime+';charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
