@@ -103,12 +103,16 @@ async function searchBooks(){
   const q=document.getElementById('filter').value.trim();
   const box=document.getElementById('books');
   if(!q){externalBookResults=[];renderBooks();box?.scrollIntoView({behavior:'smooth',block:'start'});return}
-  box.innerHTML='<div class="loading">🔎 جارٍ البحث في الفهرس المحلي ومصادر الكتب المفتوحة...</div>';
   const local=books.map((x,i)=>({...x,i,source:'فهرس المنصة'})).filter(x=>x.join(' ').toLowerCase().includes(q.toLowerCase()));
+  externalBookResults=[];
+  renderBookSearchResults(local,q,'جارٍ البحث في المصدر المفتوح…');
+  box?.scrollIntoView({behavior:'smooth',block:'start'});
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),7000);
   try{
     const u='https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=20&fields=key,title,author_name,first_publish_year,publisher,isbn,subject';
-    const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),10000);
-    const res=await fetch(u,{signal:controller.signal});clearTimeout(timer);
+    const res=await fetch(u,{signal:controller.signal,mode:'cors',cache:'no-store'});
+    clearTimeout(timer);
     if(!res.ok)throw new Error('HTTP '+res.status);
     const data=await res.json();
     externalBookResults=(data.docs||[]).map((x,i)=>({
@@ -120,18 +124,20 @@ async function searchBooks(){
       subject:(x.subject||[]).slice(0,3).join('؛ '),
       key:x.key||''
     }));
+    renderBookSearchResults(local,q,externalBookResults.length?'تم جلب النتائج المفتوحة.':'لم يعثر المصدر المفتوح على نتائج.');
   }catch(e){
+    clearTimeout(timer);
     externalBookResults=[];
+    renderBookSearchResults(local,q,'تعذر الوصول إلى المصدر المفتوح حاليًا؛ عُرضت نتائج الفهرس المحلي فقط.');
   }
-  renderBookSearchResults(local,q);
-  box?.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function renderBookSearchResults(local,q){
+function renderBookSearchResults(local,q,statusText=''){
   const box=document.getElementById('books');
   const localHtml=local.map(x=>'<article class="card"><h3>'+esc(x[0])+'</h3><div class="meta">'+esc(x[1])+' — فهرس المنصة</div><div><span class="tag">'+esc(x[2])+'</span><span class="tag">'+esc(x[3])+'</span></div><div class="book-tools"><button class="alt" onclick="copyBookWithMenu('+x.i+')">📋 نسخ التوثيق</button><a class="result-link" style="padding:8px 10px" target="_blank" rel="noopener" href="https://openlibrary.org/search?q='+encodeURIComponent(x[0]+' '+x[1])+'">عرض في Open Library ↗</a></div></article>').join('');
   const extHtml=externalBookResults.map(x=>'<article class="card"><h3>'+esc(x.title)+'</h3><div class="meta">'+esc(x.author||'المؤلف غير مفهرس')+' — Open Library</div><div><span class="tag">'+esc(x.year||'السنة غير متاحة')+'</span>'+(x.publisher?'<span class="tag">'+esc(x.publisher)+'</span>':'')+'</div><p class="mini-note">'+(x.subject?'موضوعات: '+esc(x.subject):'')+(x.isbn?' · ISBN: '+esc(x.isbn):'')+'</p><div class="book-tools"><a class="result-link" style="padding:8px 10px" target="_blank" rel="noopener" href="https://openlibrary.org'+esc(x.key)+'">فتح السجل ↗</a><button class="alt" onclick="copyExternalBookCitation('+x.i+')">📋 نسخ التوثيق</button></div></article>').join('');
-  const summary='<div class="result-panel" style="grid-column:1/-1"><h3>نتائج البحث عن: «'+esc(q)+'»</h3><div class="mini-note">المحلية: '+local.length+' · النتائج المفتوحة: '+externalBookResults.length+'. النتائج المفتوحة تُعرض هنا مباشرة أسفل شريط البحث.</div></div>';
-  box.innerHTML=summary+(localHtml||extHtml?localHtml+extHtml:'<div class="empty">لم تُعثر على نتائج في الفهرس المحلي أو المصدر المفتوح.</div>');
+  const state=statusText?'<div class="mini-note">'+esc(statusText)+'</div>':'';
+  const summary='<div class="result-panel" style="grid-column:1/-1"><h3>نتائج البحث عن: «'+esc(q)+'»</h3>'+state+'<div class="mini-note">الفهرس المحلي: '+local.length+' · المصدر المفتوح: '+externalBookResults.length+'. تظهر النتائج هنا مباشرة أسفل أدوات البحث.</div></div>';
+  box.innerHTML=summary+((localHtml||extHtml)?localHtml+extHtml:'<div class="empty">لم تُعثر على نتائج حتى الآن.</div>');
   document.getElementById('count').textContent='نتائج البحث: '+(local.length+externalBookResults.length);
 }
 function copyExternalBookCitation(i){
